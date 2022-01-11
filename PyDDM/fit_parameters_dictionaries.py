@@ -218,6 +218,11 @@ fitting_models['ISF - Single Exponential - NonErgodic'] = isf_single_exponential
 ###############################################################################
 
 def turn_parameters_into_dataframe_for_display(parinfo):
+    '''
+    This function takes a list of dictionaries, one dictionary per parameter
+    of a model for the ISF or DDM Matrix, and 
+    
+    '''
     parameter_data = {}
     for parameter in parinfo:
         parameter_data[parameter['parname']] = [parameter['value'], parameter['limits'][0], parameter['limits'][1]]
