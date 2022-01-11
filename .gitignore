@@ -1,4 +1,6 @@
-"Examples/images_nobin_40x_128x128_8bit_fitresults_DDM Matrix - Single Exponential.xlsx"
+Examples/*.xlsx
+Examples/*.pdf
+Examples/*.nc
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
