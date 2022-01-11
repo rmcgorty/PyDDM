@@ -5,9 +5,9 @@ Usage
 Installation
 -------------
 
-To use DDM_py, first download the following modules:
+To use PyDDM, first download the following modules:
 	
-	**DDM_py_package**
+	**PyDDM**
 	
 	This contains two modules which are relevant for usage: 
 

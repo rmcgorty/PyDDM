@@ -16,6 +16,8 @@ import os
 import pathlib
 import sys
 sys.path.insert(0, pathlib.Path(__file__).parents[2].resolve().as_posix())
+sys.path.append(os.path.abspath("../../PyDDM"))
+print(sys.path)
 
 
 # -- Project information -----------------------------------------------------
@@ -25,7 +27,7 @@ copyright = '2021, Ryan McGorty and Hannah Noor Verwei'
 author = 'Ryan McGorty and Hannah Noor Verwei'
 
 # The full version, including alpha/beta/rc tags
-release = '1.0'
+release = 'v0.1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -40,10 +42,10 @@ extensions = [ 'sphinx.ext.duration',
      'sphinx.ext.imgmath'
 ]
 autosummary_generate = True
-autosummary_generate_overwrite=True
+autosummary_generate_overwrite = True
 
-imgmath_latex=r'C:\Users\Hanna\AppData\Local\Programs\MiKTeX\miktex\bin\x64\latex.exe'
-imgmath_dvipng=r'C:\Users\Hanna\AppData\Local\Programs\MiKTeX\miktex\bin\x64\dvipng.exe'
+imgmath_latex=r'C:\Users\rmcgorty\AppData\Local\Programs\MiKTeX\miktex\bin\x64\latex.exe'
+imgmath_dvipng=r'C:\Users\rmcgorty\AppData\Local\Programs\MiKTeX\miktex\bin\x64\dvipng.exe'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

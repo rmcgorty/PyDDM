@@ -1,7 +1,7 @@
-DDMpy\_package.ddm\_fit
-=======================
+﻿PyDDM.ddm\_analysis\_and\_fitting
+=================================
 
-.. automodule:: DDMpy_package.ddm_fit
+.. automodule:: PyDDM.ddm_analysis_and_fitting
 
    
    
@@ -15,7 +15,10 @@ DDMpy\_package.ddm\_fit
       :toctree:
       :nosignatures:
    
+      apply_binning
+      interactive_fit_inspection
       newt
+      recalculate_ISF_with_new_background
    
    
 
@@ -28,7 +31,9 @@ DDMpy\_package.ddm\_fit
       :template: custom-class-template.rst
       :nosignatures:
    
-      DDM_fit
+      Browse_DDM_Fits
+      DDM_Analysis
+      DDM_Fit
    
    
 

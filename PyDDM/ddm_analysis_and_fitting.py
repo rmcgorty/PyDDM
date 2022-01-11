@@ -55,7 +55,7 @@ def recalculate_ISF_with_new_background(ddm_dataset, background):
     """
     The intermediate scattering function (ISF) is re-calculated from the radial averages, with the given background value.
 
-    :param ddm_dataset: Dataset with radial averages calculated with :py:meth:`DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix`
+    :param ddm_dataset: Dataset with radial averages calculated with :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix`
     :type ddm_dataset: xarray Dataset
     :param background: Background value
     :type background: float
@@ -649,7 +649,7 @@ class DDM_Analysis:
 
 class DDM_Fit:
     """
-    Set of functions to fit DDM matrix (image structure function) or ISF, the user can choose from a variety of mathematical models :py:meth:`DDMpy_package.ISF_and_DDMmatrix_theoretical_models`. 
+    Set of functions to fit DDM matrix (image structure function) or ISF, the user can choose from a variety of mathematical models :py:mod:`PyDDM.ISF_and_DDMmatrix_theoretical_models`. 
     Analysis paramters can be provided in a YAML file :doc:`More information here </Provide_info_for_analysis>`.
     Graphs of the fits are produced and can be saved as PDF.
 
@@ -803,7 +803,7 @@ class DDM_Fit:
     def load_data(self, data=None):
         """Loads data for fitting whether it is in memory or saved to disk.
 
-        :param data: Name of the Xarray Dataset with data obtained from using :py:meth:`DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix`
+        :param data: Name of the Xarray Dataset with data obtained from using :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix`
         :type data: str or DataSet(Xarray), Optional
         """
 
@@ -1035,7 +1035,7 @@ class DDM_Fit:
         """
         Saves fit results as csv file, so that it can be opened in Excel.  the fit and parameter settings to a dictionary with a key value provided by the user
 
-        :param fit_results: Xarray Dataset with data obtained from using :py:meth:`DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix`
+        :param fit_results: Xarray Dataset with data obtained from using :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix`
         :type fit_results: xarray.Dataset
         :param also_save_data: Save data in csv format to disk, default: True
         :type also_save_data: bool
@@ -1144,7 +1144,7 @@ class DDM_Fit:
                    :type forced_qs_for_tau2: None or List[int]
                    :param q_indices: q-indices for which to plot the data to the fit (note these are not the actual values of q, those will be reported and can be found, via: fit_Dataset.q[q_index])
                    :type q_indices: Lits[int]
-                   :param use_new_tau: apply :py:meth:`DDMpy_package.ddm_fit.newt`, default is True
+                   :param use_new_tau: apply :py:meth:`PyDDM.ddm_analysis_and_fitting.newt`, default is True
                    :type use_new_tau: bool
                    :param fit_report_name: Name to extend file name of PDF with if 'None' file is saved as ddm_fit_report_'provided_filename'
                    :type fit_report_name: None or str
@@ -1271,7 +1271,7 @@ class DDM_Fit:
 
         :param fit_results: Name of xarray Dataset with fit results to be reported. If None, the latest fit will be reported
         :type fit_results: xarray.Dataset
-        :param use_new_tau: Apply :py:meth:`DDMpy_package.ddm_fit.newt`, default is True
+        :param use_new_tau: Apply :py:meth:`PyDDM.ddm_analysis_and_fitting.newt`, default is True
         :type use_new_tau: bool
         :param use_tau2: Get the tau versus q fit and fitting parameters for tau corresponding to the second exponent of the model, denoted as 'Tau2', default is False
         :type use_tau2: bool

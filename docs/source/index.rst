@@ -17,7 +17,7 @@ Welcome to PyDDM's documentation!
 
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    
    usage
    walkthrough
