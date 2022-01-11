@@ -1,0 +1,24 @@
+DataDirectory: 'C:/Users/Hanna/Documents/DDM_miniproject/'
+FileName: 'images_nobin_40x_128x128_8bit.tif'
+Metadata:
+  pixel_size: 0.242 # size of pixel in um
+  frame_rate: 41.7 #frames per second
+Analysis_parameters:
+  starting_frame_number: 1
+  ending_frame_number: 3000 #frame number to crop the video
+  number_lagtimes: 100 #number of lag times that will be sampled to calculate ddm matrix
+  first_lag_time: 1 #specify first lag time for ddm analysis in frame number
+  last_lag_time: 2000 #in frame number
+  crop_to_roi: # leave empty for no cropping [topleft,bottomleft,topright,bottomright] 
+  split_into_4_rois: no
+  use_windowing_function: yes #Use Blackmann-Harris windowing or not?
+  binning: no
+  bin_size: 2 
+Fitting_parameters:
+  model: 'ISF - Single Exponential' #Options are 'ISF - Single Exponential' and 'DDM Matrix - Single Exponential' for now
+  Tau: [1.0, 0.001, 100]
+  StretchingExp: [1.0, 0.5, 1.2]
+  Amplitude: [1e3, 1, 1e6]
+  Background: [10, 0, 1e3]
+  Good_q_range: [10, 25]
+  Auto_update_good_q_range: True

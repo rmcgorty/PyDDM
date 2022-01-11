@@ -1,0 +1,26 @@
+DataDirectory: 'C:/Users/Ryan/Documents/GitHub/DDM-at-USD/ExampleData/'
+FileName: 'images_nobin_40x_128x128_8bit.tif'
+Metadata:
+  pixel_size: 0.242 # size of pixel in um
+  frame_rate: 41.7 #frames per second
+Analysis_parameters:
+  starting_frame_number: 0
+  ending_frame_number: null
+  number_lagtimes: 40
+  first_lag_time: 1
+  last_lag_time: 600
+  crop_to_roi: null # set to 'null' (no quotes) for no cropping [topleft,bottomleft,topright,bottomright] 
+  split_into_4_rois: no
+  use_windowing_function: no #Use Blackmann-Harris windowing or not?
+  binning: yes
+  bin_size: 2 
+  central_angle: null
+  angle_range: null
+Fitting_parameters:
+  model: 'DDM Matrix - Single Exponential' #Options are 'ISF - Single Exponential' and 'DDM Matrix - Single Exponential' for now
+  Tau: [1.0, 0.001, 10]
+  StretchingExp: [1.0, 0.5, 1.1]
+  Amplitude: [1e2, 1, 1e6]
+  Background: [2.5e4, 0, 1e7]
+  Good_q_range: [5, 20]
+  Auto_update_good_q_range: True

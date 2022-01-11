@@ -1,0 +1,42 @@
+.. DDM_class_based_framework documentation master file, created by
+   sphinx-quickstart on Wed Nov 10 16:49:39 2021.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to DDM_py's documentation!
+=====================================================
+
+**DDM_py**  is a Pyhton class based framework for analysis of differential dynamic microscopy (DDM) data. 
+
+The analysis is performed in two steps:
+	1.DDM analysis to calculate the DDM matrix and ISF
+	2.Fitting with multiple mathematical models
+	
+
+
+.. note::
+
+   This project is under active development.
+
+
+.. toctree::
+   :maxdepth: 1
+   
+   usage
+   walkthrough
+
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-module-template.rst
+   :recursive:
+
+   DDMpy_package
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DDMpy_package.ddm_fit.DDM_fit &#8212; DDM_py 0.1 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="DDMpy_package.ddm_fit.newt" href="DDMpy_package.ddm_fit.newt.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">DDM_py 0.1 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../usage.html">
+   Usage
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../YAML_layout.html">
+     YAML_layout
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../walkthrough.html">
+   Walkthrough
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="DDMpy_package.html">
+   DDMpy_package
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="DDMpy_package.ddm_analysis.html">
+     DDMpy_package.ddm_analysis
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="DDMpy_package.ddm_analysis.apply_binning.html">
+       DDMpy_package.ddm_analysis.apply_binning
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="DDMpy_package.ddm_analysis.recalculate_ISF_with_new_background.html">
+       DDMpy_package.ddm_analysis.recalculate_ISF_with_new_background
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="DDMpy_package.ddm_analysis.DDM_analysis.html">
+       DDMpy_package.ddm_analysis.DDM_analysis
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="DDMpy_package.ddm_fit.html">
+     DDMpy_package.ddm_fit
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+    <label for="toctree-checkbox-4">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="DDMpy_package.ddm_fit.newt.html">
+       DDMpy_package.ddm_fit.newt
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       DDMpy_package.ddm_fit.DDM_fit
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/_autosummary/DDMpy_package.ddm_fit.DDM_fit.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="ddmpy-package-ddm-fit-ddm-fit">
+<h1>DDMpy_package.ddm_fit.DDM_fit<a class="headerlink" href="#ddmpy-package-ddm-fit-ddm-fit" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">DDMpy_package.ddm_fit.</span></span><span class="sig-name descname"><span class="pre">DDM_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_file_yaml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subimage_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Opens a YAML file, provided by the user as Test(‘YAMLfile.yaml’)
+and uses the meta data and analysis parameters to perform DDM analyis
+The actual code for the analysis is inside ddm.py</p>
+<p class="rubric">Methods</p>
+<table class="longtable table autosummary">
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 90%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">error_in_fit</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_MSD</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.fit" title="DDMpy_package.ddm_fit.DDM_fit.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a></p></td>
+<td><p>Fits the DDM data</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.fit_report" title="DDMpy_package.ddm_fit.DDM_fit.fit_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit_report</span></code></a></p></td>
+<td><p>Produces a report of the fit to the DDM data including plots of signal versus lag time for specific given q-indices, tau versus lagtime, stretching exponent, amplitude, background or other applicable parameters.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.get_tau_vs_q_fit" title="DDMpy_package.ddm_fit.DDM_fit.get_tau_vs_q_fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tau_vs_q_fit</span></code></a></p></td>
+<td><p>Determines a good q-range to fit tau (delay time) versus q using linear model estimator from scikit-learn.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inspect_fit</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.loadYAML" title="DDMpy_package.ddm_fit.DDM_fit.loadYAML"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loadYAML</span></code></a></p></td>
+<td><p>Loads information from .yml or .yaml file if file follows specified format</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.load_data" title="DDMpy_package.ddm_fit.DDM_fit.load_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load_data</span></code></a></p></td>
+<td><p>Loads data for fitting whether it is in memory or saved to disk.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.reload_fit_model_by_name" title="DDMpy_package.ddm_fit.DDM_fit.reload_fit_model_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reload_fit_model_by_name</span></code></a></p></td>
+<td><p>Update the current fitting model, by providing the model named.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.save_fit_results_to_excel" title="DDMpy_package.ddm_fit.DDM_fit.save_fit_results_to_excel"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_fit_results_to_excel</span></code></a></p></td>
+<td><p>Saves fit results as csv file, so that it can be opened in Excel.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.save_fits_disk" title="DDMpy_package.ddm_fit.DDM_fit.save_fits_disk"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_fits_disk</span></code></a></p></td>
+<td><p>save the interesting fits to disk</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.set_parameter_bounds" title="DDMpy_package.ddm_fit.DDM_fit.set_parameter_bounds"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_parameter_bounds</span></code></a></p></td>
+<td><p>Restrict the value of the parameter for the fitting by specifying bounds.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_parameter_fixed</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.set_parameter_initial_guess" title="DDMpy_package.ddm_fit.DDM_fit.set_parameter_initial_guess"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_parameter_initial_guess</span></code></a></p></td>
+<td><p>Set the intitial value of parameter.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#DDMpy_package.ddm_fit.DDM_fit.use_parameters_provided" title="DDMpy_package.ddm_fit.DDM_fit.use_parameters_provided"><code class="xref py py-obj docutils literal notranslate"><span class="pre">use_parameters_provided</span></code></a></p></td>
+<td><p>Gives the parameters and their values, as provided in the intiation file (YAML file)</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_fit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_lsqr_lm_cf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[False,</span> <span class="pre">False,</span> <span class="pre">True]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_tau_based_on_estimated_diffcoeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimated_diffcoeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_tau_based_on_estimated_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimated_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_tau2_based_on_estimated_diffcoeff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimated_diffcoeff2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_tau2_based_on_estimated_velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">estimated_velocity2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_limits_on_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_lims_on_tau_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_A_from_images_as_guess</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_limits_on_A</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">updated_lims_on_A_fraction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">display_table</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fits the DDM data</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save</strong> (<em>bool</em>) – save the fit in dictionary, called ‘fittings’, fit results are accescible fittings[name_fit][‘fit’].</p></li>
+<li><p><strong>name_fit</strong> (<em>None</em><em> or </em><em>str</em>) – Name to save the fit results under in the fittings dictionary</p></li>
+<li><p><strong>use_lsqr_lm_cf</strong> (<em>List</em><em>[</em><em>bool</em><em>]</em>) – <p>???</p>
+</p></li>
+<li><p><strong>update_tau_based_on_estimated_diffcoeff</strong> (<em>bool</em>) – Use an estimation of diffusion coeffcient to set initial value of tau (delay time) for fitting procedure</p></li>
+<li><p><strong>estimated_diffcoeff</strong> (<em>float</em>) – Estimated value of the diffusion constant (μm^2/s)</p></li>
+<li><p><strong>update_tau_based_on_estimated_velocity</strong> (<em>float</em>) – Use an estimation of velocity to set bounds to set initial value of tau (delay time) for fitting procedure</p></li>
+<li><p><strong>estimated_velocity</strong> (<em>float</em>) – Estimated value of the velocity (μm/s)</p></li>
+<li><p><strong>update_tau2_based_on_estimated_diffcoeff</strong> (<em>bool</em>) – Use an estimation of diffusion coeffcient to set initial value of the seconds tau for fitting procedure</p></li>
+<li><p><strong>estimated_diffcoeff2</strong> (<em>float</em>) – Estimated value of the diffusion constant for second tau (μm^2/s)</p></li>
+<li><p><strong>update_tau2_based_on_estimated_velocity</strong> (<em>bool</em>) – Use an estimation of velocity to set bounds to set initial value of second tau for fitting procedure</p></li>
+<li><p><strong>estimated_velocity2</strong> (<em>float</em>) – Estimated value of the velocity (μm/s)</p></li>
+<li><p><strong>update_limits_on_tau</strong> (<em>bool</em>) – Set bounds on tau based on the given estimation of the diffusion coefficient or velocity</p></li>
+<li><p><strong>updated_lims_on_tau_fraction</strong> (<em>float</em>) – Limits are set by adding and subtracting the given fraction of the estimated initial tau value, default is 0.1</p></li>
+<li><p><strong>use_A_from_images_as_guess</strong> (<em>bool</em>) – If True the amplitude value, determined from the direct Fourier transform of the frames/images, is used as initial guess</p></li>
+<li><p><strong>update_limits_on_A</strong> (<em>bool</em>) – Set bounds on the amplitude based on the given estimation</p></li>
+<li><p><strong>updated_lims_on_A_fraction</strong> (<em>float</em>) – Fraction that determines to what extend the amplitude is bounded during the fitting procedure, default is 0.1</p></li>
+<li><p><strong>display_table</strong> (<em>bool</em>) – Print table with fitted values</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.fit_report">
+<span class="sig-name descname"><span class="pre">fit_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fit_results</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PDF_save</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forced_qs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forced_qs_for_tau2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_indices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[10,</span> <span class="pre">20,</span> <span class="pre">30,</span> <span class="pre">40]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_new_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_report_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.fit_report" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a report of the fit to the DDM data including plots of signal versus lag time for specific given q-indices,
+tau versus lagtime, stretching exponent, amplitude, background or other applicable parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fit_results</strong> (<em>xarray.Dataset</em>) – Name of xarray Dataset with fit results to be reported. If None, the latest fit will be reported</p></li>
+<li><p><strong>PDF_save</strong> (<em>bool</em>) – safe fit report as PDF, default is True</p></li>
+<li><p><strong>forced_qs</strong> (<em>None</em><em> or </em><em>List</em><em>[</em><em>int</em><em>]</em>) – If None, the q-range used for fitting (defined as the ‘good_q_range’ in the fit_results Dataset) is used to display the fits. If a range is specified, fit will be displayed within this range</p></li>
+<li><p><strong>forced_qs_for_tau2</strong> (<em>None</em><em> or </em><em>List</em><em>[</em><em>int</em><em>]</em>) – Same as ‘forced_qs’, but for the second exponent</p></li>
+<li><p><strong>q_indices</strong> (<em>Lits</em><em>[</em><em>int</em><em>]</em>) – q-indices for which to plot the data to the fit (note these are not the actual values of q, those will be reported and can be found, via: fit_Dataset.q[q_index])</p></li>
+<li><p><strong>use_new_tau</strong> (<em>bool</em>) – apply <a class="reference internal" href="DDMpy_package.ddm_fit.newt.html#DDMpy_package.ddm_fit.newt" title="DDMpy_package.ddm_fit.newt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DDMpy_package.ddm_fit.newt()</span></code></a>, default is True</p></li>
+<li><p><strong>fit_report_name</strong> (<em>None</em><em> or </em><em>str</em>) – Name to extend file name of PDF with if ‘None’ file is saved as <a href="#id1"><span class="problematic" id="id2">ddm_fit_report_</span></a>’provided_filename’</p></li>
+<li><p><strong>show</strong> (<em>bool</em>) – Show the plots, default is True</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.get_tau_vs_q_fit">
+<span class="sig-name descname"><span class="pre">get_tau_vs_q_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fit_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_new_tau</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_tau2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">forced_qs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_good_q_range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.get_tau_vs_q_fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines a good q-range to fit tau (delay time) versus q using linear model estimator from scikit-learn. Extracts effective diffusion coeficient and mean squared displacement parameters from the fit.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fit_results</strong> (<em>xarray.Dataset</em>) – Name of xarray Dataset with fit results to be reported. If None, the latest fit will be reported</p></li>
+<li><p><strong>use_new_tau</strong> (<em>bool</em>) – Apply <a class="reference internal" href="DDMpy_package.ddm_fit.newt.html#DDMpy_package.ddm_fit.newt" title="DDMpy_package.ddm_fit.newt"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DDMpy_package.ddm_fit.newt()</span></code></a>, default is True</p></li>
+<li><p><strong>use_tau2</strong> (<em>bool</em>) – Get the tau versus q fit and fitting parameters for tau corresponding to the second exponent of the model, denoted as ‘Tau2’, default is False</p></li>
+<li><p><strong>forced_qs</strong> (<em>None</em><em> or </em><em>List</em><em>[</em><em>int</em><em>]</em>) – List lowest and highest q-indices for fitting, to narrow the search range for automatic determination of optimal q-values.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>good_q_range</strong> (<em>list[float]</em>)- determined q-range to which the data was fitted</p></li>
+<li><p><strong>slope</strong> (<em>float</em>)- slope of the q versus tau (delay time) fit</p></li>
+<li><p><strong>effective_diffconst</strong> (<em>float</em>)- Diffusion coefficient extracted from q versus tau fit</p></li>
+<li><p><strong>MSD_alpha</strong> (<em>float</em>)- Slope of the mean squared discplacement (MSD) versus lag time obtained from DDM data</p></li>
+<li><p><strong>MSD_effective_diffconst</strong> (<em>float</em>)- Diffusion coefficient calculated with ‘MSD_alpha’</p></li>
+<li><p><strong>diffusion_coeff.values</strong> (<em>float</em>)- Assuming the following relationship: tau ~ 1/q^2, gives a diffusion coefficient, the mean value over the ‘good_q_range’</p></li>
+<li><p><strong>diffusion_coeff_std.values</strong> (<em>float</em>)- Standard deviation of the diffusion coefficient</p></li>
+<li><p><strong>velocity.values</strong> (<em>float</em>)- Assuming the following relationship: tau ~ 1/q, gives a diffusion coefficient, the mean value over the ‘good_q_range’</p></li>
+<li><p><strong>velocity_std.value</strong> (<em>float</em>)- Standard deviation in the velocity</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.loadYAML">
+<span class="sig-name descname"><span class="pre">loadYAML</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.loadYAML" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads information from .yml or .yaml file if file follows specified format</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.load_data">
+<span class="sig-name descname"><span class="pre">load_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.load_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads data for fitting whether it is in memory or saved to disk.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>str</em><em> or </em><em>DataSet</em><em>(</em><em>Xarray</em><em>)</em>) – Name of the Xarray Dataset with data obtained from using <a class="reference internal" href="DDMpy_package.ddm_analysis.DDM_analysis.html#DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix" title="DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix()</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.reload_fit_model_by_name">
+<span class="sig-name descname"><span class="pre">reload_fit_model_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update_params</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.reload_fit_model_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the current fitting model, by providing the model named. If invalid model name is provided a list with available options will be provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_name</strong> (<em>str</em>) – Name of the model for fitting</p></li>
+<li><p><strong>update_params</strong> (<em>bool</em>) – If True updates fitting parameters according to provided parameters</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.save_fit_results_to_excel">
+<span class="sig-name descname"><span class="pre">save_fit_results_to_excel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fit_results</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">also_save_data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fit_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.save_fit_results_to_excel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Saves fit results as csv file, so that it can be opened in Excel.  the fit and parameter settings to a dictionary with a key value provided by the user</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fit_results</strong> (<em>xarray.Dataset</em>) – Xarray Dataset with data obtained from using <a class="reference internal" href="DDMpy_package.ddm_analysis.DDM_analysis.html#DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix" title="DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix"><code class="xref py py-meth docutils literal notranslate"><span class="pre">DDMpy_package.ddm_analysis.DDM_analysis.calculate_DDM_matrix()</span></code></a></p></li>
+<li><p><strong>also_save_data</strong> (<em>bool</em>) – Save data in csv format to disk, default: True</p></li>
+<li><p><strong>fit_name</strong> (<em>None</em><em> or </em><em>str</em>) – file name ‘fit_results_modeltype’ will be extended with given string. If ‘None’ file will be saved without extention</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.save_fits_disk">
+<span class="sig-name descname"><span class="pre">save_fits_disk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fit_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.save_fits_disk" title="Permalink to this definition">¶</a></dt>
+<dd><p>save the interesting fits to disk</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.set_parameter_bounds">
+<span class="sig-name descname"><span class="pre">set_parameter_bounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.set_parameter_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Restrict the value of the parameter for the fitting by specifying bounds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param_name</strong> (<em>str</em>) – Name of the parameter for which the intial guess should be set</p></li>
+<li><p><strong>bounds</strong> (<em>List</em><em>[</em><em>float</em><em>]</em>) – Value for the parameter for which the intial guess should be set</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.set_parameter_initial_guess">
+<span class="sig-name descname"><span class="pre">set_parameter_initial_guess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.set_parameter_initial_guess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the intitial value of parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param_name</strong> (<em>str</em>) – Name of the parameter for which the intial guess should be set</p></li>
+<li><p><strong>value</strong> (<em>int</em><em> or </em><em>float</em>) – Value for the parameter for which the intial guess should be set</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="DDMpy_package.ddm_fit.DDM_fit.use_parameters_provided">
+<span class="sig-name descname"><span class="pre">use_parameters_provided</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">print_par_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#DDMpy_package.ddm_fit.DDM_fit.use_parameters_provided" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the parameters and their values, as provided in the intiation file (YAML file)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>print_par_names</strong> (<em>bool</em>) – Default is False</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+              </div>
+              
+        
+            <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="DDMpy_package.ddm_fit.newt.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">DDMpy_package.ddm_fit.newt</p>
+        </div>
+    </a>
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Ryan McGorty and Hannah Noor Verwei<br/>
+        
+            &copy; Copyright 2021, Ryan McGorty and Hannah Noor Verwei.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>

@@ -1,0 +1,28 @@
+Usage
+=========
+
+.. toctree::
+
+   YAML_layout
+
+Installation
+-------------
+
+To use DDM_py, first download the modules:
+	ddm_analysis
+	ddm_fit
+
+Enter analysis information
+---------------------------
+
+Make a YAML file
+Use default provided :download:`<./example_yaml_file.yml>`
+
+Ready to analyse
+-----------------
+
+Initate instance of class
+
+.. code-block:: console
+
+	$ ddm_class=ddm_analysis('example.yaml')
