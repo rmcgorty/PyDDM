@@ -39,7 +39,8 @@ extensions = [ 'sphinx.ext.duration',
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
      'sphinx.ext.autosummary',
-     'sphinx.ext.imgmath'
+     'sphinx.ext.imgmath',
+     'sphinx.ext.napoleon'
 ]
 autosummary_generate = True
 autosummary_generate_overwrite = True

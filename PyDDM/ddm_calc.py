@@ -35,6 +35,15 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
+logger2 = logging.getLogger("DDM Analysis")
+logger2.setLevel(logging.DEBUG)
+ch2 = logging.StreamHandler()
+#ch = IPythonStreamHandler()
+ch2.setLevel(logging.DEBUG)
+formatter2 = logging.Formatter('%(name)s - %(message)s')
+ch2.setFormatter(formatter2)
+logger2.addHandler(ch2)
+
 comp_name = socket.gethostname()
 
 #This function is used to determine a new time when a distribution

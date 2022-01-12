@@ -1,4 +1,4 @@
-PyDDM.ddm\_analysis\_and\_fitting.Browse\_DDM\_Fits
+﻿PyDDM.ddm\_analysis\_and\_fitting.Browse\_DDM\_Fits
 ===================================================
 
 .. currentmodule:: PyDDM.ddm_analysis_and_fitting
@@ -23,5 +23,11 @@ PyDDM.ddm\_analysis\_and\_fitting.Browse\_DDM\_Fits
    
 
    
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Browse_DDM_Fits.lastind
    
    

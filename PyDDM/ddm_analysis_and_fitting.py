@@ -145,7 +145,9 @@ class DDM_Analysis:
                 with open(self.data_yaml) as f:
                     self.content = yaml.safe_load(f)
             else:
-                print("File %s does not exist. Check file name or path." % self.data_yaml)
+                #print("File %s does not exist. Check file name or path." % self.data_yaml)
+                ddm.logger2.error("File %s does not exist. Check file name or path." % self.data_yaml)
+                return 0
         elif isinstance(self.data_yaml, dict):
             self.content = self.data_yaml.copy()
 
@@ -156,7 +158,8 @@ class DDM_Analysis:
 
         #Make sure the path to the movie exists before proceeding
         if os.path.exists(self.data_dir+self.filename):
-            print('File path to image data exists.')
+            #print('File path to image data exists.')
+            ddm.logger.info("File path to image data exists.")
             self.metadata = self.content['Metadata']
             self.pixel_size = self.metadata['pixel_size']
             self.frame_rate = self.metadata['frame_rate']
@@ -187,7 +190,8 @@ class DDM_Analysis:
                 self.angle_range = self.analysis_parameters['angle_range']
             else:
                 self.angle_range = None
-            print(f'Provided metadata: {self.metadata}')
+            #print(f'Provided metadata: {self.metadata}')
+            ddm.logger2.info(f'Provided metadata: {self.metadata}')
             return 1
         else:
             print('Error: check path to image file')

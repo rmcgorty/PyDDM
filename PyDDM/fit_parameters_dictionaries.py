@@ -1,4 +1,26 @@
-# -*- coding: utf-8 -*-
+"""
+This module contains a dictionary for each of the different models for fitting
+the DDM matrix or the ISF. It also contains functions for setting the initial 
+guesses and bounds for the fitting parameters for these models. 
+
+.. data:: ddm_matrix_single_exponential
+  
+    :type: dict
+
+    Single exponential model for the DDM matrix. This model fits the DDM matrix
+    to DDM_Matrix = A(q) (1 - exp(-(dt/tau)^s)) + B(q)
+
+.. data:: ddm_matrix_single_exponential_nonerg
+
+    :type: dict
+    descr
+
+.. data:: ddm_matrix_double_exponential
+
+    :type: dict
+    descr
+"""
+
 """
 Created on Thu Nov  4 11:02:14 2021
 
@@ -220,7 +242,21 @@ fitting_models['ISF - Single Exponential - NonErgodic'] = isf_single_exponential
 def turn_parameters_into_dataframe_for_display(parinfo):
     '''
     This function takes a list of dictionaries, one dictionary per parameter
-    of a model for the ISF or DDM Matrix, and 
+    of a model for the ISF or DDM Matrix, and converts it to a Pandas dataframe.
+    
+    Parameters
+    ----------
+    parinfo : list
+        List of dictionaries. A dictionary in this list will look something like this
+        {'n': 0, 'value': 0, 'limits': [0,0], 'limited': [True,True], 'fixed': False, 'parname': "Amplitude", 'error': 0, 'step':0}
+        See, for example, :py:data:`fit_parameters_dictionaries.ddm_matrix_single_exponential`
+    initial_guesses : array
+        1-D array containing the initial guesses for the parameters
+
+    Returns
+    -------
+    Pandas dataframe
+    
     
     '''
     parameter_data = {}
