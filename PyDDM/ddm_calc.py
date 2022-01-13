@@ -52,13 +52,32 @@ newt = lambda t,s: (1./s)*gamma(1./s)*t
 
 #Sometimes it is helpful to apply a window function to the images (deals with beads/molecules leaving the field of view)
 def window_function(im):
-    '''
-    Use of windowing function described in paper here: (https://arxiv.org/abs/1707.07501)
-
-    :param im: Images series
-    :type im: numpy array
-
-    More information: `link_to_article <https://link.springer.com/article/10.1140%2Fepje%2Fi2017-11587-3>`_
+    r'''Applies windowing function to images.
+    
+    Particles moving outside the frame of the images can lead to artifacts in 
+    the DDM analysis, especially for the higher wavevectors. Use of windowing 
+    function described in paper here: (https://arxiv.org/abs/1707.07501). We 
+    apply the Blackman-Harris windowing. This function creates a mask to 
+    multiply the images by to implement the windowing. 
+    
+    Parameters
+    ----------
+    im : array
+        Array of same size as one frame of the image sequences for analysis.
+    
+    Returns
+    -------
+    filter_func : array
+        Multiply this array (of same size as `im`) to apply the windowing
+        filter.
+        
+    References
+    ----------
+    For more information about using a window function for DDM analysis see [1]_.
+    
+    .. [1] Giavazzi, F., Edera, P., Lu, P. J. & Cerbino, R. Image windowing 
+    mitigates edge effects in Differential Dynamic Microscopy. Eur. Phys. J. 
+    E 40, 97 (2017).
 
     '''
     if im.ndim==3:
@@ -138,9 +157,11 @@ def generateLogDistributionOfTimeLags(start,stop,numPoints):
         return np.unique(listOfLagTimes)
 
 def new_ddm_matrix(imageArray):
-    '''
-
-    '''
+    r"""More experimental method for getting DDM matrix.
+    
+    More to come later. 
+    
+    """
 
     #First, generate Fourier transforms of all images
     fft_ims = np.zeros(imageArray.shape,dtype='complex128')
@@ -174,6 +195,7 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
     #
     #
 
+    #Applies the Blackman-Harris window if desired
     if use_BH_windowing:
         filterfunction = window_function(imageArray)
     else:
@@ -185,6 +207,8 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
     #Initializes array for Fourier transforms of differences
     fft_diffs = np.zeros((len(dts), ndx, ndy),dtype=np.float)
 
+    #We *don't* take the Fourier transform of *every* possible difference
+    #of images separated by a given lag time. 
     steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
     if fast_mode:
         w = np.where(steps_in_diffs < 20)
@@ -311,27 +335,75 @@ def fit_ddm_all_qs(dData, times, param_dictionary,
                    last_times = None, given_fit_method = None,
                    update_initial_guess_each_q = False,
                    debug=False):
+    r"""Function to fit the DDM matrix or ISF for all wavevectors.
+    
+    This function fits the data from DDM (either the DDM matrix or the
+    intermediate scattering function (ISF)) to a specified model. 
+    
+    Parameters
+    ----------
+    dData : array
+        Array containing the DDM data to fit for. This will be either the
+        DDM matrix or the ISF. This should be a 2D array; the first dimension 
+        corresponds to the lag times, the second dimension corresponds to the
+        wavevectors. 
+    times : array_like
+        1D array of the lagtimes
+    param_dictionary : dict
+        Dictionary corresponding to the model we will fit to. This dictionary
+        contains the parameters, the initial guess for their values, their bounds,
+        and the function of the model to fit to. See the module 
+        :py:mod:`PyDDM.fit_parameters_dictionaries`
+    amplitude_from_ims : array_like
+        The DDM matrix is usually fit to something like 
+        DDM_matrix = A(1-f)+B where A is the amplitude. But this A parameter can
+        also be determined by taking the Fourier transforms of the images (rather
+        than differences between images). This parameter is the amplitude found
+        from the Fourier transforms of the images. We have the option of using
+        these values as the initial guesses when fitting the amplitude of 
+        the DDM matrix. 
+    first_use_leastsq : {False}, optional
+        If True, will use `scipy.optimize.least_squares` for fitting.
+    use_curvefit_method : {True}, optional
+        If True, will use `scipy.optimize.curve_fit` for fitting.
+    sigma : {None}, optional
+        If `scipy.optimize.curve_fit` is used, we can weight the data points by
+        this array. If passed, it will need to be a 1D array of length equal to 
+        the number of lag times. 
+    
+    Returns
+    -------
+    best_fit_params : dict
+        Dictionary containing the best fit values
+    theory : array
+        Model evaluated using the best fit values. Will be of the same size as
+        the passed parameter `dData`. 
+    
+    """
 
-    '''
-
-
-    '''
-
+    #Find the number of lag times and number of wavevectors
+    #based on shape of the data passed to the function
     num_times, num_qs = dData.shape
 
+    #Initialize dictionary to store fitted values for parameters
     best_fit_params = {}
 
+    #Find the number of parameters we will fit for
     number_of_parameters = len(param_dictionary['parameter_info'])
 
     for param in param_dictionary['parameter_info']:
         best_fit_params[param['parname']] = np.zeros((num_qs))
 
-    theory = np.empty((num_times, num_qs)) #Empyt array to store theoretical models calculated with best fits
+    theory = np.empty((num_times, num_qs)) #Empty array to store theoretical models calculated with best fits
     theory.fill(np.nan)
 
+    #Loop through each wavevector
     for i in range(num_qs):
         if debug:
             print("Fitting for q index of %i..." % i)
+            
+        #If one does not want data for the longer lag times to be included
+        #when fitting, one can pass the optional parameter `last_times`
         if last_times is not None:
             if np.isscalar(last_times):
                 data_to_fit = dData[:last_times,i]
@@ -420,7 +492,56 @@ def fit_ddm(dData, times, param_dictionary,
             sigma=None,
             err=None, logfit=False,maxiter=600,
             factor=1e-3, quiet=False, quiet_on_method=True):
-
+    r"""Function to fit the DDM matrix or ISF for one wavevector.
+    
+    This function fits the data from DDM (either the DDM matrix or the
+    intermediate scattering function (ISF)) to a specified model. This function
+    will fit the data for one q. 
+    
+    Parameters
+    ----------
+    dData : array
+        Array containing the DDM data to fit for. This will be either the
+        DDM matrix or the ISF. This should be a 2D array; the first dimension 
+        corresponds to the lag times, the second dimension corresponds to the
+        wavevectors. 
+    times : array_like
+        1D array of the lagtimes
+    param_dictionary : dict
+        Dictionary corresponding to the model we will fit to. This dictionary
+        contains the parameters, the initial guess for their values, their bounds,
+        and the function of the model to fit to. See the module 
+        :py:mod:`PyDDM.fit_parameters_dictionaries`
+    amplitude_from_ims : array_like
+        The DDM matrix is usually fit to something like 
+        DDM_matrix = A(1-f)+B where A is the amplitude. But this A parameter can
+        also be determined by taking the Fourier transforms of the images (rather
+        than differences between images). This parameter is the amplitude found
+        from the Fourier transforms of the images. We have the option of using
+        these values as the initial guesses when fitting the amplitude of 
+        the DDM matrix. 
+    first_use_leastsq : {False}, optional
+        If True, will use `scipy.optimize.least_squares` for fitting.
+    use_curvefit_method : {True}, optional
+        If True, will use `scipy.optimize.curve_fit` for fitting.
+    sigma : {None}, optional
+        If `scipy.optimize.curve_fit` is used, we can weight the data points by
+        this array. If passed, it will need to be a 1D array of length equal to 
+        the number of lag times. 
+    
+    Returns
+    -------
+    params : array
+        Array containing the best fit values
+    theory : array
+        Model evaluated using the best fit values. Will be of the same size as
+        the passed parameter `dData`. 
+    error : array
+        Error between the fit and model.
+    None
+        Last return is `None`.
+    
+    """
 
     parameter_values = fpd.extract_array_of_parameter_values(param_dictionary)
     param_mins, param_maxs = fpd.extract_array_of_param_mins_maxes(param_dictionary)
@@ -453,6 +574,39 @@ def fit_ddm(dData, times, param_dictionary,
 
 
 def execute_LSQ_fit(dData, times, param_dict, debug=True):
+    r"""Performs least_squares fit.
+    
+    Using the `scipy.optimize.least_squares` function, the data is fit to 
+    model specified within the parameter `param_dict`. 
+    
+    Parameters
+    ----------
+    dData : array
+        Array containing the DDM data to fit for. This will be either the
+        DDM matrix or the ISF. This should be a 2D array; the first dimension 
+        corresponds to the lag times, the second dimension corresponds to the
+        wavevectors. 
+    times : array_like
+        1D array of the lagtimes
+    param_dict : dict
+        Dictionary corresponding to the model we will fit to. This dictionary
+        contains the parameters, the initial guess for their values, their bounds,
+        and the function of the model to fit to. See the module 
+        :py:mod:`PyDDM.fit_parameters_dictionaries`
+    debug : {True}, optional
+        If True, will print out values of initial guesses and bounds (and other
+        info).
+        
+    Returns
+    -------
+    lsqr_params : array
+        Values found for the parameters. 
+    theory : array
+        Model evaluated using values of the best fit parameters. 
+    fun : array
+        Vector of residuals
+    
+    """
 
     theory_function = param_dict['model_function']
 
@@ -475,7 +629,44 @@ def execute_LSQ_fit(dData, times, param_dict, debug=True):
 
 
 def execute_ScipyCurveFit_fit(dData, times, param_dict, sigma=None, debug=True, method=None):
-
+    r"""Performs curve_fit fit.
+    
+    Using the `scipy.optimize.curve_fit` function, the data is fit to 
+    model specified within the parameter `param_dict`. 
+    
+    Parameters
+    ----------
+    dData : array
+        Array containing the DDM data to fit for. This will be either the
+        DDM matrix or the ISF. This should be a 2D array; the first dimension 
+        corresponds to the lag times, the second dimension corresponds to the
+        wavevectors. 
+    times : array_like
+        1D array of the lagtimes
+    param_dict : dict
+        Dictionary corresponding to the model we will fit to. This dictionary
+        contains the parameters, the initial guess for their values, their bounds,
+        and the function of the model to fit to. See the module 
+        :py:mod:`PyDDM.fit_parameters_dictionaries`
+    sigma : {None}, optional
+        Passed as `sigma` parameter to `scipy.optimize.curve_fit`
+    debug : {True}, optional
+        If True, will print out values of initial guesses and bounds (and other
+        info).
+    method : {None}, optional
+        Passed as `method` to `scipy.optimize.curve_fit`. Can be `lm`, `trf`, 
+        or `dogbox`. 
+        
+    Returns
+    -------
+    lsqr_params : array
+        Values found for the parameters. 
+    theory : array
+        Model evaluated using values of the best fit parameters. 
+    error : array
+        Error of parameters
+    
+    """
     theory_function = param_dict['model_function']
 
     params_to_pass_to_cf = fpd.extract_array_of_parameter_values(param_dict)
@@ -510,11 +701,11 @@ def execute_ScipyCurveFit_fit(dData, times, param_dict, sigma=None, debug=True, 
 
 
 def generate_mask(im, centralAngle, angRange):
-    '''
-    Generates a mask of the same size as 'im'.
-    If the DDM matrix is not to be radially averaged, we can use a mask
-      to average values of the matrix only in some angular range around
-      a central angle.
+    r"""Generates a mask of the same size as `im`.
+    
+    If the DDM matrix is not to be radially averaged, we can use a mask 
+    to average values of the matrix only in some angular range around 
+    a central angle.
 
     Parameters
     ----------
@@ -530,7 +721,7 @@ def generate_mask(im, centralAngle, angRange):
     mask : ndarray
         DESCRIPTION.
 
-    '''
+    """
     nx,ny = im.shape
     xx = np.arange(-(nx-1)/2., nx/2.)
     yy = np.arange(-(ny-1)/2., ny/2.)
@@ -581,6 +772,37 @@ def find_radial_average(im, mask=None, centralAngle=None, angRange=None):
 def radial_avg_ddm_matrix(ddm_matrix, mask=None,
                           centralAngle=None, angRange=None,
                           remove_vert_line=True):
+    r"""Radially averages DDM matrix. 
+    
+    For DDM analysis, if we can assume isotropic dynamics, we radially average 
+    the DDM matrix so that the data is a function of the magnitude of the wavevector 
+    q (rather than on the vector determined by q_x and q_y).
+    
+    Parameters
+    ----------
+    ddm_matrix : array
+        DDM matrix to be radially averaged. This must be a 3D matrix. The first 
+        dimension corresponds to lag time. The second and third dimensions are the
+        x and y components of the wavevector. 
+    mask : {None}, optional
+        Array to be applied as mask to DDM matrix.
+    centralAngle : {None}, optional
+        DESC
+    angRange : {None}, optional
+        DESC
+    remove_vert_line : {True}, optional
+        DESC
+        
+    Return
+    ------
+    ravs : array
+        Radially averaged DDM matrix. This will be a 2D array. The first dimension 
+        corresponds to the lag time. The second dimension corresponds to the 
+        magnitude of the wavevector. 
+    
+    
+    """
+    
     #From https://github.com/MathieuLeocmach/DDM/blob/master/python/DDM.ipynb
     nx,ny = ddm_matrix[0].shape
     dists = np.sqrt(np.arange(-1*nx/2, nx/2)[:,None]**2 + np.arange(-1*ny/2, ny/2)[None,:]**2)
