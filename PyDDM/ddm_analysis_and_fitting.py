@@ -332,10 +332,10 @@ class DDM_Analysis:
                     self.im = apply_binning(self.im, self.binsize)
                     dims_after_binning = self.im.shape
 
-            #The number of pixels has been reduced by binning procedure, therefore the pixel size overwritten:
-            self.pixel_size = self.pixel_size*self.binsize
-            print("Applying binning...")
-            print(f'Dimensions after binning {dims_after_binning}, the new pixel size {self.pixel_size}')
+                #The number of pixels has been reduced by binning procedure, therefore the pixel size overwritten:
+                self.pixel_size = self.pixel_size*self.binsize
+                print("Applying binning...")
+                print(f'Dimensions after binning {dims_after_binning}, the new pixel size {self.pixel_size}')
 
         self.lag_times_frames = ddm.generateLogDistributionOfTimeLags(self.first_lag_time, self.last_lag_time,
                                                                       self.number_of_lag_times)
