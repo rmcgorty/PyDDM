@@ -732,9 +732,9 @@ def generate_mask(im, centralAngle, angRange):
     mask = np.ones_like(angles)
     if (angRange is not None) and (centralAngle is not None):
         mask = np.empty_like(q)
-        mask.fill(np.nan)
+        mask.fill(0)
         centralAngleRadians = centralAngle * np.pi/180
-        angRangeRadians = angRange * np.pi/180
+        angRangeRadians = 0.5 * angRange * np.pi/180
         w = np.where(abs(angles-centralAngleRadians)<angRangeRadians)
         mask[w] = 1
         maskCopy = np.fliplr(np.flipud(mask))

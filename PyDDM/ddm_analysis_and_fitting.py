@@ -545,7 +545,7 @@ class DDM_Analysis:
             ddm_dataset.to_netcdf(f"{file_name}_ddmmatrix.nc", mode='w')
         except:
             print(f'Could not save data set as: {file_name}_ddmmatrix.nc')
-            name_alternative=input("Provide an alternative name (do not include .nc suffix): ")
+            name_alternative=input("Provide an alternative name (do not include .nc suffix) [MUST SPECIFY FULL PATH!]: ")
             ddm_dataset.to_netcdf(f"{name_alternative}.nc", mode='w')
             print("note this name should be entered in the yaml file for fitting")
 
