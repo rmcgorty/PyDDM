@@ -11,6 +11,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import os
+import sphinx_rtd_theme
 # sys.path.insert(0, os.path.abspath('.'))
 #pathlib.Path(__file__).parents[2].resolve().as_posix
 import pathlib
@@ -40,7 +41,8 @@ extensions = [ 'sphinx.ext.duration',
     'sphinx.ext.autodoc',
      'sphinx.ext.autosummary',
      'sphinx.ext.imgmath',
-     'sphinx.ext.napoleon'
+     'sphinx.ext.napoleon',
+     'sphinx_rtd_theme' #pip install sphinx_rtd_theme
 ]
 autosummary_generate = True
 autosummary_generate_overwrite = True
@@ -69,9 +71,10 @@ exclude_patterns = []
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_book_theme'
+#html_theme = 'sphinx_book_theme'
+html_theme = 'sphinx_rtd_theme'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+#html_static_path = ['_static']
