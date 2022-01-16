@@ -689,6 +689,11 @@ class DDM_Fit:
 
     def loadYAML(self):
         """Loads information from .yml or .yaml file if file follows specified format
+        
+        The provided yaml (https://yaml.org/) file must contain the keys:
+             * DataDirectory
+             * FileName
+             * Fitting_parameters
 
         """
         
@@ -729,7 +734,8 @@ class DDM_Fit:
         return 1
 
     def reload_fit_model_by_name(self, model_name, update_params=True):
-        """Update the current fitting model, by providing the model named. If invalid model name is provided a list with available options will be provided.
+        """Update the current fitting model, by providing the model named. If 
+        invalid model name is provided a list with available options will be provided.
 
 
         :param model_name: Name of the model for fitting
@@ -1135,29 +1141,27 @@ class DDM_Fit:
                    forced_qs_for_tau2=None, q_indices=[10,20,30,40], use_new_tau=True,
                    fit_report_name=None, show=True):
         """
-                   Produces a report of the fit to the DDM data including plots of signal versus lag time for specific given q-indices,
-                   tau versus lagtime, stretching exponent, amplitude, background or other applicable parameters.
+        Produces a report of the fit to the DDM data including plots of signal versus lag time for specific given q-indices,
+        tau versus lagtime, stretching exponent, amplitude, background or other applicable parameters.
 
-                   :param fit_results: Name of xarray Dataset with fit results to be reported. If None, the latest fit will be reported
-                   :type fit_results: xarray.Dataset
-                   :param PDF_save: safe fit report as PDF, default is True
-                   :type PDF_save: bool
-                   :param forced_qs: If None, the q-range used for fitting (defined as the 'good_q_range' in the fit_results Dataset) is used to display the fits. If a range is specified, fit will be displayed within this range
-                   :type forced_qs: None or List[int]
-                   :param forced_qs_for_tau2: Same as 'forced_qs', but for the second exponent
-                   :type forced_qs_for_tau2: None or List[int]
-                   :param q_indices: q-indices for which to plot the data to the fit (note these are not the actual values of q, those will be reported and can be found, via: fit_Dataset.q[q_index])
-                   :type q_indices: Lits[int]
-                   :param use_new_tau: apply :py:meth:`PyDDM.ddm_analysis_and_fitting.newt`, default is True
-                   :type use_new_tau: bool
-                   :param fit_report_name: Name to extend file name of PDF with if 'None' file is saved as ddm_fit_report_'provided_filename'
-                   :type fit_report_name: None or str
-                   :param show: Show the plots, default is True
-                   :type show: bool
-
-
-
-      """
+        :param fit_results: Name of xarray Dataset with fit results to be reported. If None, the latest fit will be reported
+        :type fit_results: xarray.Dataset
+        :param PDF_save: safe fit report as PDF, default is True
+        :type PDF_save: bool
+        :param forced_qs: If None, the q-range used for fitting (defined as the 'good_q_range' in the fit_results Dataset) is used to display the fits. If a range is specified, fit will be displayed within this range
+        :type forced_qs: None or List[int]
+        :param forced_qs_for_tau2: Same as 'forced_qs', but for the second exponent
+        :type forced_qs_for_tau2: None or List[int]
+        :param q_indices: q-indices for which to plot the data to the fit (note these are not the actual values of q, those will be reported and can be found, via: fit_Dataset.q[q_index])
+        :type q_indices: Lits[int]
+        :param use_new_tau: apply :py:meth:`PyDDM.ddm_analysis_and_fitting.newt`, default is True
+        :type use_new_tau: bool
+        :param fit_report_name: Name to extend file name of PDF with if 'None' file is saved as ddm_fit_report_"provided_filename"
+        :type fit_report_name: None or str
+        :param show: Show the plots, default is True
+        :type show: bool
+        
+        """
 
         if fit_report_name is None:
             pdf_report_filename = f'{self.data_dir}ddm_fit_report_{self.filename_noext}.pdf'

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-
 Mathematical models for the DDM matrix and the ISF
 
 """
@@ -12,59 +11,86 @@ Mathematical models for the DDM matrix and the ISF
 
 import numpy as np
 
-def dTheorySingleExp_DDM(lagtime,a1,t1,bg,s1=1.0):
-    r"""
-    Theoretical model for the  DDM matrix with one exponential term
+def dTheorySingleExp_DDM(lagtime,amplitude,tau,bg,s=1.0):
+    r"""Theoretical model for the  DDM matrix with one exponential term
+    
+    Parameters
+    ----------
+    lagtime : array
+        1D array of the lagtimes
+    amplitude : float
+        Amplitude, "A" in equation below
+    tau : float
+        The characteristic decay time
+    bg : float
+        Background term, "B" in equation below
+    s : float
+        Stretching exponent
 
-    :param lagtime: Time lag
-    :type lagtime: float
-    :param a1: Amplitude for first exponential term
-    :type a1: float
-    :param t1: Decay time for first exponential term
-    :type t1: float
-    :param b1: Background
-    :type b1: float
-    :param s1: Stretching exponent for first exponetial term
-    :type s1: float
+    Returns
+    -------
+    ddm_matrix : array
+        DDM matrix as shown in equation below
 
-    :return:
-            * ddm_matrix (*float*)- DDM matrix (image structure function)
+    Notes
+    -----
+    This model assumes a single exponential for the intermediate scattering 
+    function. This is often used with diffusive or ballistic motion. If the 
+    dynamics are subdiffusive, the stretching exponent may be less than 1. 
 
     .. math::
-        \\
         f(q, \Delta t) = e^{\left( \frac{-\Delta t}{\tau}\right)^{s}} \\
         D(q, \Delta t) = A \times (1-f(q, \Delta t)) + B
 
     """
-    g1 = np.exp(-1 * (lagtime / t1)**s1)
-    ddm_matrix = a1 * (1 - g1) + bg
+    g1 = np.exp(-1 * (lagtime / tau)**s)
+    ddm_matrix = amplitude * (1 - g1) + bg
     return ddm_matrix
 
-def dTheorySingleExp_Nonerg_DDM(lagtime,a1,t,bg,s,c):
+def dTheorySingleExp_Nonerg_DDM(lagtime,amplitude,tau,bg,s,C):
     r'''
-    Theoretical model for the DDM matrix with one exponential term for non ergodic systems
+    Theoretical model for the DDM matrix with an exponential term for the 
+    intermediate scatting function. Also contains a non-ergodicity parameter. 
+    With this, the ISF will decay to the non-ergodicity paramter (C), instead 
+    of to zero as is the case with ergodic systems. 
 
-    :param lagtime: Time lag
-    :type lagtime: float
-    :param t: relaxation time (tau)
-    :type t: float
-    :param s: Stretching exponent  ("p" in Cho et al 2020)
-    :type s: float
-    :param c: non-ergodicity parameter
-    :type c: float
+    Parameters
+    ----------
+    lagtime : array
+        1D array of the lagtimes
+    amplitude : float
+        Amplitude, "A" in equation below
+    tau : float
+        The characteristic decay time
+    bg : float
+        Background term, "B" in equation below
+    s : float
+        Stretching exponent
+    C : float
+        The non-ergodicity parameter
 
-    :return:
-            * ddm_matrix (*float*)- DDM matrix (image structure function)
-
+    Returns
+    -------
+    ddm_matrix : array
+        DDM matrix as shown in equation below
+        
+    Notes
+    -----
     .. math::
-
         f(q, \Delta t) = e^{\left( \frac{-\Delta t}{\tau}\right)^{s}} + C \\
-        D(q, \Delta t) = A \times (1-f(q, \Delta t)) + B
+        D(q, \Delta t) = A \times (1 - f(q, \Delta t)) + B
+    
+    A non-ergodic model was used in the paper below. [1]_
+    
+    References
+    ----------
+    .. [1] Cho, J. H., Cerbino, R. & Bischofberger, I. Emergence of Multiscale Dynamics in Colloidal Gels. Phys. Rev. Lett. 124, 088005 (2020).
+
 
     '''
 
-    isf = ((1-c)*np.exp(-1.0*(lagtime/t)**s)) + c
-    ddm_matrix = a1 * (1 - isf) + bg
+    isf = ((1-C)*np.exp(-1.0*(lagtime/tau)**s)) + C
+    ddm_matrix = amplitude * (1 - isf) + bg
     return ddm_matrix
 
 def dTheoryDoubleExp_DDM(lagtime,amp,bg,f,t1,s1,t2,s2):

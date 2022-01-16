@@ -1,19 +1,7 @@
 """
-This module contains the code for calculating and fitting the DDM matrix. Other 
-modules defines classes which interface with the functions here. A select group of 
-papers are listed below for those looking for a deeper understanding of these 
-functions. [1]_ [2]_ [3]_
-
-This code, and its earlier versions, have been used in several projects of the 
-McGorty lab at the University of San Diego. 
-
-
-References
-----------
-.. [1] Cerbino, R. & Trappe, V. Differential Dynamic Microscopy: Probing Wave Vector Dependent Dynamics with a Microscope. Phys. Rev. Lett. 100, 188102 (2008)
-.. [2] Wilson, L. G. et al. Differential Dynamic Microscopy of Bacterial Motility. Phys. Rev. Lett. 106, 018101 (2011).
-.. [3] Germain, D., Leocmach, M. & Gibaud, T. Differential dynamic microscopy to characterize Brownian motion and bacteria motility. American Journal of Physics 84, 202–210 (2016).
-
+This module contains the code for calculating and fitting the DDM matrix. The 
+module :py:mod:`PyDDM.ddm_analysis_and_fitting` defines classes which interface 
+with the functions here. 
 
 
 """
