@@ -118,7 +118,6 @@ def dTheoryDoubleExp_DDM(lagtime,amp,bg,f,t1,s1,t2,s2):
             * ddm_matrix (*float*)- DDM matrix (image structure function)
 
     .. math::
-        \\
         f(q, \Delta t) = f \times e^{\left( \frac{-\Delta t}{\tau 1}\right)^{s1}} + (1-f) \times e^{\left( \frac{-\Delta t}{\tau 2}\right)^{s2}} \\
         D(q, \Delta t) = A \times (1-f(q, \Delta t)) + B
 
@@ -129,51 +128,77 @@ def dTheoryDoubleExp_DDM(lagtime,amp,bg,f,t1,s1,t2,s2):
     return ddm_matrix
 
 
-def dTheorySingleExp_ISF(lagtime,t,s):
-    r'''
-    Theoretical model for the ISF with one exponential term
+def dTheorySingleExp_ISF(lagtime,tau,s):
+    r"""Theoretical model for the  DDM matrix with one exponential term
+    
+    Parameters
+    ----------
+    lagtime : array
+        1D array of the lagtimes
+    tau : float
+        The characteristic decay time
+    s : float
+        Stretching exponent
 
-    :param lagtime: Time lag
-    :type lagtime: float
-    :param t: relaxation time (tau)
-    :type t: float
-    :param s: Stretching exponent  ("p" in Cho et al 2020)
-    :type s: float
+    Returns
+    -------
+    ISF : array
+        DDM matrix as shown in equation below
 
-    :return:
-            * ISF equation (*float*)- ISF (intermediate scattering function)
+    Notes
+    -----
+    This model assumes a single exponential for the intermediate scattering 
+    function. This is often used with diffusive or ballistic motion. If the 
+    dynamics are subdiffusive, the stretching exponent may be less than 1. 
+    
+    If we use this model to fit our DDM data, we must be able to estimate the
+    amplitude and background terms. 
 
     .. math::
         \\
         f(q, \Delta t) = e^{\left( \frac{-\Delta t}{\tau}\right)^{s}}
         
+    """
+    return np.exp(-1.0*(lagtime/tau)**s)
 
-
-    '''
-    return np.exp(-1.0*(lagtime/t)**s)
-
-def dTheorySingleExp_Nonerg_ISF(lagtime,t,s,c):
+def dTheorySingleExp_Nonerg_ISF(lagtime,tau,s,C):
     r'''
-    Theoretical model for the ISF with one exponential term
+    Theoretical model with an exponential term for the 
+    intermediate scatting function. Also contains a non-ergodicity parameter. 
+    With this, the ISF will decay to the non-ergodicity paramter (C), instead 
+    of to zero as is the case with ergodic systems. 
 
-    :param lagtime: Time lag
-    :type lagtime: float
-    :param t: relaxation time (tau)
-    :type t: float
-    :param s: Stretching exponent  ("p" in Cho et al 2020)
-    :type s: float
-    :param c: non-ergodicity parameter
-    :type c: float
+    Parameters
+    ----------
+    lagtime : array
+        1D array of the lagtimes
+    tau : float
+        The characteristic decay time
+    s : float
+        Stretching exponent
+    C : float
+        The non-ergodicity parameter
 
-    :return:
-            * ISF equation (*float*)- ISF (intermediate scattering function)
+    Returns
+    -------
+    ddm_matrix : array
+        DDM matrix as shown in equation below
+        
+    Notes
+    -----
     .. math::
-        \\
-        f(q, \Delta t) = e^{\left( \frac{-\Delta t}{\tau}\right)^{s}} + C
+        f(q, \Delta t) = e^{\left( \frac{-\Delta t}{\tau}\right)^{s}} + C \\
+        D(q, \Delta t) = A \times (1 - f(q, \Delta t)) + B
+    
+    A non-ergodic model was used in the paper below. [1]_
+    
+    References
+    ----------
+    .. [1] Cho, J. H., Cerbino, R. & Bischofberger, I. Emergence of Multiscale Dynamics in Colloidal Gels. Phys. Rev. Lett. 124, 088005 (2020).
 
 
     '''
-    return ((1-c)*np.exp(-1.0*(lagtime/t)**s)) + c
+    return ((1-C)*np.exp(-1.0*(lagtime/tau)**s)) + C
 
 
 def dTheoryDoubleExp_ISF(lagtime,f,t1,s1,t2,s2):
@@ -193,41 +218,87 @@ def dTheoryDoubleExp_ISF(lagtime,f,t1,s1,t2,s2):
 #  along with an exponential term.                                        #
 ###########################################################################
 
-def dTheoryExpAndBallistic_ISF(lagtime,t1,s,t2,a,Z):
-    '''
-    From Wilson et. al PRL 2011
+def dTheoryExpAndBallistic_ISF(lagtime,tau1,s,tau2,a,Z):
+    r'''Diffusive and ballistic motion
+    
+    This model for the ISF can be used to fit dynamics where there is diffusive 
+    motion as well as ballistic motion. The ballistic component is assumed to 
+    follow a Schulz distribution of velocities. This model was shown to work 
+    for characterizing the motion of bacteria [1]_ . 
+    
+    Parameters
+    ----------
+    lagtime : array
+        1D array of the lag times
+    tau1 : float
+        Characteristic decay time for the exponential term of the ISF
+    s : float
+        Stretching exponent for exponential term
+    tau2 : float
+        Characteristic decay time for ballistic component
+    a : float
+        Fraction of the dynamics that are ballistic
+    Z : float
+        Schulz distribution number
+        
+    Returns
+    -------
+    isf : array
+        The intermediate scattering function
+    
+    References
+    ----------
+    .. [1] Wilson, L. G. et al. Differential Dynamic Microscopy of Bacterial Motility. *Phys. Rev. Lett.* 106, 018101 (2011). https://doi.org/10.1103/PhysRevLett.106.018101
 
-    x: independent variable: our lag time
-    t1: subdiff. relaxation time (tau)
-    s: stretching exponent ("p" in Cho et al 2020)
-    t2: ballistic relaxation time, 1/qv
-    a: proportion of population that is moving ballistically
-    Z: Schulz distribution number
     '''
-    theta = (lagtime / t2)/(Z + 1.0)
-    VDist = ((Z + 1.0)/((Z * lagtime)/t2)) * np.sin(Z*np.arctan(theta))/((1.0 + theta**2.0)**(Z/2.0))
-    g1 = np.exp(-1.0*(lagtime/t1)**s)
+    theta = (lagtime / tau2)/(Z + 1.0)
+    VDist = ((Z + 1.0)/((Z * lagtime)/tau2)) * np.sin(Z*np.arctan(theta))/((1.0 + theta**2.0)**(Z/2.0))
+    g1 = np.exp(-1.0*(lagtime/tau1)**s)
     isf = g1*((1.0-a)+a*VDist)
     return isf
 
-def dTheoryExpAndBallistic_DDM(lagtime,amp,bg,t1,s,t2,a,Z):
-    '''
-    From Wilson et. al PRL 2011
+def dTheoryExpAndBallistic_DDM(lagtime,amplitude,bg,tau1,s,tau2,a,Z):
+    r'''Diffusive and ballistic motion
+    
+    This model for the DDM matrix can be used to fit dynamics where there is diffusive 
+    motion as well as ballistic motion. The ballistic component is assumed to 
+    follow a Schulz distribution of velocities. This model was shown to work 
+    for characterizing the motion of bacteria [1]_ . 
+    
+    Parameters
+    ----------
+    lagtime : array
+        1D array of the lag times
+    amplitude : float
+        Amplitude
+    bg : float
+        Background
+    tau1 : float
+        Characteristic decay time for the exponential term of the ISF
+    s : float
+        Stretching exponent for exponential term
+    tau2 : float
+        Characteristic decay time for ballistic component
+    a : float
+        Fraction of the dynamics that are ballistic
+    Z : float
+        Schulz distribution number
+        
+    Returns
+    -------
+    ddmmatrix : array
+        The DDM matrix
+    
+    References
+    ----------
+    .. [1] Wilson, L. G. et al. Differential Dynamic Microscopy of Bacterial Motility. *Phys. Rev. Lett.* 106, 018101 (2011). https://doi.org/10.1103/PhysRevLett.106.018101
 
-    lagtime: independent variable: our lag time
-    amp: amplitude
-    bg: background
-    t1: subdiff. relaxation time (tau)
-    s: stretching exponent ("p" in Cho et al 2020)
-    t2: ballistic relaxation time, 1/qv
-    a: proportion of population that is moving ballistically
-    Z: Schulz distribution number
     '''
-    theta = (lagtime / t2)/(Z + 1.0)
-    VDist = ((Z + 1.0)/((Z * lagtime)/t2)) * np.sin(Z*np.arctan(theta))/((1.0 + theta**2.0)**(Z/2.0))
-    g1 = np.exp(-1.0*(lagtime/t1)**s)
+    theta = (lagtime / tau2)/(Z + 1.0)
+    VDist = ((Z + 1.0)/((Z * lagtime)/tau2)) * np.sin(Z*np.arctan(theta))/((1.0 + theta**2.0)**(Z/2.0))
+    g1 = np.exp(-1.0*(lagtime/tau1)**s)
     isf = g1*((1.0-a)+a*VDist)
-    ddmmatrix = amp * (1-isf) + bg
+    ddmmatrix = amplitude * (1-isf) + bg
     return ddmmatrix
 
 

@@ -134,8 +134,10 @@ class DDM_Analysis:
 
 
     def loadYAML(self):
-        """
-        Opens file with .yml or .yaml extensions and extracts parameter values.
+        r"""Opens yaml file and extracts parameter values.
+        
+        To analyze a recorded movie, there must be associated metadata. That can either 
+        be in the form of a yaml file or string in the yaml format. The yaml file 
 
 
         """
@@ -500,8 +502,8 @@ class DDM_Analysis:
             image0 = self.im[0].astype(np.float64)
 
         #Put ddm_matrix and radial averages in a dataset:
-        ddm_dataset=xr.Dataset({'ddm_matrix':(['lagtime', 'q_y','q_x'], ddm_matrix),
-                                'ravs':(['lagtime', 'q'], ravs),
+        ddm_dataset=xr.Dataset({'ddm_matrix_full':(['lagtime', 'q_y','q_x'], ddm_matrix), #was 'ddm_matrix'
+                                'ddm_matrix':(['lagtime', 'q'], ravs), #was 'ravs'
                                 'first_image':(['y','x'], image0)},
                                coords={'lagtime': self.lag_times,
                                        'framelag':('frames', self.lag_times_frames),
@@ -512,17 +514,17 @@ class DDM_Analysis:
                                       'x':'pixels', 'y':'pixels',
                                       'info':'ddm_matrix is the averages of FFT difference images, ravs are the radial averages'})
 
-        ddm_dataset['av_fft_offrame'] = (('q'), ravfft[0,:]) # av_fft_offrame=0.5*(A+B)
-        ddm_dataset['B'] = 2*ddm_dataset.av_fft_offrame[-10:].mean()
-        ddm_dataset['B_std'] = 2*ddm_dataset.av_fft_offrame[-10:].std()
+        ddm_dataset['avg_image_ft'] = (('q'), ravfft[0,:]) # av_fft_offrame=0.5*(A+B) #was 'av_fft_offrame'
+        ddm_dataset['B'] = 2*ddm_dataset.avg_image_ft[-10:].mean()
+        ddm_dataset['B_std'] = 2*ddm_dataset.avg_image_ft[-10:].std()
         ddm_dataset['num_pairs_per_dt'] = (('lagtime'),self.num_pairs_per_dt)
         print(f" Background estimate ± std is {ddm_dataset.B.values:.2f} ± {ddm_dataset.B_std.values:.2f}")
 
         # Calculate amplitude: av_fft_frame=0.5(A+B)->A=2*av_fft_frame-B
-        ddm_dataset["Amplitude"] = 2 * ddm_dataset['av_fft_offrame']-ddm_dataset.B
+        ddm_dataset["Amplitude"] = 2 * ddm_dataset['avg_image_ft']-ddm_dataset.B
 
         # calculate ISF with new amplitude and background
-        ddm_dataset['ISF']=1-(ddm_dataset.ravs-ddm_dataset.B)/ddm_dataset.Amplitude
+        ddm_dataset['ISF']=1-(ddm_dataset.ddm_matrix-ddm_dataset.B)/ddm_dataset.Amplitude
 
         ##write yaml file data to xarray attribute in format accepeted by net cdf (no multiple dimension or Booleans)
         for i in self.content:
@@ -612,14 +614,18 @@ class DDM_Analysis:
             pdf_to_save_to.savefig()
 
         dt_to_show = 5
-        plt.matshow(ddmdataset.ddm_matrix[dt_to_show], cmap=matplotlib.cm.gray)
+        if 'ddm_matrix_full' in ddmdataset.data_vars:
+            ddm_mat_to_show = ddmdataset.ddm_matrix_full[dt_to_show]
+        else:
+            ddm_mat_to_show = ddmdataset.ddm_matrix[dt_to_show]
+        plt.matshow(ddm_mat_to_show, cmap=matplotlib.cm.gray)
         plt.title(f"{self.filename_for_saving_data} \n DDM matrix for lag time of {self.lag_times[dt_to_show]:.2f} sec", fontsize=9)
         if pdf_to_save_to != None:
             pdf_to_save_to.savefig()
 
         ##Plot graph of rav FFT of frames, used to determine A  and B
         fig2=plt.figure(figsize=(6, 6/1.2))
-        plt.semilogy(ddmdataset.coords['q'][3:], ddmdataset.av_fft_offrame[3:],'ro')
+        plt.semilogy(ddmdataset.coords['q'][3:], ddmdataset.avg_image_ft[3:],'ro')
         plt.xlabel("q μm$^{-1}$")
         plt.ylabel("0.5 * (A+B)")
         plt.hlines(0.5*ddmdataset.B.values, ddmdataset.coords['q'][3], ddmdataset.coords['q'][-1], linestyles='dashed')
@@ -688,12 +694,12 @@ class DDM_Fit:
 
 
     def loadYAML(self):
-        """Loads information from .yml or .yaml file if file follows specified format
+        r"""Loads information from .yml or .yaml file if file follows specified format
         
-        The provided yaml (https://yaml.org/) file must contain the keys:
-             * DataDirectory
-             * FileName
-             * Fitting_parameters
+            The provided yaml (https://yaml.org/) file must contain the keys:
+                * DataDirectory
+                * FileName
+                * Fitting_parameters
 
         """
         
@@ -812,16 +818,20 @@ class DDM_Fit:
 
     def load_data(self, data=None):
         """Loads data for fitting whether it is in memory or saved to disk.
+        
+        Parameters
+        ----------
+        data : xarray dataset
+            Default is None, in which case it will look for saved file containing 
+            the DDM dataset based on the filename and data directory. Otherwise, 
+            one can pass the filename to the xarray dataset or the dataset itself. 
 
-        :param data: Name of the Xarray Dataset with data obtained from using :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix`
-        :type data: str or DataSet(Xarray), Optional
         """
-
 
         if type(data)==str:
             self._load_data_from_file(filename=data)
         elif (type(data)==xr.core.dataset.Dataset):
-            self._load_data_from_xarray(data)
+            self.ddm_dataset = data
         elif data==None:
             self._load_data_from_file()
         else:
@@ -861,9 +871,6 @@ class DDM_Fit:
                     self.ddm_dataset.close()
                     self.filename_noext = fls[0].split('\\')[-1][:-13]
 
-
-    def _load_data_from_xarray(self, data):
-        self.ddm_dataset = data
 
 
     def fit(self, quiet=True, save=True, name_fit=None,
@@ -923,11 +930,19 @@ class DDM_Fit:
         :type display_table: bool
 
         """
+        
+        #get the radially averaged ddm matrix data 
+        # note that an older version called this 'ravs'
+        # but newer versiosn call this 'ddm_matrix'
+        if 'ravs' in self.ddm_dataset.data_vars:
+            ddm_matrix_data = self.ddm_dataset.ravs
+        else:
+            ddm_matrix_data = self.ddm_dataset.ddm_matrix
 
         if self.model_dict['data_to_use'] == 'ISF':
             data_to_fit = self.ddm_dataset.ISF
         elif self.model_dict['data_to_use'] == 'DDM Matrix':
-            data_to_fit = self.ddm_dataset.ravs
+            data_to_fit = ddm_matrix_data
 
         if use_lsqr_cf[1]:
             sigma = 1./np.sqrt(self.ddm_dataset.num_pairs_per_dt)
@@ -968,7 +983,7 @@ class DDM_Fit:
 
         fit_results = xr.Dataset(dict(parameters=bestfit_dataarray, theory=theory_dataarray,
                                       isf_data=self.ddm_dataset.ISF,
-                                      ddm_matrix_data=self.ddm_dataset.ravs,
+                                      ddm_matrix_data=ddm_matrix_data,
                                       A=self.ddm_dataset.Amplitude,
                                       B=self.ddm_dataset.B))
         fit_results.attrs['model'] = self.fit_model
@@ -1109,7 +1124,8 @@ class DDM_Fit:
                 if 'isf_data' in fit_results:
                     dataframe_data = fit_results.isf_data.transpose().to_dataframe()
                 else:
-                    dataframe_data = self.ddm_dataset.ISF.transpose().to_dataframe()
+                    also_save_data = False
+                    #dataframe_data = self.ddm_dataset.ISF.transpose().to_dataframe()
                 if 'A' in fit_results:
                     dataframe_amplitude = fit_results.A.to_dataframe()
                 else:
@@ -1118,7 +1134,8 @@ class DDM_Fit:
                 if 'ddm_matrix_data' in fit_results:
                     dataframe_data = fit_results.ddm_matrix_data.transpose().to_dataframe()
                 else:
-                    dataframe_data = self.ddm_dataset.ravs.transpose().to_dataframe()
+                    also_save_data = False
+                    #dataframe_data = self.ddm_dataset.ravs.transpose().to_dataframe()
 
         if fit_name == None:
             excel_file_name = f"{self.data_dir}{self.filename_noext}_fitresults_{fit_results.model}.xlsx"
@@ -1388,8 +1405,9 @@ class DDM_Fit:
         try:
             ddm_matrix_data = fit.ddm_matrix_data
         except:
-            ddm_matrix_data = self.ddm_dataset.ravs
-        msd, msd_std = ddm.get_MSD_from_DDM_data(fit.q, amp, self.ddm_dataset.ravs,
+            ddm_matrix_data = self.ddm_dataset.ddm_matrix
+            
+        msd, msd_std = ddm.get_MSD_from_DDM_data(fit.q, amp, ddm_matrix_data,
                                                  bg, qrange)
         try:
             msd = msd.drop('parameter')
@@ -1557,6 +1575,8 @@ class DDM_Fit:
 #see https://matplotlib.org/stable/gallery/event_handling/data_browser.html
 class Browse_DDM_Fits:
     """
+    Class for interactive inspection of DDM data fits. 
+    
     Click on a point to select and highlight it -- the data that
     generated the point will be shown in the lower axes.  Use the 'n'
     and 'p' keys to browse through the next and previous points
