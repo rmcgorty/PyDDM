@@ -1,3 +1,22 @@
+"""
+This module contains the code for calculating and fitting the DDM matrix. Other 
+modules defines classes which interface with the functions here. A select group of 
+papers are listed below for those looking for a deeper understanding of these 
+functions. [1]_ [2]_ [3]_
+
+This code, and its earlier versions, have been used in several projects of the 
+McGorty lab at the University of San Diego. 
+
+
+References
+----------
+.. [1] Cerbino, R. & Trappe, V. Differential Dynamic Microscopy: Probing Wave Vector Dependent Dynamics with a Microscope. Phys. Rev. Lett. 100, 188102 (2008)
+.. [2] Wilson, L. G. et al. Differential Dynamic Microscopy of Bacterial Motility. Phys. Rev. Lett. 106, 018101 (2011).
+.. [3] Germain, D., Leocmach, M. & Gibaud, T. Differential dynamic microscopy to characterize Brownian motion and bacteria motility. American Journal of Physics 84, 202–210 (2016).
+
+
+
+"""
 ###########################################################################
 # File moved from other DDM repository on 5/21/2021                   #####
 # Renamed ddm_calc.py from ddm.py from ddm_clean.py                   #####
@@ -8,7 +27,6 @@
 import sys
 import copy
 import numpy as np
-import xarray as xr
 from scipy.optimize import least_squares, curve_fit
 from scipy.special import gamma
 from scipy.signal import blackmanharris #for Blackman-Harris windowing
@@ -56,9 +74,10 @@ def window_function(im):
     
     Particles moving outside the frame of the images can lead to artifacts in 
     the DDM analysis, especially for the higher wavevectors. Use of windowing 
-    function described in paper here: (https://arxiv.org/abs/1707.07501). We 
+    function described in Giavazzi 2017 [1]_. We 
     apply the Blackman-Harris windowing. This function creates a mask to 
     multiply the images by to implement the windowing. 
+
     
     Parameters
     ----------
@@ -73,11 +92,7 @@ def window_function(im):
         
     References
     ----------
-    For more information about using a window function for DDM analysis see [1]_.
-    
-    .. [1] Giavazzi, F., Edera, P., Lu, P. J. & Cerbino, R. Image windowing 
-    mitigates edge effects in Differential Dynamic Microscopy. Eur. Phys. J. 
-    E 40, 97 (2017).
+    .. [1] Giavazzi, F., Edera, P., Lu, P. J. & Cerbino, R. Image windowing mitigates edge effects in Differential Dynamic Microscopy. Eur. Phys. J. E 40, 97 (2017).
 
     '''
     if im.ndim==3:
@@ -180,15 +195,35 @@ def new_ddm_matrix(imageArray):
 
 
 def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, quiet=False):
-    '''
-    This code calculates the image structure function for the series of images
-    in imageArray at the lag times specified in dts.
-    :param imageArray: image data
-    :param dts: 1D array of delay times
-    :param shiftAtEnd: defaults to False
-    :param noshift: defaults to False
-    :param submean: defaults to true
-    :return: two numpy arrays: the fft'd data and the list of times
+    r'''Calculates DDM matrix
+    
+    This function calculates the DDM matrix at the lag times provided by `dts`.  
+    
+    Parameters
+    ----------
+    imageArray : array
+        3D array of images. First dimension should be time. 
+    dts : array
+        1D array of the lag times for which to calculate the DDM matrix
+    use_BH_windowing : {True, False}, optional
+        Apply Blackman-Harris windowing to the images if True. Default is False. 
+    fast_mode : {True, False}, optional
+        Calculates the DDM matrix using few Fourier transformed image pairs per lag time. 
+        Default is False.
+    quiet : {True, False}, optional
+        If True, prints updates as the computation proceeds
+        
+        
+    Returns
+    -------
+    ddm_mat : array
+        The DDM matrix. First dimension is time lag. Other two are the x and y
+        wavevectors.
+    num_pairs_per_dt : array
+        1D array. Contains the number of image pairs that went into calculating the 
+        DDM matrix for each lag time. Used for weighting fits to the DDM matrix.
+    
+    
     '''
 
     ### TO-DO: check that imageArray is in fact a 3D array
@@ -205,7 +240,7 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
     ntimes, ndx, ndy = imageArray.shape
 
     #Initializes array for Fourier transforms of differences
-    fft_diffs = np.zeros((len(dts), ndx, ndy),dtype=np.float)
+    ddm_mat = np.zeros((len(dts), ndx, ndy),dtype=np.float)
 
     #We *don't* take the Fourier transform of *every* possible difference
     #of images separated by a given lag time. 
@@ -214,13 +249,11 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
         w = np.where(steps_in_diffs < 20)
         steps_in_diffs[w] = 20
 
-
-    j=0
-
+    #To record the number of pairs of images for each lag time
     num_pairs_per_dt = []
 
-
     #Loops over each delay time
+    j=0
     for k,dt in enumerate(dts):
 
         if not quiet:
@@ -237,18 +270,19 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
         #Loop through each image difference and take the fourier transform
         for i in range(0,all_diffs_new.shape[0]):
             temp = np.fft.fft2(all_diffs_new[i]) # - all_diffs_new[i].mean())
-            fft_diffs[j] = fft_diffs[j] + abs(temp*np.conj(temp))/(ndx*ndy)
+            ddm_mat[j] = ddm_mat[j] + abs(temp*np.conj(temp))/(ndx*ndy)
 
         num_pairs_per_dt.append(all_diffs_new.shape[0])
 
         #Divide the running sum of FTs to get the average FT of the image differences of that lag time
-        fft_diffs[j] = fft_diffs[j] / (all_diffs_new.shape[0])
-        fft_diffs[j] = np.fft.fftshift(fft_diffs[j])
+        ddm_mat[j] = ddm_mat[j] / (all_diffs_new.shape[0])
+        ddm_mat[j] = np.fft.fftshift(ddm_mat[j])
 
-        #fft_diffs[j] = np.fft.fftshift(np.fft.fft2(all_diffs.mean(axis=0)-all_diffs.mean()))
         j = j+1
+        
+    num_pairs_per_dt = np.array(num_pairs_per_dt)
 
-    return fft_diffs, np.array(num_pairs_per_dt)
+    return ddm_mat, num_pairs_per_dt
 
 
 def get_FF_DDM_matrix(imageFile, dts, submean=True,
@@ -339,6 +373,8 @@ def fit_ddm_all_qs(dData, times, param_dictionary,
     
     This function fits the data from DDM (either the DDM matrix or the
     intermediate scattering function (ISF)) to a specified model. 
+    
+    .. math:: D(q,\Delta t) = A(q) [1 - ISF(q,\Delta t)] + B(q)
     
     Parameters
     ----------
@@ -498,6 +534,8 @@ def fit_ddm(dData, times, param_dictionary,
     intermediate scattering function (ISF)) to a specified model. This function
     will fit the data for one q. 
     
+    .. math:: D(q,\Delta t) = A(q) [1 - ISF(q,\Delta t)] + B(q)
+    
     Parameters
     ----------
     dData : array
@@ -577,7 +615,7 @@ def execute_LSQ_fit(dData, times, param_dict, debug=True):
     r"""Performs least_squares fit.
     
     Using the `scipy.optimize.least_squares` function, the data is fit to 
-    model specified within the parameter `param_dict`. 
+    model specified within the parameter `param_dict`. [1]_
     
     Parameters
     ----------
@@ -605,6 +643,11 @@ def execute_LSQ_fit(dData, times, param_dict, debug=True):
         Model evaluated using values of the best fit parameters. 
     fun : array
         Vector of residuals
+        
+        
+    References
+    ----------
+    .. [1] https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.least_squares.html
     
     """
 
@@ -632,7 +675,7 @@ def execute_ScipyCurveFit_fit(dData, times, param_dict, sigma=None, debug=True, 
     r"""Performs curve_fit fit.
     
     Using the `scipy.optimize.curve_fit` function, the data is fit to 
-    model specified within the parameter `param_dict`. 
+    model specified within the parameter `param_dict`. [1]_
     
     Parameters
     ----------
@@ -665,6 +708,10 @@ def execute_ScipyCurveFit_fit(dData, times, param_dict, sigma=None, debug=True, 
         Model evaluated using values of the best fit parameters. 
     error : array
         Error of parameters
+        
+    References
+    ----------
+    .. [1] https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.curve_fit.html
     
     """
     theory_function = param_dict['model_function']
@@ -833,10 +880,41 @@ def radial_avg_ddm_matrix(ddm_matrix, mask=None,
 
 
 def get_MSD_from_DDM_data(q, A, D, B, qrange_to_avg):
-    '''
-    From Eq. 6 of Bayles, A. V., Squires, T. M. & Helgeson, M. E. Probe microrheology
-         without particle tracking by differential dynamic microscopy.
-         Rheol Acta 56, 863–869 (2017).
+    r'''
+    Finds the mean squared displacement (MSD) from the DDM matrix as well as values
+    for the amplitude (A) and background (B). Uses the method described in the papers below. [1]_ [2]_
+    
+    
+    .. math:: MSD(\Delta t) = \frac{4}{q^2} \ln [\frac{A(q)}{A(q)-D(q,\Delta t)+B(q)}]
+    
+    
+    
+    Parameters
+    ----------
+    q : array
+        1D array of the magnitudes of wavevectors
+    A : array
+        Array of same size as q of the amplitude
+    D : array
+        2D array containing the DDM matrix
+    B : array or float
+        Background
+    qrange_to_avg : array_like
+        2-element array or list. 
+        
+    Returns
+    -------
+    msd_mean : array
+        Mean squared displacment, averaged over the range of q values specified
+    msd_stddev : array
+        Standard deviation of the mean squared displacements
+        
+    
+    References
+    ----------
+    .. [1] Bayles, A. V., Squires, T. M. & Helgeson, M. E. Probe microrheology without particle tracking by differential dynamic microscopy. Rheol Acta 56, 863–869 (2017).
+    .. [2] Edera, P., Bergamini, D., Trappe, V., Giavazzi, F. & Cerbino, R. Differential dynamic microscopy microrheology of soft materials: A tracking-free determination of the frequency-dependent loss and storage moduli. Phys. Rev. Materials 1, 073804 (2017).
+
 
     '''
     msd = (4./(q*q)) * np.log(A / (A-D+B))
