@@ -27,7 +27,6 @@ PyDDM.utils
       plot_one_tau_vs_q
       plot_schulz
       plot_stretching_exponent
-      plot_taus_together
       plot_to_inspect_fit
       plot_to_inspect_fit_2x2subplot
       view_colormap

@@ -1,4 +1,4 @@
-﻿PyDDM.fit\_parameters\_dictionaries
+PyDDM.fit\_parameters\_dictionaries
 ===================================
 
 .. automodule:: PyDDM.fit_parameters_dictionaries

@@ -40,15 +40,15 @@ extensions = [ 'sphinx.ext.duration',
     'sphinx.ext.doctest',
     'sphinx.ext.autodoc',
      'sphinx.ext.autosummary',
-     'sphinx.ext.imgmath',
+     #'sphinx.ext.imgmath',
      'sphinx.ext.napoleon',
      'sphinx_rtd_theme' #pip install sphinx_rtd_theme
 ]
 autosummary_generate = True
 autosummary_generate_overwrite = True
 
-imgmath_latex=r'C:\Users\rmcgorty\AppData\Local\Programs\MiKTeX\miktex\bin\x64\latex.exe'
-imgmath_dvipng=r'C:\Users\rmcgorty\AppData\Local\Programs\MiKTeX\miktex\bin\x64\dvipng.exe'
+imgmath_latex=r'C:\Users\Ryan\AppData\Local\Programs\MiKTeX\miktex\bin\x64\latex.exe'
+imgmath_dvipng=r'C:\Users\Ryan\AppData\Local\Programs\MiKTeX\miktex\bin\x64\dvipng.exe'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

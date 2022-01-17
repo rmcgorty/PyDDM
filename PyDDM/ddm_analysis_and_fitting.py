@@ -61,7 +61,12 @@ def recalculate_ISF_with_new_background(ddm_dataset, background):
     :type background: float
 
     """
-    if ("av_fft_offrame" in ddm_dataset) and ("ravs" in ddm_dataset):
+    if ("avg_image_ft" in ddm_dataset) and ("ddm_matrix" in ddm_dataset):
+        ddm_dataset['B'] = background
+        ddm_dataset["Amplitude"] = 2 * ddm_dataset['avg_image_ft']-background
+        ddm_dataset['ISF'] = 1-(ddm_dataset.ddm_matrix-background)/ddm_dataset.Amplitude
+        return ddm_dataset
+    elif ("av_fft_offrame" in ddm_dataset) and ("ravs" in ddm_dataset):
         ddm_dataset['B'] = background
         ddm_dataset["Amplitude"] = 2 * ddm_dataset['av_fft_offrame']-background
         ddm_dataset['ISF'] = 1-(ddm_dataset.ravs-background)/ddm_dataset.Amplitude
@@ -515,8 +520,12 @@ class DDM_Analysis:
                                       'info':'ddm_matrix is the averages of FFT difference images, ravs are the radial averages'})
 
         ddm_dataset['avg_image_ft'] = (('q'), ravfft[0,:]) # av_fft_offrame=0.5*(A+B) #was 'av_fft_offrame'
-        ddm_dataset['B'] = 2*ddm_dataset.avg_image_ft[-10:].mean()
-        ddm_dataset['B_std'] = 2*ddm_dataset.avg_image_ft[-10:].std()
+        
+        #Get last 10% of q. Average used for estimating background
+        number_of_hi_qs = int(0.1*len(self.q))
+        
+        ddm_dataset['B'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].mean()
+        ddm_dataset['B_std'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].std()
         ddm_dataset['num_pairs_per_dt'] = (('lagtime'),self.num_pairs_per_dt)
         print(f" Background estimate ± std is {ddm_dataset.B.values:.2f} ± {ddm_dataset.B_std.values:.2f}")
 
@@ -670,7 +679,6 @@ class DDM_Fit:
         self.model_dict = None
         self.data_yaml = data_yaml
         self.loadYAML()
-        self.parameters_from_fits = [] #empty list for now. will fill with xarrays
         self.fittings = {} #Stores fit_model,parameters and data set, key-value provided by user
         self.use_parameters_provided()
         self.load_data()
@@ -1007,7 +1015,8 @@ class DDM_Fit:
         else:
             update_good_q_range = False
 
-        qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = self.get_tau_vs_q_fit(fit_results, forced_qs=force_q_range, update_good_q_range=update_good_q_range)
+        qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = get_tau_vs_q_fit(fit_results, forced_qs=force_q_range, 
+                                                                                          update_good_q_range=update_good_q_range)
         fit_results.attrs['effective_diffusion_coeff'] = d_eff
         fit_results.attrs['tau_vs_q_slope'] = slope
         fit_results.attrs['msd_alpha'] = msd_alpha
@@ -1019,7 +1028,8 @@ class DDM_Fit:
         fit_results.attrs['good_q_range'] = qrange
 
         if ('Tau2' in fit_results.parameters.parameter):
-            qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = self.get_tau_vs_q_fit(fit_results, use_tau2=True, forced_qs=force_q_range, update_good_q_range=update_good_q_range)
+            qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = get_tau_vs_q_fit(fit_results, use_tau2=True, 
+                                                                                              forced_qs=force_q_range, update_good_q_range=update_good_q_range)
             fit_results.attrs['tau2_effective_diffusion_coeff'] = d_eff
             fit_results.attrs['tau2_tau_vs_q_slope'] = slope
             fit_results.attrs['tau2_msd_alpha'] = msd_alpha
@@ -1037,6 +1047,12 @@ class DDM_Fit:
         if display_table:
             pd = hf.generate_pandas_table_fit_results(fit_results)
             display(pd)
+            
+        #Placing other metadata in the fit_results Dataset
+        fit_results.attrs['DataDirectory'] = self.ddm_dataset.DataDirectory
+        fit_results.attrs['FileName'] = self.ddm_dataset.FileName
+        fit_results.attrs['pixel_size'] = self.ddm_dataset.pixel_size
+        fit_results.attrs['frame_rate'] = self.ddm_dataset.frame_rate
 
         return fit_results
 
@@ -1045,9 +1061,8 @@ class DDM_Fit:
 
         #Save the fit and parameter settings to a dictionary with a key value provided by the user
 
-
         if name_fit == None:
-            name_fit=input("Under what name would you want to save the generated fit: ")
+            name_fit=input("Under what name would you want to save the generated fit in the dictionary 'fittings': ")
 
         if name_fit != None:
             self.fittings[name_fit]={'model':copy.deepcopy(self.fit_model),
@@ -1056,134 +1071,60 @@ class DDM_Fit:
         return name_fit
 
 
-    def save_fit_results_to_excel(self, fit_results, also_save_data=True, fit_name=None):
-        """
-        Saves fit results as csv file, so that it can be opened in Excel.  the fit and parameter settings to a dictionary with a key value provided by the user
-
-        :param fit_results: Xarray Dataset with data obtained from using :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix`
-        :type fit_results: xarray.Dataset
-        :param also_save_data: Save data in csv format to disk, default: True
-        :type also_save_data: bool
-        :param fit_name: file name 'fit_results_modeltype' will be extended with given string. If 'None' file will be saved without extention
-        :type fit_name: None or str
 
 
-        """
-
-        if 'B' in fit_results:
-            bg = fit_results.B.values
-        else:
-            bg = self.ddm_dataset.B.values
-        about_fit_data = {'Parameters': ['Data directory', 'File', 'Pixel size', 'Framerate', 'B',
-                                   'tau vs q slope', 'Effective diffusion coeff',
-                                   'MSD alpha', 'MSD effective diffusion coeff',
-                                   'Diffusion coeff', 'Diffusion coeff std',
-                                   'Velocity', 'Velocity std', 'q range'],
-                          'Values': [self.data_dir, self.filename, self.ddm_dataset.pixel_size,
-                                   self.ddm_dataset.frame_rate, bg,
-                                   fit_results.tau_vs_q_slope, fit_results.effective_diffusion_coeff,
-                                   fit_results.msd_alpha, fit_results.msd_effective_diffusion_coeff,
-                                   fit_results.diffusion_coeff, fit_results.diffusion_coeff_std,
-                                   fit_results.velocity, fit_results.velocity_std,
-                                   fit_results.good_q_range]}
-
-        if 'tau2_effective_diffusion_coeff' in fit_results:
-            about_fit_data['Parameters'].append('2nd tau vs q slope')
-            about_fit_data['Parameters'].append('2nd Effective diffusion coeff')
-            about_fit_data['Parameters'].append('2nd MSD alpha')
-            about_fit_data['Parameters'].append('2nd MSD effective diffusion coeff')
-            about_fit_data['Parameters'].append('2nd Diffusion coeff')
-            about_fit_data['Parameters'].append('2nd Diffusion coeff std')
-            about_fit_data['Parameters'].append('2nd Velocity')
-            about_fit_data['Parameters'].append('2nd Velocity std')
-            about_fit_data['Parameters'].append('2nd q range')
-            about_fit_data['Values'].append(fit_results.tau2_tau_vs_q_slope)
-            about_fit_data['Values'].append(fit_results.tau2_effective_diffusion_coeff)
-            about_fit_data['Values'].append(fit_results.tau2_msd_alpha)
-            about_fit_data['Values'].append(fit_results.tau2_msd_effective_diffusion_coeff)
-            about_fit_data['Values'].append(fit_results.tau2_diffusion_coeff)
-            about_fit_data['Values'].append(fit_results.tau2_diffusion_coeff_std)
-            about_fit_data['Values'].append(fit_results.tau2_velocity)
-            about_fit_data['Values'].append(fit_results.tau2_velocity_std)
-            about_fit_data['Values'].append(fit_results.tau2_good_q_range)
-
-        about_fit_data['Parameters'].append('Fit model')
-        about_fit_data['Parameters'].append('Date fit ran')
-        about_fit_data['Parameters'].append('Computer ran on')
-        about_fit_data['Values'].append(fit_results.model)
-        about_fit_data['Values'].append(time.ctime())
-        about_fit_data['Values'].append(socket.gethostname())
-
-        dataframe_about = pd.DataFrame(data = about_fit_data)
-
-        dataframe_bestfitparams = fit_results.parameters.to_dataframe()
-        dataframe_theory = fit_results.theory.transpose().to_dataframe()
-        dataframe_initialguess = pd.DataFrame(data = fit_results.initial_params_dict)
-        if also_save_data:
-            if fit_results.data_to_use == 'ISF':
-                if 'isf_data' in fit_results:
-                    dataframe_data = fit_results.isf_data.transpose().to_dataframe()
-                else:
-                    also_save_data = False
-                    #dataframe_data = self.ddm_dataset.ISF.transpose().to_dataframe()
-                if 'A' in fit_results:
-                    dataframe_amplitude = fit_results.A.to_dataframe()
-                else:
-                    dataframe_amplitude = self.ddm_dataset.Amplitude.to_dataframe()
-            elif fit_results.data_to_use == 'DDM Matrix':
-                if 'ddm_matrix_data' in fit_results:
-                    dataframe_data = fit_results.ddm_matrix_data.transpose().to_dataframe()
-                else:
-                    also_save_data = False
-                    #dataframe_data = self.ddm_dataset.ravs.transpose().to_dataframe()
-
-        if fit_name == None:
-            excel_file_name = f"{self.data_dir}{self.filename_noext}_fitresults_{fit_results.model}.xlsx"
-        else:
-            excel_file_name = f"{self.data_dir}{self.filename_noext}_fitresults_{fit_results.model}_{fit_name}.xlsx"
-
-        with pd.ExcelWriter(excel_file_name) as writer:
-            dataframe_about.to_excel(writer, sheet_name='About')
-            dataframe_bestfitparams.to_excel(writer, sheet_name='Best fit parameters')
-            dataframe_initialguess.to_excel(writer, sheet_name='Initial guess')
-            dataframe_theory.to_excel(writer, sheet_name='Theory')
-            if also_save_data:
-                dataframe_data.to_excel(writer, sheet_name='Data %s' % fit_results.data_to_use)
-                if fit_results.data_to_use == 'ISF':
-                    dataframe_amplitude.to_excel(writer, sheet_name='Amplitude')
-
-
-
-    def fit_report(self, fit_results=None, PDF_save=True, forced_qs=None,
-                   forced_qs_for_tau2=None, q_indices=[10,20,30,40], use_new_tau=True,
-                   fit_report_name=None, show=True):
-        """
-        Produces a report of the fit to the DDM data including plots of signal versus lag time for specific given q-indices,
-        tau versus lagtime, stretching exponent, amplitude, background or other applicable parameters.
-
-        :param fit_results: Name of xarray Dataset with fit results to be reported. If None, the latest fit will be reported
-        :type fit_results: xarray.Dataset
-        :param PDF_save: safe fit report as PDF, default is True
-        :type PDF_save: bool
-        :param forced_qs: If None, the q-range used for fitting (defined as the 'good_q_range' in the fit_results Dataset) is used to display the fits. If a range is specified, fit will be displayed within this range
-        :type forced_qs: None or List[int]
-        :param forced_qs_for_tau2: Same as 'forced_qs', but for the second exponent
-        :type forced_qs_for_tau2: None or List[int]
-        :param q_indices: q-indices for which to plot the data to the fit (note these are not the actual values of q, those will be reported and can be found, via: fit_Dataset.q[q_index])
-        :type q_indices: Lits[int]
-        :param use_new_tau: apply :py:meth:`PyDDM.ddm_analysis_and_fitting.newt`, default is True
-        :type use_new_tau: bool
-        :param fit_report_name: Name to extend file name of PDF with if 'None' file is saved as ddm_fit_report_"provided_filename"
-        :type fit_report_name: None or str
-        :param show: Show the plots, default is True
-        :type show: bool
+    def generate_fit_report(self, fit_results=None, PDF_save=True, forced_qs=None,
+                            forced_qs_for_tau2=None, q_indices=[10,20,30,40], use_new_tau=True,
+                            fit_report_name_end=None, show=True):
+        r"""Generates fit report
         
+        See :py:func:`PyDDM.ddm_analysis_and_fitting.fit_report`
+        
+        This method calls that function. For this method, you can refer to `fit_results` by 
+        the key in the `fittings` dictionary of the :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit` class. 
+        When calling the :py:func:`PyDDM.ddm_analysis_and_fitting.fit_report` function, 
+        the filename of the image data and the image data directory will be used 
+        when saving the PDF report. 
+        
+        Use the :py:func:`PyDDM.ddm_analysis_and_fitting.fit_report` if you 
+        want the report saved somewhere not in the DataDirectory indicated in the 
+        yaml data which initialized the DDM_Fit class. 
+        
+
+        Parameters
+        ----------
+        fit_results : xarray Dataset, str, or None
+            Results of the DDM fitting to either the DDM matrix or the ISF. 
+        PDF_save : bool, optional
+            Saves plots to a PDF file. The default is True.
+        forced_qs : list or None, optional
+            Does power law fitting over this range of q. The default is None. If not 
+            None, must be list-like with two numbers indicating the index of the 
+            lower and upper q. 
+        forced_qs_for_tau2 : list or None, optional
+            Like `forced_qs` but for the second decay time
+        q_indices : list, optional
+            List of q indices to show when plotting the DDM matrix or ISF vs lag time 
+            along with the theoretical model. The default is [10,20,30,40].
+        use_new_tau : bool, optional
+            If True, calculates a more representative decay time based on the value of 
+            tau and the stretching exponent. The default is True.
+        fit_report_name_end : str, optional
+            String appended to the filename of the PDF generated. The default is None. 
+        show : bool, optional
+            Plots will appear if True. The default is True.
+    
+        Returns
+        -------
+        fit_results : xarray Dataset
+            Results of DDM fitting with attributes possibly changed
+
         """
 
-        if fit_report_name is None:
-            pdf_report_filename = f'{self.data_dir}ddm_fit_report_{self.filename_noext}.pdf'
+        if fit_report_name_end is None:
+            pdf_report_filename = f'{self.filename_noext}'
         else:
-            pdf_report_filename = f'{self.data_dir}ddm_fit_report_{self.filename_noext}_{fit_report_name}.pdf'
+            pdf_report_filename = f'{self.filename_noext}_{fit_report_name_end}'
 
         if show:
             plt.ion()
@@ -1205,191 +1146,12 @@ class DDM_Fit:
         else:
             print("Not a valid parameter passed to fit_results.")
             return
+        
+        new_fit_res = fit_report(fit_results, PDF_save=PDF_save, forced_qs=forced_qs, pdf_save_dir = self.data_dir, 
+                                 forced_qs_for_tau2=forced_qs_for_tau2, q_indices=q_indices, use_new_tau=use_new_tau, 
+                                 fit_report_name=pdf_report_filename, show=show)
+        return new_fit_res
 
-        list_of_all_figs = [] #initialize empty list to contain figures
-
-        fig1 = hf.plot_to_inspect_fit(np.arange(q_indices[0],q_indices[-1],4), fit_results,
-                                     show_legend=False, show_colorbar=True,
-                                     print_params=False)
-        list_of_all_figs.append(fig1)
-        fig2 = hf.plot_to_inspect_fit_2x2subplot(q_indices, fit_results, self.ddm_dataset)
-        list_of_all_figs.append(fig2)
-
-
-        if forced_qs is None:
-            forced_qs = fit_results.attrs['good_q_range']
-        qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = self.get_tau_vs_q_fit(fit_results, use_new_tau=use_new_tau,
-                                                                                               forced_qs=forced_qs, update_good_q_range=True)
-        fit_results.attrs['effective_diffusion_coeff'] = d_eff
-        fit_results.attrs['tau_vs_q_slope'] = slope
-        fit_results.attrs['msd_alpha'] = msd_alpha
-        fit_results.attrs['msd_effective_diffusion_coeff'] = msd_d_eff
-        fit_results.attrs['diffusion_coeff'] = d
-        fit_results.attrs['diffusion_coeff_std'] = d_std
-        fit_results.attrs['velocity'] = v
-        fit_results.attrs['velocity_std'] = v_std
-        if forced_qs is not None:
-            if (len(forced_qs)==2) and (forced_qs[0]<forced_qs[1]):
-                fit_results.attrs['good_q_range']=forced_qs
-        else:
-            fit_results.attrs['good_q_range'] = qrange
-
-
-        fig3 = hf.plot_one_tau_vs_q(fit_results, self.ddm_dataset, 'b', 0.2, y_position_of_text=0.2, use_new_tau=use_new_tau)
-        list_of_all_figs.append(fig3)
-
-        if ('StretchingExp' in fit_results.parameters.parameter):
-            fig4 = hf.plot_stretching_exponent(fit_results, self.ddm_dataset, 'g', 0.6)
-            list_of_all_figs.append(fig4)
-
-
-        if ('Tau2' in fit_results.parameters.parameter):
-
-            qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = self.get_tau_vs_q_fit(fit_results, use_tau2=True, use_new_tau=use_new_tau,
-                                                                                                   forced_qs=forced_qs_for_tau2, update_good_q_range=True)
-            fit_results.attrs['tau2_effective_diffusion_coeff'] = d_eff
-            fit_results.attrs['tau2_tau_vs_q_slope'] = slope
-            fit_results.attrs['tau2_msd_alpha'] = msd_alpha
-            fit_results.attrs['tau2_msd_effective_diffusion_coeff'] = msd_d_eff
-            fit_results.attrs['tau2_diffusion_coeff'] = d
-            fit_results.attrs['tau2_diffusion_coeff_std'] = d_std
-            fit_results.attrs['tau2_velocity'] = v
-            fit_results.attrs['tau2_velocity_std'] = v_std
-            #fit_results.attrs['tau2_good_q_range'] = qrange
-            if forced_qs_for_tau2 != None:
-                if (len(forced_qs_for_tau2)==2) and (forced_qs_for_tau2[0]<forced_qs_for_tau2[1]):
-                    fit_results.attrs['tau2_good_q_range']=forced_qs_for_tau2
-                else:
-                    fit_results.attrs['tau2_good_q_range'] = qrange
-
-            fig3b = hf.plot_one_tau_vs_q(fit_results, self.ddm_dataset, 'c', 0.6, use_tau2=True, use_new_tau=use_new_tau)
-            list_of_all_figs.append(fig3b)
-            fig3c = hf.plot_one_tau_vs_q(fit_results, self.ddm_dataset, 'b', 0.6, show_table=False, use_new_tau=use_new_tau)
-            fig3c = hf.plot_one_tau_vs_q(fit_results, self.ddm_dataset, 'c', 0.3, use_tau2=True, fig_to_use=fig3c, show_table=False, use_new_tau=use_new_tau)
-            list_of_all_figs.append(fig3c)
-            if ('StretchingExp2' in fit_results.parameters.parameter):
-                fig4b = hf.plot_stretching_exponent(fit_results, self.ddm_dataset, 'limegreen', 0.6, use_s2=True)
-                list_of_all_figs.append(fig4b)
-
-        fig5 = hf.plot_amplitude(fit_results, self.ddm_dataset)
-        list_of_all_figs.append(fig5)
-        fig6 = hf.plot_background(fit_results, self.ddm_dataset)
-        list_of_all_figs.append(fig6)
-        #fig7 = hf.plot_amplitude_over_background(fit_results, self.ddm_dataset)
-        #list_of_all_figs.append(fig7)
-        if ('Fraction1' in fit_results.parameters.parameter) or ('FractionBallistic' in fit_results.parameters.parameter):
-            fig8 = hf.plot_fraction(fit_results, self.ddm_dataset)
-            list_of_all_figs.append(fig8)
-        if ('SchulzNum' in fit_results.parameters.parameter):
-            fig9 = hf.plot_schulz(fit_results, self.ddm_dataset)
-            list_of_all_figs.append(fig9)
-        if ('SchulzNum2' in fit_results.parameters.parameter):
-            fig10 = hf.plot_schulz(fit_results, self.ddm_dataset, use2=True)
-            list_of_all_figs.append(fig10)
-        if 'NonErgodic' in fit_results.parameters.parameter:
-            fig11 = hf.plot_nonerg(fit_results, self.ddm_dataset)
-            list_of_all_figs.append(fig11)
-
-        if PDF_save:
-            with PdfPages(pdf_report_filename) as pdf:
-                for fgr in list_of_all_figs:
-                    pdf.savefig(fgr, bbox_inches='tight')
-
-        if not show:
-            plt.close('all')
-
-
-    def get_tau_vs_q_fit(self, fit_results, use_new_tau=True, use_tau2=False,
-                         forced_qs=None, update_good_q_range=True):
-        """Determines a good q-range to fit tau (delay time) versus q using linear model estimator from scikit-learn. Extracts effective diffusion coeficient and mean squared displacement parameters from the fit.
-
-
-        :param fit_results: Name of xarray Dataset with fit results to be reported. If None, the latest fit will be reported
-        :type fit_results: xarray.Dataset
-        :param use_new_tau: Apply :py:meth:`PyDDM.ddm_analysis_and_fitting.newt`, default is True
-        :type use_new_tau: bool
-        :param use_tau2: Get the tau versus q fit and fitting parameters for tau corresponding to the second exponent of the model, denoted as 'Tau2', default is False
-        :type use_tau2: bool
-        :param forced_qs: List lowest and highest q-indices for fitting, to narrow the search range for automatic determination of optimal q-values.
-        :type forced_qs: None or List[int]
-
-        :return:
-            * **good_q_range** (*list[float]*)- determined q-range to which the data was fitted
-            * **slope** (*float*)- slope of the q versus tau (delay time) fit
-            * **effective_diffconst** (*float*)- Diffusion coefficient extracted from q versus tau fit
-            * **MSD_alpha** (*float*)- Slope of the mean squared discplacement (MSD) versus lag time obtained from DDM data
-            * **MSD_effective_diffconst** (*float*)- Diffusion coefficient calculated with 'MSD_alpha'
-            * **diffusion_coeff.values** (*float*)- Assuming the following relationship: tau ~ 1/q^2, gives a diffusion coefficient, the mean value over the 'good_q_range'
-            * **diffusion_coeff_std.values** (*float*)- Standard deviation of the diffusion coefficient
-            * **velocity.values** (*float*)- Assuming the following relationship: tau ~ 1/q, gives a diffusion coefficient, the mean value over the 'good_q_range'
-            * **velocity_std.value** (*float*)- Standard deviation in the velocity
-
-        """
-
-
-        if use_tau2:
-            tau = fit_results.parameters.loc['Tau2',:]
-        else:
-            tau = fit_results.parameters.loc['Tau',:]
-        if use_new_tau and ('StretchingExp' in fit_results.parameters.parameter):
-            stretch_exp = fit_results.parameters.loc['StretchingExp',:]
-            print("In function ddm_fit.get_tau_vs_q_fit, using new tau...")
-            if (use_tau2 and ('StretchingExp2' in fit_results.parameters.parameter)):
-                stretch_exp = fit_results.parameters.loc['StretchingExp2',:]
-            tau = newt(tau, stretch_exp)
-        q = self.ddm_dataset.q
-
-        if forced_qs is not None:
-            lowq,hiq = forced_qs
-            good_q_range = forced_qs
-        else:
-            lowq = 1
-            hiq = len(q)-2
-            good_q_range = [lowq,hiq]
-
-        '''
-        for more on this linear model estimator
-        see https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html
-        '''
-        estimator = RANSACRegressor(random_state=42)
-        logq = np.log(q[lowq:hiq]).values
-        logt = np.log(tau[lowq:hiq]).values
-        estimator.fit(logq[:,np.newaxis], logt)
-        slope = estimator.estimator_.coef_
-        coef1 = estimator.estimator_.intercept_
-        inlier_mask = estimator.inlier_mask_
-        outlier_mask = np.logical_not(inlier_mask)
-
-        if update_good_q_range:
-            a=np.array([[len(list(g)),k] for k, g in itertools.groupby(inlier_mask)])
-            largest_run_of_trues = 0
-            index_start = 1
-            index_end = np.nan
-            index_to_mark = 0
-            for i in range(a.shape[0]):
-                if a[i,1]==1:
-                    if a[i,0]>largest_run_of_trues:
-                        index_start = index_to_mark
-                        index_end = index_start + a[i,0]
-                        largest_run_of_trues = a[i,0]
-                index_to_mark += a[i,0]
-            if index_end != np.nan:
-                good_q_range = [index_start + lowq - 1, index_end + lowq - 1]
-
-        MSD_alpha = 2./(-1*slope)
-        MSD_effective_diffconst = (1.0/np.exp(coef1))**MSD_alpha
-        effective_diffconst = 1.0/np.exp(coef1)
-
-        '''
-        If we force a tau ~ 1/q or tau ~ 1/q^2 dependence to get
-         or a velocity a diffusion coeff, respectively.
-        '''
-        diffusion_coeff = np.mean(1./(tau[good_q_range[0]:good_q_range[1]]*(q[good_q_range[0]:good_q_range[1]]**2)))
-        diffusion_coeff_std = np.std(1./(tau[good_q_range[0]:good_q_range[1]]*(q[good_q_range[0]:good_q_range[1]]**2)))
-        velocity = np.mean(1./(tau[good_q_range[0]:good_q_range[1]]*(q[good_q_range[0]:good_q_range[1]])))
-        velocity_std = np.std(1./(tau[good_q_range[0]:good_q_range[1]]*(q[good_q_range[0]:good_q_range[1]])))
-
-        return good_q_range, slope, effective_diffconst, MSD_alpha, MSD_effective_diffconst, diffusion_coeff.values, diffusion_coeff_std.values, velocity.values, velocity_std.values
 
 
     def extract_MSD(self, fit=None, qrange=None):
@@ -1586,7 +1348,6 @@ class DDM_Fit:
 
         """
 
-
         if save_directory is None:
             save_directory = self.data_dir
 
@@ -1629,7 +1390,9 @@ class DDM_Fit:
                     except:
                         print(f'Could not save fit results as: {saved_fit_filename}.')
                 else:
+                    saved_fit_filename = f'{save_directory}ddm_fit_results_{self.filename_noext}_{name_of_fit}.nc'
                     self.fittings[name_of_fit]['fit'].to_netcdf(path = saved_fit_filename)
+
 
 
 ##############################################################################
@@ -1766,9 +1529,54 @@ def get_tau_vs_q_fit(fit_results, use_new_tau=True, use_tau2=False,
 def fit_report(fit_results, PDF_save=True, forced_qs=None, pdf_save_dir = "./", 
                forced_qs_for_tau2=None, q_indices=[10,20,30,40], use_new_tau=True, 
                fit_report_name=None, show=True):
-    """
-
+    r"""Creates a set of plots based on fit results
     
+    Creates plots (saved in a single PDF file if `PDF_save` is True (the default)) 
+    based on the DDM fit results. Plots of the DDM matrix or the ISF are shown 
+    versus lag time along with the theoretical model calculated with the best fit 
+    parameters. Also shown are the decay time (tau) vs wavevector (q) plots, the 
+    amplitude vs the wavevector, and the background vs the wavevector. Depending on the 
+    fit model used, the second decay time, fraction of dynamics with the first decay 
+    time, the non-ergodicity parameter, and the Schulz number may also be plotted. 
+    
+    By fitting the tau vs q plot to a power law, one can get parameters describing 
+    the type of dynamics. These quantities are stored as attributes to the 
+    `fit_results` xarray Dataset which is returned. 
+    
+
+    Parameters
+    ----------
+    fit_results : xarray Dataset
+        Results of the DDM fitting to either the DDM matrix or the ISF. 
+    PDF_save : bool, optional
+        Saves plots to a PDF file. The default is True.
+    forced_qs : list or None, optional
+        Does power law fitting over this range of q. The default is None. If not 
+        None, must be list-like with two numbers indicating the index of the 
+        lower and upper q. 
+    pdf_save_dir : str, optional
+        Location to save the PDF. The default is "./" (the current working directory).
+    forced_qs_for_tau2 : list or None, optional
+        Like `forced_qs` but for the second decay time
+    q_indices : list, optional
+        List of q indices to show when plotting the DDM matrix or ISF vs lag time 
+        along with the theoretical model. The default is [10,20,30,40].
+    use_new_tau : bool, optional
+        If True, calculates a more representative decay time based on the value of 
+        tau and the stretching exponent. The default is True.
+    fit_report_name : str, optional
+        String appended to the filename of the PDF generated. The default is None. 
+        If None, the file will be named 'ddm_fit_report.pdf' in the directory 
+        specified by the parameter `pdf_save_dir`. If not None, then it will 
+        be named 'ddm_fit_report_{fit_report_name}.pdf'
+    show : bool, optional
+        Plots will appear if True. The default is True.
+
+    Returns
+    -------
+    fit_results : xarray Dataset
+        Results of DDM fitting with attributes possibly changed
+
     """
 
     if fit_report_name is None:
@@ -1845,7 +1653,6 @@ def fit_report(fit_results, PDF_save=True, forced_qs=None, pdf_save_dir = "./",
 
         fig3b = hf.plot_one_tau_vs_q(fit_results, 'c', 0.6, use_tau2=True, use_new_tau=use_new_tau)
         list_of_all_figs.append(fig3b)
-        #fig3c = hf.plot_taus_together(fit_results, self.ddm_dataset, colormap='viridis')
         fig3c = hf.plot_one_tau_vs_q(fit_results, 'b', 0.6, show_table=False, use_new_tau=use_new_tau)
         fig3c = hf.plot_one_tau_vs_q(fit_results, 'c', 0.3, use_tau2=True, fig_to_use=fig3c, show_table=False, use_new_tau=use_new_tau)
         list_of_all_figs.append(fig3c)
@@ -1882,6 +1689,118 @@ def fit_report(fit_results, PDF_save=True, forced_qs=None, pdf_save_dir = "./",
         
     return fit_results
 
+
+def save_fit_results_to_excel(fit_results, also_save_data=True, file_name_end=None, save_dir=None):
+    r"""Saves fit results to Excel file
+    
+    Metadata, fit results, and (optionally, if `also_save_data` is True (the default)) the data fit to 
+    are saved to an Excel file. Data is first converted to Pandas dataframe. Then the 
+    data is saved in a multi-sheet Excel (*.xlsx) file. 
+    
+
+    Parameters
+    ----------
+    fit_results : xarray Dataset
+        Result of DDM fitting. Returned from :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Fit.fit`
+    also_save_data : bool, optional
+        Data fit to (either ISF or DDM matrix) is also saved to Excel file. The default is True.
+    file_name_end : str, optional
+        Append this string to the end of the saved filename. The default is None.
+    save_dir : str, optional
+        Directory to save Excel file. The default is None. If None, then will use the DataDirectory 
+        which is (hopefully) an attribute of the fit_results Dataset. 
+
+    Returns
+    -------
+    None.
+
+    """
+
+    bg = fit_results.B.values
+    data_dir = fit_results.DataDirectory if 'DataDirectory' in fit_results.attrs else None
+    data_filenm = fit_results.FileName if 'FileName' in fit_results.attrs else None
+    pixel_size = fit_results.pixel_size if 'pixel_size' in fit_results.attrs else None
+    frame_rate = fit_results.frame_rate if 'frame_rate' in fit_results.attrs else None
+    
+
+    about_fit_data = {'Parameters': ['Data directory', 'File', 'Pixel size', 'Framerate', 'B',
+                               'tau vs q slope', 'Effective diffusion coeff',
+                               'MSD alpha', 'MSD effective diffusion coeff',
+                               'Diffusion coeff', 'Diffusion coeff std',
+                               'Velocity', 'Velocity std', 'q range'],
+                      'Values': [data_dir, data_filenm, pixel_size,
+                               frame_rate, bg,
+                               fit_results.tau_vs_q_slope, fit_results.effective_diffusion_coeff,
+                               fit_results.msd_alpha, fit_results.msd_effective_diffusion_coeff,
+                               fit_results.diffusion_coeff, fit_results.diffusion_coeff_std,
+                               fit_results.velocity, fit_results.velocity_std,
+                               fit_results.good_q_range]}
+
+    if 'tau2_effective_diffusion_coeff' in fit_results:
+        about_fit_data['Parameters'].append('2nd tau vs q slope')
+        about_fit_data['Parameters'].append('2nd Effective diffusion coeff')
+        about_fit_data['Parameters'].append('2nd MSD alpha')
+        about_fit_data['Parameters'].append('2nd MSD effective diffusion coeff')
+        about_fit_data['Parameters'].append('2nd Diffusion coeff')
+        about_fit_data['Parameters'].append('2nd Diffusion coeff std')
+        about_fit_data['Parameters'].append('2nd Velocity')
+        about_fit_data['Parameters'].append('2nd Velocity std')
+        about_fit_data['Parameters'].append('2nd q range')
+        about_fit_data['Values'].append(fit_results.tau2_tau_vs_q_slope)
+        about_fit_data['Values'].append(fit_results.tau2_effective_diffusion_coeff)
+        about_fit_data['Values'].append(fit_results.tau2_msd_alpha)
+        about_fit_data['Values'].append(fit_results.tau2_msd_effective_diffusion_coeff)
+        about_fit_data['Values'].append(fit_results.tau2_diffusion_coeff)
+        about_fit_data['Values'].append(fit_results.tau2_diffusion_coeff_std)
+        about_fit_data['Values'].append(fit_results.tau2_velocity)
+        about_fit_data['Values'].append(fit_results.tau2_velocity_std)
+        about_fit_data['Values'].append(fit_results.tau2_good_q_range)
+
+    about_fit_data['Parameters'].append('Fit model')
+    about_fit_data['Parameters'].append('Date fit ran')
+    about_fit_data['Parameters'].append('Computer ran on')
+    about_fit_data['Values'].append(fit_results.model)
+    about_fit_data['Values'].append(time.ctime())
+    about_fit_data['Values'].append(socket.gethostname())
+
+    dataframe_about = pd.DataFrame(data = about_fit_data)
+
+    dataframe_bestfitparams = fit_results.parameters.to_dataframe()
+    dataframe_theory = fit_results.theory.transpose().to_dataframe()
+    dataframe_initialguess = pd.DataFrame(data = fit_results.initial_params_dict)
+    if also_save_data:
+        if fit_results.data_to_use == 'ISF':
+            if 'isf_data' in fit_results:
+                dataframe_data = fit_results.isf_data.transpose().to_dataframe()
+            else:
+                also_save_data = False
+            dataframe_amplitude = fit_results.A.to_dataframe()
+        elif fit_results.data_to_use == 'DDM Matrix':
+            if 'ddm_matrix_data' in fit_results:
+                dataframe_data = fit_results.ddm_matrix_data.transpose().to_dataframe()
+            else:
+                also_save_data = False
+
+    if save_dir is None:
+        save_dir = "./" if data_dir is None else data_dir
+    if data_filenm is None:
+        excel_file_name = f"fitresults_{fit_results.model}"
+    else:
+        excel_file_name = f"{data_filenm[:-4]}_fitresults_{fit_results.model}"
+    if file_name_end is not None:
+        excel_file_name = f"{excel_file_name}_{file_name_end}"
+        
+    full_path = f"{save_dir}{excel_file_name}.xlsx"
+
+    with pd.ExcelWriter(full_path) as writer:
+        dataframe_about.to_excel(writer, sheet_name='About')
+        dataframe_bestfitparams.to_excel(writer, sheet_name='Best fit parameters')
+        dataframe_initialguess.to_excel(writer, sheet_name='Initial guess')
+        dataframe_theory.to_excel(writer, sheet_name='Theory')
+        if also_save_data:
+            dataframe_data.to_excel(writer, sheet_name='Data %s' % fit_results.data_to_use)
+            if fit_results.data_to_use == 'ISF':
+                dataframe_amplitude.to_excel(writer, sheet_name='Amplitude')
 
 
 

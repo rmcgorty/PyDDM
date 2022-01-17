@@ -1,6 +1,0 @@
-Walkthrough
-************
-
-.. code-block:: python
-	
-	my_class=DDM_analysis(test.yml)

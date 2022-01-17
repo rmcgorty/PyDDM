@@ -1,4 +1,4 @@
-﻿PyDDM.ddm\_calc
+PyDDM.ddm\_calc
 ===============
 
 .. automodule:: PyDDM.ddm_calc
