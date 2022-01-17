@@ -33,7 +33,7 @@ from IPython.display import display
 
 
 def apply_binning(im, binsize):
-    """Bin a series of images by a given factor
+    r"""Bin a series of images by a given factor
 
     :param im: The movie, a series of frames in ndarry format.
     :type im: ndarray
@@ -52,13 +52,32 @@ def apply_binning(im, binsize):
 
 
 def recalculate_ISF_with_new_background(ddm_dataset, background):
-    """
-    The intermediate scattering function (ISF) is re-calculated from the radial averages, with the given background value.
+    r"""
+    The intermediate scattering function (ISF) is re-calculated from the DDM matrix, with the given background value.
+    
+    Recall the relationship between the DDM matrix (:math:`D(q,\Delta t)`) and the ISF (:math:`f(q, \Delta t)`): 
+        
+    .. math::  D(q, \Delta t) = A(q) \left[ 1 - f(q, \Delta t) \right] + B(q)
+    
+    We can estimate the amplitude,:math:`A(q)`, and background, :math:`B(q)`, terms by first calculating the Fourier 
+    transforms of all images and averaging those together. See the function :py:func:`PyDDM.ddm_calc.determining_A_and_B`. With 
+    that function and by assuming that the background is a constant with wavevector (i.e., independent of :math:`q`) we can determine 
+    :math:`A(q)` and :math:`B`. With :math:`D(q,\Delta t)`, :math:`A(q)`, and :math:`B`, we can then find the ISF :math:`f(q, \Delta t)`. 
+    This is done automatically when calculating the DDM matrix from the time series of images. For that, we assume that the 
+    amplitude goes to zero by the last 10% of the wavevectors. But, this might not be the case. This may over estimate the 
+    background. Therefore, one may want to adjust the background value and recalculate the ISF. 
+    
+    Parameters
+    ----------
+    ddm_dataset : xarray Dataset
+        Dataset calculated with :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix`
+    background : float
+        Esimate of the background parameter
 
-    :param ddm_dataset: Dataset with radial averages calculated with :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix`
-    :type ddm_dataset: xarray Dataset
-    :param background: Background value
-    :type background: float
+    Returns
+    -------
+    ddm_dataset : xarray Dataset
+        New Dataset with the variables `Amplitude` and `ISF` adjusted.
 
     """
     if ("avg_image_ft" in ddm_dataset) and ("ddm_matrix" in ddm_dataset):
@@ -103,7 +122,8 @@ def newt(t,s):
 
 class DDM_Analysis:
     """Performs preprossing of data, such as cropping, windowing etc. DDM calculations are performed on the processed time series
-    to produce a xarray DataSet with DDM matrix, radial averages and ISF. The analysis parameters are provided by the user in an YAML file: :doc:`More information here </Provide_info_for_analysis>` """
+    to produce a xarray DataSet with DDM matrix, radial averages and ISF. The analysis parameters are provided by the user in 
+    a YAML file: :doc:`More information here </Provide_info_for_analysis>` """
 
     def __init__(self, data_yaml):
         
@@ -152,8 +172,8 @@ class DDM_Analysis:
                 with open(self.data_yaml) as f:
                     self.content = yaml.safe_load(f)
             else:
-                #print("File %s does not exist. Check file name or path." % self.data_yaml)
-                ddm.logger2.error("File %s does not exist. Check file name or path." % self.data_yaml)
+                print("File %s does not exist. Check file name or path." % self.data_yaml)
+                #ddm.logger2.error("File %s does not exist. Check file name or path." % self.data_yaml)
                 return 0
         elif isinstance(self.data_yaml, dict):
             self.content = self.data_yaml.copy()
@@ -166,7 +186,7 @@ class DDM_Analysis:
         #Make sure the path to the movie exists before proceeding
         if os.path.exists(self.data_dir+self.filename):
             #print('File path to image data exists.')
-            ddm.logger.info("File path to image data exists.")
+            #ddm.logger.info("File path to image data exists.")
             self.metadata = self.content['Metadata']
             self.pixel_size = self.metadata['pixel_size']
             self.frame_rate = self.metadata['frame_rate']
@@ -197,8 +217,8 @@ class DDM_Analysis:
                 self.angle_range = self.analysis_parameters['angle_range']
             else:
                 self.angle_range = None
-            #print(f'Provided metadata: {self.metadata}')
-            ddm.logger2.info(f'Provided metadata: {self.metadata}')
+            print(f'Provided metadata: {self.metadata}')
+            #ddm.logger2.info(f'Provided metadata: {self.metadata}')
             return 1
         else:
             print('Error: check path to image file')
@@ -350,7 +370,7 @@ class DDM_Analysis:
 
 
 
-    def calculate_DDM_matrix(self, fast_mode=False, quiet=False, experimental_method=False):
+    def calculate_DDM_matrix(self, fast_mode=False, quiet=False):
         '''Function that handels the computation of DDM_matrix for multiple (time or space) windows of same movie
             Calculates the DDM matrix and radial averages then estimates
             amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -362,8 +382,6 @@ class DDM_Analysis:
             :type fast_mode: bool
             :param quiet: Should be False
             :type quiet: bool
-            :param experimental_method:
-            :type experimental_method: bool
 
             :return:
                 * ddm_dataset (*Dataset*)- xarray Dataset with:
@@ -388,13 +406,13 @@ class DDM_Analysis:
             if self.fast_mode:
                 print("Calculating the DDM matrix in fast mode...")
 
-            print(f"Calculating the DDM matrix for {self.filename}...")
-            self._computeDDMMatrix(quiet=quiet, experimental_method=experimental_method)
+            #print(f"Calculating the DDM matrix for {self.filename}...")
+            self._computeDDMMatrix(quiet=quiet)
 
 
 
     #Do not call this function, instead call analysis_flow
-    def _computeDDMMatrix(self, quiet=False, experimental_method=False):
+    def _computeDDMMatrix(self, quiet=False):
         '''
         Calculates the DDM matrix and radial averages then estimates
         amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -413,45 +431,29 @@ class DDM_Analysis:
             self.q=np.arange(0,self.im.shape[1]/2)*2*np.pi*(1./(self.im.shape[1]*self.pixel_size))
 
 
-        if experimental_method:
-            if type(self.im)==np.ndarray:
-                start_time = time.time()
-                num_images = self.im.shape[0]
-                end_for_time_autocorr = int(num_images/2)-1
-                self.ddm_matrix = ddm.new_ddm_matrix(self.im)[:end_for_time_autocorr]
-                self.ravs = ddm.radialAvFFTs_v2(self.ddm_matrix, centralAngle=self.central_angle,
-                                                angRange=self.angle_range)
-                self.lag_times_frames = np.arange(0,end_for_time_autocorr)
-                self.lag_times = self.lag_times_frames / self.frame_rate
-                self.num_pairs_per_dt = np.ones_like(self.lag_times)
-                end_time = time.time()
-                print("DDM matrix took %s seconds to compute." % (end_time - start_time))
-
-
+        if (type(self.im)==list) or (type(self.im)==np.ndarray):
+            pass
         else:
-            if (type(self.im)==list) or (type(self.im)==np.ndarray):
-                pass
+            print("Image data not yet read!")
+            return False
+        start_time = time.time()
+        self.ddm_matrix = []
+        try:
+            if type(self.im)==list:
+                for i,im in enumerate(self.im):
+                    print(f"Getting DDM matrix for {i+1} of {len(self.im)}...")
+                    d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, fast_mode = self.fast_mode, quiet=quiet)
+                    self.ddm_matrix.append(d_matrix)
+                self.num_pairs_per_dt = num_pairs
             else:
-                print("Image data not yet read!")
-                return False
-            start_time = time.time()
-            self.ddm_matrix = []
-            try:
-                if type(self.im)==list:
-                    for i,im in enumerate(self.im):
-                        print(f"Getting DDM matrix for {i+1} of {len(self.im)}...")
-                        d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, fast_mode = self.fast_mode, quiet=quiet)
-                        self.ddm_matrix.append(d_matrix)
-                    self.num_pairs_per_dt = num_pairs
-                else:
-                    self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, fast_mode = self.fast_mode, quiet=quiet)
-                self.ddm_matrix_fastmode = self.fast_mode
-                end_time = time.time()
-            except:
-                print("Unable to get DDM matrix")
-                return False
+                self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, fast_mode = self.fast_mode, quiet=quiet)
+            self.ddm_matrix_fastmode = self.fast_mode
+            end_time = time.time()
+        except:
+            print("Unable to get DDM matrix")
+            return False
 
-            print("DDM matrix took %s seconds to compute." % (end_time - start_time))
+        print("DDM matrix took %s seconds to compute." % (end_time - start_time))
 
         if type(self.im)==list:
             self.ravs = []
@@ -1695,7 +1697,7 @@ def save_fit_results_to_excel(fit_results, also_save_data=True, file_name_end=No
     
     Metadata, fit results, and (optionally, if `also_save_data` is True (the default)) the data fit to 
     are saved to an Excel file. Data is first converted to Pandas dataframe. Then the 
-    data is saved in a multi-sheet Excel (*.xlsx) file. 
+    data is saved in a multi-sheet Excel (\*.xlsx) file. 
     
 
     Parameters

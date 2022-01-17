@@ -95,20 +95,31 @@ def window_function(im):
 
 def determining_A_and_B(im, use_BH_filter=False,
                         centralAngle=None, angRange=None):
-    '''
-    Calculates the 2D Fourier transform of each frame in the image series and takes the radial averages.
-    This in order to find the amplitude and background.
+    r"""
+    Used to assist in determining the parameters :math:`A` and :math:`B` in the expression for the 
+    DDM matrix :math:`D(q,\Delta t) = A(q) [1 - f(q, \Delta t)] + B(q)`. We take the Fourier transforms 
+    of each image and average those together. Those are then radially averaged (or average over a select 
+    range of angles if `centralAngle` and `angRange` are not None). This (now  1D) function should approach 
+    the value :math:`\frac{1}{2} \times (A(q) + B(q))` as :math:`q` gets large. 
 
-    :param im: Images series
-    :type im: numpy array
-    :param use_BH_filter: Apply window filter
-    :type use_BH_filter: bool
+    Parameters
+    ----------
+    im : array
+        Images used for DDM analysis. Should be 3D array with the first dimension being time. 
+    use_BH_filter : bool, optional
+        Whether or not BLackman-Harris windowing is applied in the DDM analysis. The default is False.
+    centralAngle : float, optional
+        Use if you do *not* want to radially average the full DDM matrix. Otherwise, set to None (the default).
+    angRange : float, optional
+        Use if you do *not* want to radially average the full DDM matrix. Otherwise, set to None (the default).
 
-    :return:
-            * radial_averages (*numpy array*)- radial average of all frames in provided image series
+    Returns
+    -------
+    rad_av_av_fftsq : array
+        Radial average of the average of all Fourier transforms of the images
 
+    """
 
-    '''
     av_fftsq_of_each_frame = np.zeros_like(im[0]*1.0) #initialize array
     nFrames,ndx,ndy = im.shape
     if use_BH_filter:
@@ -214,9 +225,9 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
     
     '''
 
-    ### TO-DO: check that imageArray is in fact a 3D array
-    #
-    #
+    if imageArray.ndim != 3:
+        print("Images passed to `computeDDMMatrix` must be 3D array.")
+        return
 
     #Applies the Blackman-Harris window if desired
     if use_BH_windowing:
@@ -278,6 +289,7 @@ def get_FF_DDM_matrix(imageFile, dts, submean=True,
     '''
     This code calculates the far-field DDM matrix for the series of images
     in imageFile at the lag times specified in dts.
+    
     :param imageFile: Either a string specifying the location of the data or the data itself as a numpy array
     :param dts: 1D array of delay times
     :param limitImsTo: defaults to None
@@ -360,9 +372,9 @@ def fit_ddm_all_qs(dData, times, param_dictionary,
     r"""Function to fit the DDM matrix or ISF for all wavevectors.
     
     This function fits the data from DDM (either the DDM matrix or the
-    intermediate scattering function (ISF)) to a specified model. 
+    intermediate scattering function (ISF, :math:`f(q,\Delta t)`)) to a specified model. 
     
-    .. math:: D(q,\Delta t) = A(q) [1 - ISF(q,\Delta t)] + B(q)
+    .. math:: D(q,\Delta t) = A(q) [1 - f(q,\Delta t)] + B(q)
     
     Parameters
     ----------
@@ -736,7 +748,8 @@ def execute_ScipyCurveFit_fit(dData, times, param_dict, sigma=None, debug=True, 
 
 
 def generate_mask(im, centralAngle, angRange):
-    r"""Generates a mask of the same size as `im`.
+    r"""Generates a mask of the same size as `im` to avoid radially averaging the 
+    whole DDM matrix.
     
     If the DDM matrix is not to be radially averaged, we can use a mask 
     to average values of the matrix only in some angular range around 
@@ -745,16 +758,16 @@ def generate_mask(im, centralAngle, angRange):
     Parameters
     ----------
     im : ndarray
-        DESCRIPTION.
+        Image (2D) of same size you want the mask to be.
     centralAngle : float
-        DESCRIPTION.
+        Central angle of the angular range to average over
     angRange : float
-        DESCRIPTION.
+        Range to overage over.
 
     Returns
     -------
     mask : ndarray
-        DESCRIPTION.
+        Mask with 1s corresponding to the angular region specified and 0s elsewhere.
 
     """
     nx,ny = im.shape
@@ -778,10 +791,26 @@ def generate_mask(im, centralAngle, angRange):
 
 
 def find_radial_average(im, mask=None, centralAngle=None, angRange=None):
-    '''
-    For a single 2D matrix, finds radial average
+    r"""
+    Computes the radial average of a single 2D matrix.
 
-    '''
+    Parameters
+    ----------
+    im : array
+        Matrix to radially average
+    mask : array or None, optional
+        If desired, use a mask to avoid radially averaging the whole array. The default is None.
+    centralAngle : float
+        Central angle of the angular range to average over
+    angRange : float
+        Range to overage over.
+
+    Returns
+    -------
+    array
+        Radial average of the passed array `im`
+
+    """
     #From https://github.com/MathieuLeocmach/DDM/blob/master/python/DDM.ipynb
     nx,ny = im.shape
 
@@ -868,12 +897,12 @@ def radial_avg_ddm_matrix(ddm_matrix, mask=None,
 
 
 def get_MSD_from_DDM_data(q, A, D, B, qrange_to_avg):
-    r'''
+    r"""
     Finds the mean squared displacement (MSD) from the DDM matrix as well as values
     for the amplitude (A) and background (B). Uses the method described in the papers below. [1]_ [2]_
     
     
-    .. math:: MSD(\Delta t) = \frac{4}{q^2} \ln [\frac{A(q)}{A(q)-D(q,\Delta t)+B(q)}]
+    .. math:: MSD(\Delta t) = \frac{4}{q^2} \ln \left[ \frac{A(q)}{A(q)-D(q,\Delta t)+B(q)} \right]
     
     
     
@@ -904,7 +933,7 @@ def get_MSD_from_DDM_data(q, A, D, B, qrange_to_avg):
     .. [2] Edera, P., Bergamini, D., Trappe, V., Giavazzi, F. & Cerbino, R. Differential dynamic microscopy microrheology of soft materials: A tracking-free determination of the frequency-dependent loss and storage moduli. Phys. Rev. Materials 1, 073804 (2017).
 
 
-    '''
+    """
     msd = (4./(q*q)) * np.log(A / (A-D+B))
     msd_mean = msd[qrange_to_avg[0]:qrange_to_avg[1],:].mean(axis=0)
     msd_stddev = msd[qrange_to_avg[0]:qrange_to_avg[1],:].std(axis=0)

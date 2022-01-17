@@ -21,6 +21,7 @@ Welcome to PyDDM's documentation!
    
    usage
    walkthrough
+   Walkthrough - simple
 
 .. autosummary::
    :toctree: _autosummary

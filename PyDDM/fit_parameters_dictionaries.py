@@ -4,21 +4,159 @@ the DDM matrix or the ISF. It also contains functions for setting the initial
 guesses and bounds for the fitting parameters for these models. 
 
 .. data:: ddm_matrix_single_exponential
-  
-    :type: dict
 
+    :type: dict
+    
     Single exponential model for the DDM matrix. This model fits the DDM matrix
-    to DDM_Matrix = A(q) (1 - exp(-(dt/tau)^s)) + B(q)
+    to :math:`D(q,\Delta t) = A(q) [1 - \exp(-(\Delta t/\\tau (q))^{s(q)})] + B(q)`. The 
+    parameter :math:`s(q)` is the stretching exponent. This parameter can be fixed to 1 if 
+    a simple exponential function is desired. 
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'DDM Matrix'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **4** element list corresponding to the parameters :math:`A`, :math:`\\tau`, :math:`B`, and 
+    :math:`s`. These are given the parameter names, respectively: 'Amplitude', 'Tau', 'Background' and 'StretchingExp'. 
 
 .. data:: ddm_matrix_single_exponential_nonerg
 
     :type: dict
-    descr
+    
+    Single exponential model for the DDM matrix with a non-ergodicity parameter, :math:`C(q)`. 
+    This model fits the DDM matrix
+    to :math:`D(q,\Delta t) = A(q) [1 - f(q, \Delta t)] + B(q)` where the ISF is equal to 
+    :math:`f(q,\Delta t) = [1 - C(q)] \exp(-(\Delta t/\\tau (q))^{s(q)}) + C(q)`. 
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'DDM Matrix'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **5** element list corresponding to the parameters :math:`A`, :math:`\\tau`, :math:`B`, 
+    :math:`s`, and :math:`C`. These are given the parameter names, respectively: 'Amplitude', 'Tau', 'Background', 'StretchingExp', and 
+    'NonErgodic'. 
 
 .. data:: ddm_matrix_double_exponential
 
     :type: dict
-    descr
+    
+    Double exponential model for the DDM matrix. 
+    This model fits the DDM matrix
+    to :math:`D(q,\Delta t) = A(q) [1 - f(q, \Delta t)] + B(q)` where the ISF is equal to 
+    :math:`f(q,\Delta t) = a(q) \exp(-(\Delta t/\\tau_1 (q))^{s_1(q)}) + (1-a(q)) \exp(-(\Delta t/\\tau_2 (q))^{s_2(q)})`. Here, 
+    :math:`a(q)` is the fraction of the dynamics described with the first decay time, :math:`\\tau_1(q)`.
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'DDM Matrix'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **7** element list corresponding to the parameters :math:`A`, :math:`B`, :math:`a`, :math:`\\tau_1`,  
+    :math:`s_1`, :math:`\\tau_2`, and :math:`s_2`. These are given the parameter names, respectively: 'Amplitude', 'Background', 'Fraction1', 
+    'Tau', 'StretchingExp', 'Tau2', and 'StretchingExp2'. 
+    
+.. data:: ddm_matrix_exponential_ballistic
+
+    :type: dict
+    
+    DDM matrix is modeled with an exponential term and a term to describe ballistic motion that 
+    has a distribution of velocities modeled with a Shulz distribution. The DDM matrix is
+    :math:`D(q,\Delta t) = A(q) [1 - f(q, \Delta t)] + B(q)` where the ISF is equal to 
+    :math:`f(q,\Delta t) = \exp(-(\Delta t/\\tau_1 (q))^{s_1(q)}) \\times [(1-a) + a V(q, \Delta t)]`. Here, 
+    :math:`V = \\frac{\\tau_2 \\times (Z+1)}{Z \\times \Delta t} \\frac{Z \\times \\tan^{-1}(\\theta)}{(1+\\theta^2)^{Z/2}}` and 
+    :math:`\\theta = \\frac{\Delta t}{\\tau_2 \\times (Z+1)}`. The parameter :math:`Z(q)` is referred to as the 
+    Schulz number and characterizes the distribution of velocities. 
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'DDM Matrix'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **7** element list corresponding to the parameters :math:`A`, :math:`B`, :math:`\\tau_1`,  
+    :math:`s`, :math:`\\tau_2`, :math:`a`, and :math:`Z`. These are given the parameter names, respectively: 'Amplitude', 'Background',  
+    'Tau', 'StretchingExp', 'Tau2', 'FractionBallistic', and 'SchulzNum'. 
+    
+.. data:: ddm_matrix_ballistic
+
+    :type: dict
+    
+    DDM matrix is modeled with a term to describe ballistic motion that 
+    has a distribution of velocities modeled with a Shulz distribution. The DDM matrix is
+    :math:`D(q,\Delta t) = A(q) [1 - f(q, \Delta t)] + B(q)` where the ISF is equal to 
+    :math:`f(q,\Delta t) = V(q, \Delta t)]`. Here, 
+    :math:`V = \\frac{\\tau \\times (Z+1)}{Z \\times \Delta t} \\frac{Z \\times \\tan^{-1}(\\theta)}{(1+\\theta^2)^{Z/2}}` and 
+    :math:`\\theta = \\frac{\Delta t}{\\tau \\times (Z+1)}`. The parameter :math:`Z(q)` is referred to as the 
+    Schulz number and characterizes the distribution of velocities.
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'DDM Matrix'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **4** element list corresponding to the parameters :math:`A`, :math:`B`, :math:`\\tau`,  
+    and :math:`Z`. These are given the parameter names, respectively: 'Amplitude', 'Background',  
+    'Tau', and 'SchulzNum'. 
+    
+.. data:: isf_single_exponential
+
+    :type: dict
+    
+    Single exponential model for the intermediate scattering function (ISF). This model fits the ISF to 
+    to :math:`f(q,\Delta t) = \exp(-(\Delta t/\\tau (q))^{s(q)})`. The 
+    parameter :math:`s(q)` is the stretching exponent. This parameter can be fixed to 1 if 
+    a simple exponential function is desired. 
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'ISF'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **2** element list corresponding to the parameters :math:`\\tau` and 
+    :math:`s`. These are given the parameter names, respectively: 'Tau' and 'StretchingExp'. 
+    
+.. data:: isf_single_exponential_nonerg
+
+    :type: dict
+    
+    Single exponential model for the intermediate scattering function (ISF) with a non-ergodicity parameter, :math:`C(q)`. 
+    This model fits the ISF to :math:`f(q,\Delta t) = [1 - C(q)] \exp(-(\Delta t/\\tau (q))^{s(q)}) + C(q)`. 
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'ISF'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **3** element list corresponding to the parameters :math:`\\tau`,  
+    :math:`s`, and :math:`C`. These are given the parameter names, respectively: 'Tau', 'StretchingExp', and 'NonErgodic'. 
+
+.. data:: isf_double_exponential
+
+    :type: dict
+    
+    Double exponential model for the intermediate scattering function (ISF). 
+    This model fits the ISF to 
+    :math:`f(q,\Delta t) = a(q) \exp(-(\Delta t/\\tau_1 (q))^{s_1(q)}) + (1-a(q)) \exp(-(\Delta t/\\tau_2 (q))^{s_2(q)})`. Here, 
+    :math:`a(q)` is the fraction of the dynamics described with the first decay time, :math:`\\tau_1(q)`.
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'ISF'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **5** element list corresponding to the parameters :math:`a`, :math:`\\tau_1`,  
+    :math:`s_1`, :math:`\\tau_2`, and :math:`s_2`. These are given the parameter names, respectively: 'Fraction1', 'Tau', 'StretchingExp', 
+    'Tau2', and 'StretchingExp2'. 
+    
+.. data:: isf_exponential_ballistic
+
+    :type: dict
+    
+    The intermediate scattering function (ISF) is modeled with an exponential term and a term to describe ballistic motion that 
+    has a distribution of velocities modeled with a Shulz distribution. The ISF is equal to 
+    :math:`f(q,\Delta t) = \exp(-(\Delta t/\\tau_1 (q))^{s_1(q)}) \\times [(1-a) + a V(q, \Delta t)]`. Here, 
+    :math:`V = \\frac{\\tau_2 \\times (Z+1)}{Z \\times \Delta t} \\frac{Z \\times \\tan^{-1}(\\theta)}{(1+\\theta^2)^{Z/2}}` and 
+    :math:`\\theta = \\frac{\Delta t}{\\tau_2 \\times (Z+1)}`. The parameter :math:`Z(q)` is referred to as the 
+    Schulz number and characterizes the distribution of velocities. 
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'ISF'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **5** element list corresponding to the parameters :math:`\\tau_1`,  
+    :math:`s`, :math:`\\tau_2`, :math:`a`, and :math:`Z`. These are given the parameter names, respectively:   
+    'Tau', 'StretchingExp', 'Tau2', 'FractionBallistic', and 'SchulzNum'. 
+    
+.. data:: isf_ballistic
+
+    :type: dict
+    
+    The intermediate scattering function (ISF) is modeled with a term to describe ballistic motion that 
+    has a distribution of velocities modeled with a Shulz distribution. The ISF is :math:`f(q,\Delta t) = V(q, \Delta t)]`. Here, 
+    :math:`V = \\frac{\\tau \\times (Z+1)}{Z \\times \Delta t} \\frac{Z \\times \\tan^{-1}(\\theta)}{(1+\\theta^2)^{Z/2}}` and 
+    :math:`\\theta = \\frac{\Delta t}{\\tau \\times (Z+1)}`. The parameter :math:`Z(q)` is referred to as the 
+    Schulz number and characterizes the distribution of velocities.    
+    
+    For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF`. 
+    This dictionary also contains the key `data_to_use` which is equal to 'ISF'. The key `parameter_info` is set 
+    to a list of dictionaries. This is a **2** element list corresponding to the parameters :math:`\\tau`  and 
+    :math:`Z`. These are given the parameter names, respectively: 'Tau', and 'SchulzNum'. 
+    
 """
 
 """
@@ -269,11 +407,35 @@ def turn_parameters_into_dataframe_for_display(parinfo):
     return pd_data
 
 def return_possible_fitting_models():
+    r"""
+    Prints a list of the different fitting models available. 
+
+    Returns
+    -------
+    None.
+
+    """
     model_dictionary_keys = fitting_models.keys()
     for i,model_name in enumerate(model_dictionary_keys):
         print("%i - %s" % (i+1, model_name))
         
 def return_parameter_names(parameter_dictionary, print_par_names=False):
+    r"""
+    Returns a list of the parameter names.
+
+    Parameters
+    ----------
+    parameter_dictionary : dict
+        Parameter dictionary for a given model.
+    print_par_names : TYPE, optional
+        Prints the names of the parameters in the model. 
+
+    Returns
+    -------
+    param_names : list[str]
+        List of parameter names
+
+    """
     #print(parameter_dictionary.keys())
     param_info = parameter_dictionary['parameter_info']
     param_names = []
@@ -284,9 +446,23 @@ def return_parameter_names(parameter_dictionary, print_par_names=False):
     return param_names
 
 def set_parameter_initial_guess(parameter_dictionary, param_name, value):
+    r"""
+    Sets the initial guess for a parameter. 
+
+    Parameters
+    ----------
+    parameter_dictionary : dict
+        Parameter dictionary for a given model
+    param_name : str
+        Name of the parameter
+    value : float
+        Initial guess for the  parameter
+
+
+    """
     if 'parameter_info' not in parameter_dictionary:
         print("Provided parameter dictionary did not have 'parameter_info' as a key.")
-        return 0
+        return
     param_info = parameter_dictionary['parameter_info']
     list_of_paramnames = []
     which_parameter = -1
@@ -299,9 +475,25 @@ def set_parameter_initial_guess(parameter_dictionary, param_name, value):
         print(f"Parameter '{param_name}' set to {value}.")
 
 def set_parameter_guess_and_limits(parameter_dictionary, param_name, guess_min_max):
+    r"""
+    Sets the initial guess *and* bounds for a parameter when doing the fitting
+
+    Parameters
+    ----------
+    parameter_dictionary : dict
+        Parameter dictionary for a given model
+    param_name : str
+        Name of the parameter
+    guess_min_max : array_like
+        *Three* element list or array. First element corresponds to the 
+        initial guess; second element corresponds to lower bound; third 
+        element corresponds to upper bound.
+
+
+    """
     if 'parameter_info' not in parameter_dictionary:
         print("Provided parameter dictionary did not have 'parameter_info' as a key.")
-        return 0
+        return
     param_info = parameter_dictionary['parameter_info']
     list_of_paramnames = []
     which_parameter = -1
@@ -320,7 +512,22 @@ def set_parameter_guess_and_limits(parameter_dictionary, param_name, guess_min_m
         print(f"Parameter '{param_name}' not found in model 'parameter_info'. Check for typos.")
     #turn_parameters_into_dataframe_for_display(parameter_dictionary['parameter_info'])
 
+
 def set_parameter_limits(parameter_dictionary, param_name, min_max):
+    r"""
+    Sets the initial guess *and* bounds for a parameter when doing the fitting
+
+    Parameters
+    ----------
+    parameter_dictionary : dict
+        Parameter dictionary for a given model
+    param_name : str
+        Name of the parameter
+    min_max : array_like
+        *Two* element list or array. First element corresponds to lower bound; second 
+        element corresponds to upper bound.
+
+    """
     if 'parameter_info' not in parameter_dictionary:
         print("Provided parameter dictionary did not have 'parameter_info' as a key.")
         return 0
@@ -341,12 +548,26 @@ def set_parameter_limits(parameter_dictionary, param_name, min_max):
 
 
 def set_parameter_fixed(parameter_dictionary, param_name, fix):
+    r"""
+    Sets a parameter to be fixed. CURRENTLY NOT SUPPORTED!
+
+    Parameters
+    ----------
+    parameter_dictionary : dict
+        Parameter dictionary for a given model
+    param_name : str
+        Name of the parameter
+    fix : bool
+        If True, parameter will be fixed. If False, parameter will 
+        be allowed to vary. 
+
+    """
     if 'parameter_info' not in parameter_dictionary:
         print("Provided parameter dictionary did not have 'parameter_info' as a key.")
-        return 0
+        return
     if type(fix)!=bool:
         print("The 'fixed' parameter must be either True or False.")
-        return 0
+        return
     param_info = parameter_dictionary['parameter_info']
     list_of_paramnames = []
     which_parameter = -1
@@ -363,49 +584,55 @@ def set_parameter_fixed(parameter_dictionary, param_name, fix):
    
 
 def populate_intial_guesses(parameter_dictionary, initial_guesses):
-    '''
+    r"""
+    Set the initial guess for all parameters in a parameter dictionary.     
+    
     Parameters
     ----------
     parameter_dictionary : dictionary
-        
+        Parameter dictionary for a given model
     initial_guesses : array
         1-D array containing the initial guesses for the parameters
 
-    Returns
-    -------
-    None.
+    Note
+    ----
+    The array (or list) `initial_guesses` must have the same number of 
+    elements as the `parameter_dictionary` has in the key `parameter_info`. 
 
-    '''
+    """
     if 'parameter_info' in parameter_dictionary:
         number_of_parameters_in_dictionary = len(parameter_dictionary['parameter_info'])
         length_of_initial_guesses = len(initial_guesses)
         if number_of_parameters_in_dictionary != length_of_initial_guesses:
             print("Not the correct number of initial guesses for paratmers. %i initial guesses but must have %i" % (length_of_initial_guesses, number_of_parameters_in_dictionary))
-            return 0
+            return 
         else:
             for i,param in enumerate(parameter_dictionary['parameter_info']):
                 param['value'] = initial_guesses[i]
     else:
         print("Paramter dictionary must have key of 'paramter_info'")
-        return 0
+        return 
     
     
 def populate_min_and_max_of_paramters(parameter_dictionary, minp, maxp):
-    '''
+    r"""
+    Set the initial guess for all parameters in a parameter dictionary.   
+    
     Parameters
     ----------
-    parameter_dictionary : dictionary
-        
+    parameter_dictionary : dict
+        Parameter dictionary for a given model
     minp : array
         1-D array containing the minimum value each parameter can take
     maxp : array
         1-D array containing the minimum value each parameter can take
 
-    Returns
-    -------
-    None.
+    Note
+    ----
+    The arrays (or lists) `minp` and `maxp` must have the same number of 
+    elements as the `parameter_dictionary` has in the key `parameter_info`. 
 
-    '''
+    """
     if 'parameter_info' in parameter_dictionary:
         number_of_parameters_in_dictionary = len(parameter_dictionary['parameter_info'])
         length_of_mins = len(minp)
@@ -425,19 +652,21 @@ def populate_min_and_max_of_paramters(parameter_dictionary, minp, maxp):
         return 0
     
 def extract_array_of_parameter_values(parameter_dictionary):
-    '''
-    
+    r"""
+    From a parameter dictionary, return array of the initial guesses for 
+    the parameters. 
 
     Parameters
     ----------
-    parameter_dictionary : TYPE
-        DESCRIPTION.
+    parameter_dictionary : dict
+        Parameter dictionary for a given model.
 
     Returns
     -------
-    None.
+    array
+        Values of the parameters.
 
-    '''
+    """
     parameter_values = []
     if 'parameter_info' in parameter_dictionary:
         for i,param in enumerate(parameter_dictionary['parameter_info']):
@@ -448,19 +677,23 @@ def extract_array_of_parameter_values(parameter_dictionary):
     return np.array(parameter_values)
 
 def extract_array_of_param_mins_maxes(parameter_dictionary):
-    '''
-    
-    
+    r"""
+    From a parameter dictionary, return two arrays: first corresponds to 
+    the lower bounds; second to upper bounds. 
+
     Parameters
     ----------
-    parameter_dictionary : TYPE
-        DESCRIPTION.
+    parameter_dictionary : dict
+        Parameter dictionary for a given model.
 
     Returns
     -------
-    None.
+    lower_bounds : array
+        Lower bounds for all parameters
+    upper_bounds : array
+        Upper bounds for all parameters
 
-    '''
+    """
     parameter_mins = []
     parameter_maxes = []
     if 'parameter_info' in parameter_dictionary:
@@ -474,19 +707,21 @@ def extract_array_of_param_mins_maxes(parameter_dictionary):
 
 
 def extract_array_of_fixed_or_not(parameter_dictionary):
-    '''
-    
-    
+    r"""
+    From a parameter dicionary, return an array specifying whether 
+    the parameters are fixed (True) or not (False)
+
     Parameters
     ----------
-    parameter_dictionary : TYPE
-        DESCRIPTION.
+    parameter_dictionary : dict
+        Parameter dictionary for a given model.
 
     Returns
     -------
-    None.
+    array
+        Array of type bool
 
-    '''
+    """
     fixed_parameters = []
     if 'parameter_info' in parameter_dictionary:
         for i,param in enumerate(parameter_dictionary['parameter_info']):

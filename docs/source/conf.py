@@ -42,7 +42,8 @@ extensions = [ 'sphinx.ext.duration',
      'sphinx.ext.autosummary',
      #'sphinx.ext.imgmath',
      'sphinx.ext.napoleon',
-     'sphinx_rtd_theme' #pip install sphinx_rtd_theme
+     'nbsphinx' #https://nbsphinx.readthedocs.io/en/0.8.8/usage.html
+     #'sphinx_rtd_theme' #pip install sphinx_rtd_theme
 ]
 autosummary_generate = True
 autosummary_generate_overwrite = True
