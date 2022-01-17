@@ -1190,14 +1190,25 @@ class DDM_Fit:
         else:
             plt.ioff()
 
-        if (type(fit_results)!=xr.Dataset) and (fit_results is None):
+        if isinstance(fit_results, str):
+            if fit_results in self.fittings:
+                fit_results = self.fittings[fit_results]['fit']
+            else:
+                print("Not in the list of keys: ", list(self.fittings.keys()))
+                return
+        elif fit_results is None:
             fit_keys = list(self.fittings)
             fit_results = self.fittings[fit_keys[-1]]['fit'] #gets the latest fit
             print(f"Using fit stored with key '{fit_keys[-1]}'.")
+        elif isinstance(fit_results, xr.core.dataset.Dataset):
+            pass
+        else:
+            print("Not a valid parameter passed to fit_results.")
+            return
 
         list_of_all_figs = [] #initialize empty list to contain figures
 
-        fig1 = hf.plot_to_inspect_fit(np.arange(q_indices[0],q_indices[-1],4), fit_results, self.ddm_dataset,
+        fig1 = hf.plot_to_inspect_fit(np.arange(q_indices[0],q_indices[-1],4), fit_results,
                                      show_legend=False, show_colorbar=True,
                                      print_params=False)
         list_of_all_figs.append(fig1)
@@ -1253,7 +1264,6 @@ class DDM_Fit:
 
             fig3b = hf.plot_one_tau_vs_q(fit_results, self.ddm_dataset, 'c', 0.6, use_tau2=True, use_new_tau=use_new_tau)
             list_of_all_figs.append(fig3b)
-            #fig3c = hf.plot_taus_together(fit_results, self.ddm_dataset, colormap='viridis')
             fig3c = hf.plot_one_tau_vs_q(fit_results, self.ddm_dataset, 'b', 0.6, show_table=False, use_new_tau=use_new_tau)
             fig3c = hf.plot_one_tau_vs_q(fit_results, self.ddm_dataset, 'c', 0.3, use_tau2=True, fig_to_use=fig3c, show_table=False, use_new_tau=use_new_tau)
             list_of_all_figs.append(fig3c)
@@ -1458,20 +1468,23 @@ class DDM_Fit:
 
         theory_values = fit.theory
         if (fit.data_to_use == 'DDM Matrix'):
-            data_values = self.ddm_dataset.ravs
+            if 'ravs' in fit.data_vars:
+                data_values = fit.ravs
+            elif 'ddm_matrix_data' in fit.data_vars:
+                data_values = fit.ddm_matrix_data
             if use_isf:
                 if "Background" in fit.parameter:
                     background = fit.parameters.loc['Background']
                 else:
-                    background = self.ddm_dataset.B
+                    background = fit.B
                 if "Amplitude" in fit.parameter:
                     amplitude = fit.parameters.loc['Amplitude']
                 else:
-                    amplitude = self.ddm_dataset.Amplitude
-                data_values = 1 - ((self.ddm_dataset.ravs - background) / amplitude)
+                    amplitude = fit.A
+                data_values = 1 - ((data_values - background) / amplitude)
                 theory_values = 1 - ((theory_values-background)/amplitude)
         elif (fit.data_to_use == 'ISF'):
-            data_values = self.ddm_dataset.ISF
+            data_values = fit.isf_data
         error_vs_lagtime = data_values - theory_values
         mean_squared_error = np.mean(error_vs_lagtime**2, axis=0) #mean square error as function of q
         if show_plot:
@@ -1481,7 +1494,7 @@ class DDM_Fit:
             axes.set_xlabel("Lag time (s)")
             axes.set_ylabel("Error between data and fit.")
             axes.hlines(0, fit.lagtime[0], fit.lagtime[-1], 'k', linestyle=':')
-            axes.set_title("q value of %.4f" % self.ddm_dataset.q[q_index])
+            axes.set_title("q value of %.4f" % fit.q[q_index])
         print("Mean square error of %.8f" % mean_squared_error[q_index])
         return error_vs_lagtime, mean_squared_error
 
@@ -1543,33 +1556,334 @@ class DDM_Fit:
         plt.show()
 
 
-    def save_fits_disk(self, fit_name=None, save_directory=None):
-        "save the interesting fits to disk"
-        #user provides the list with names of fits which should be saved
-        #Those keys in the dictionary fittings which have a match in the list are saved with pickle dump.
-        #If fit_name is None, then will save all
+    def save_fits_disk(self, fit=None, save_directory=None, file_type = 'pickle', fit_fname_end=None):
+        r"""Saves fit results
+        
+        Fit results are saved either as a pickle format or as a netcdf file. 
+        
+
+        Parameters
+        ----------
+        fit_name : string or xarray Dataset, optional
+            The fit to save. The default is None. If None, then *all* fit results saved 
+            in the dictionary self.fittings will be saved. If not all fits should be saved, 
+            then set `fit_name` to the dictionary key (as string) of self.fittings *OR* set 
+            `fit_name` to the xarray Dataset. 
+        save_directory : string, optional
+            Directory to save data. The default is None. If None, then the directory 
+            where this will be saved will be the `DataDirectory` specified in the yaml 
+            data used when the :py:class:`ddm_analysis_and_fitting.DDM_Fit` class was initialized. 
+        file_type : string, optional
+            Either 'pickle' or 'netcdf'. Default is 'pickle'.
+        fit_fname_end : string, optional
+            Saved filename will contain the image data filename with this string appended 
+            at the end. Note that if `fit` was passed as a string, then that string will be 
+            used in the filename (unless this parameter is not None, the default). If the 
+            `fit` parameter is a Dataset, then the default is to use a filename with 'fit' 
+            appended at the end (unless this parameter is not None). Note that if *all* fits 
+            in the self.fittings dictionary are to be saved, then this parameter is irrevelant and 
+            the keys of the dictionary will be used in the filenames. 
+
+        """
+
 
         if save_directory is None:
             save_directory = self.data_dir
 
-        if fit_name is not None:
-            saved_fit_filename = f'{save_directory}ddm_fit_results_{self.filename_noext}_{fit_name}.pickle'
-            try:
-                with open(saved_fit_filename, 'wb') as f:
-                    pickle.dump(self.fittings[fit_name]['fit'], f, pickle.HIGHEST_PROTOCOL)
-            except:
-                print(f'Could not save fit results as: {saved_fit_filename}.')
+        if fit is not None:
+            if isinstance(fit, xr.core.dataset.Dataset):
+                fit_to_save = fit
+                if fit_fname_end == None:
+                    fit_fname_end = 'fit'
+            elif isinstance(fit, str):
+                if fit in self.fittings:
+                    fit_to_save = self.fittings[fit]['fit']
+                    if fit_fname_end == None:
+                        fit_fname_end = fit
+                else:
+                    print("The key %s was not found in self.fittings." % fit)
+                    print("Available keys are: ", list(self.fittings.keys()))
+                    return 
+            else:
+                print("Must pass a fit of either type xarray.core.dataset.Dataset or as a string.")
+                return
+            if (file_type == 'pickle') or (file_type == 'Pickle'):
+                saved_fit_filename = f'{save_directory}ddm_fit_results_{self.filename_noext}_{fit_fname_end}.pickle'
+                try:
+                    with open(saved_fit_filename, 'wb') as f:
+                        pickle.dump(fit_to_save, f, pickle.HIGHEST_PROTOCOL)
+                except:
+                    print(f'Could not save fit results as: {saved_fit_filename}.')
+            else:
+                saved_fit_filename = f'{save_directory}ddm_fit_results_{self.filename_noext}_{fit_fname_end}.nc'
+                fit_to_save.to_netcdf(path = saved_fit_filename)
+            
 
         else:
             for name_of_fit in self.fittings:
-                saved_fit_filename = f'{save_directory}ddm_fit_results_{self.filename_noext}_{name_of_fit}.pickle'
-                try:
-                    with open(saved_fit_filename, 'wb') as f:
-                        pickle.dump(self.fittings[name_of_fit]['fit'], f, pickle.HIGHEST_PROTOCOL)
-                except:
-                    print(f'Could not save fit results as: {saved_fit_filename}.')
+                if (file_type == 'pickle') or (file_type == 'Pickle'):
+                    saved_fit_filename = f'{save_directory}ddm_fit_results_{self.filename_noext}_{name_of_fit}.pickle'
+                    try:
+                        with open(saved_fit_filename, 'wb') as f:
+                            pickle.dump(self.fittings[name_of_fit]['fit'], f, pickle.HIGHEST_PROTOCOL)
+                    except:
+                        print(f'Could not save fit results as: {saved_fit_filename}.')
+                else:
+                    self.fittings[name_of_fit]['fit'].to_netcdf(path = saved_fit_filename)
 
-        return 1
+
+##############################################################################
+# FUNCTIONS FOR INSPECTING FITS                                              #
+##############################################################################
+
+
+def get_tau_vs_q_fit(fit_results, use_new_tau=True, use_tau2=False, 
+                     forced_qs=None, update_good_q_range=True):
+    r"""From decay  time (tau) vs wavevector (q), gets effective diffusion coeff and scaling exponent
+    
+    This function looks at tau vs q and fits tau(q) to a powerlaw. From this we
+    can determine an effective diffusion coefficient (or velocity). This function 
+    will also try to estimate a 'good' range of q values for which a power law 
+    relationship holds. To do so, it uses a linear model estimator. [1]_ 
+    
+    Parameters
+    ----------
+    fit_results : xarray Dataset
+        Dataset containing fit results. Must have 'q' as a coordinate and have 'Tau' 
+        (and/or 'Tau2') as a parameter. 
+    use_new_tau : bool, optional
+        If True (default), uses the stretching exponent to find more representative 
+        decay time for each q value. 
+    use_tau2 : bool, optional
+        If False (default), uses 'Tau'. This is the case if there is just one decay 
+        time in the model used.
+    forced_qs : list or None, optional
+        If None (default), then the range of good q values for which a power law 
+        relationship holds will be estimated. If not None, must be a list of number. 
+        The first number would be the smallest index of q values and the second, the 
+        largest index. 
+    update_good_q_range : bool, optional
+        If True (default), then the range of good q values for which a power law 
+        relationship is observed will be updated using a linear model estimator. 
+    
+
+    Returns
+    -------
+    good_q_range : list
+        List of two numbers. Low and high indices of 'good' q values.
+    slope : float
+        Slope of log tau vs log q. If -2, then dynamics are diffusive. If -1, 
+        then dynamics are ballistic. If less than -2, dynamics are subdiffusive. 
+    effective_diffconst : float
+        The effective diffusion coefficient
+    MSD_alpha : float
+        Estimated power in the relationship MSD ~ (lagtime)^power
+    MSD_effective_diffconst : float
+        Estimated coefficient in relationship MSD = (coeff)(lagtime^power)
+    diffusion_coeff : float
+        Diffusion coefficient found by forcing a tau ~ q^-2 power law
+    diffusion_coeff_std : float
+        Standard deviation of previous value
+    velocity : float
+        Velocity found by forcing a tau ~ q^-1 power law
+    velocity_std : float
+        Standard deviation of previous value
+        
+    
+    References
+    ----------
+    .. [1] https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html
+    
+
+    """
+
+    if use_tau2:
+        tau = fit_results.parameters.loc['Tau2',:]
+    else:
+        tau = fit_results.parameters.loc['Tau',:]
+    if use_new_tau and ('StretchingExp' in fit_results.parameters.parameter):
+        stretch_exp = fit_results.parameters.loc['StretchingExp',:]
+        if (use_tau2 and ('StretchingExp2' in fit_results.parameters.parameter)):
+            stretch_exp = fit_results.parameters.loc['StretchingExp2',:]
+        print("In function 'get_tau_vs_q_fit', using new tau...")
+        tau = newt(tau, stretch_exp)
+        
+    q = fit_results.q
+
+    if forced_qs is not None:
+        lowq,hiq = forced_qs
+        good_q_range = forced_qs
+    else:
+        lowq = 1
+        hiq = len(q)-2
+        good_q_range = [lowq,hiq]
+
+    '''
+    for more on this linear model estimator
+    see https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html
+    '''
+    estimator = RANSACRegressor(random_state=42)
+    logq = np.log(q[lowq:hiq]).values
+    logt = np.log(tau[lowq:hiq]).values
+    estimator.fit(logq[:,np.newaxis], logt)
+    slope = estimator.estimator_.coef_
+    coef1 = estimator.estimator_.intercept_
+    inlier_mask = estimator.inlier_mask_
+    outlier_mask = np.logical_not(inlier_mask)
+
+    if update_good_q_range:
+        a=np.array([[len(list(g)),k] for k, g in itertools.groupby(inlier_mask)])
+        largest_run_of_trues = 0
+        index_start = 1
+        index_end = np.nan
+        index_to_mark = 0
+        for i in range(a.shape[0]):
+            if a[i,1]==1:
+                if a[i,0]>largest_run_of_trues:
+                    index_start = index_to_mark
+                    index_end = index_start + a[i,0]
+                    largest_run_of_trues = a[i,0]
+            index_to_mark += a[i,0]
+        if index_end != np.nan:
+            good_q_range = [index_start + lowq - 1, index_end + lowq - 1]
+
+    MSD_alpha = 2./(-1*slope)
+    MSD_effective_diffconst = (1.0/np.exp(coef1))**MSD_alpha
+    effective_diffconst = 1.0/np.exp(coef1)
+
+    '''
+    If we force a tau ~ 1/q or tau ~ 1/q^2 dependence to get
+     or a velocity a diffusion coeff, respectively.
+    '''
+    diffusion_coeff = np.mean(1./(tau[good_q_range[0]:good_q_range[1]]*(q[good_q_range[0]:good_q_range[1]]**2)))
+    diffusion_coeff_std = np.std(1./(tau[good_q_range[0]:good_q_range[1]]*(q[good_q_range[0]:good_q_range[1]]**2)))
+    velocity = np.mean(1./(tau[good_q_range[0]:good_q_range[1]]*(q[good_q_range[0]:good_q_range[1]])))
+    velocity_std = np.std(1./(tau[good_q_range[0]:good_q_range[1]]*(q[good_q_range[0]:good_q_range[1]])))
+
+    return good_q_range, slope, effective_diffconst, MSD_alpha, MSD_effective_diffconst, diffusion_coeff.values, diffusion_coeff_std.values, velocity.values, velocity_std.values
+
+
+def fit_report(fit_results, PDF_save=True, forced_qs=None, pdf_save_dir = "./", 
+               forced_qs_for_tau2=None, q_indices=[10,20,30,40], use_new_tau=True, 
+               fit_report_name=None, show=True):
+    """
+
+    
+    """
+
+    if fit_report_name is None:
+        pdf_report_filename = f'{pdf_save_dir}ddm_fit_report.pdf'
+    else:
+        pdf_report_filename = f'{pdf_save_dir}ddm_fit_report_{fit_report_name}.pdf'
+
+    if show:
+        plt.ion()
+    else:
+        plt.ioff()
+
+    if isinstance(fit_results, xr.core.dataset.Dataset):
+        pass
+    else:
+        print("Not a valid parameter passed to fit_results.")
+        return
+
+    list_of_all_figs = [] #initialize empty list to contain figures
+
+    fig1 = hf.plot_to_inspect_fit(np.arange(q_indices[0],q_indices[-1],4), fit_results,
+                                 show_legend=False, show_colorbar=True,
+                                 print_params=False)
+    list_of_all_figs.append(fig1)
+    fig2 = hf.plot_to_inspect_fit_2x2subplot(q_indices, fit_results)
+    list_of_all_figs.append(fig2)
+
+
+    if forced_qs is None:
+        forced_qs = fit_results.attrs['good_q_range']
+    qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = get_tau_vs_q_fit(fit_results, use_new_tau=use_new_tau,
+                                                                                      forced_qs=forced_qs, update_good_q_range=True)
+    fit_results.attrs['effective_diffusion_coeff'] = d_eff
+    fit_results.attrs['tau_vs_q_slope'] = slope
+    fit_results.attrs['msd_alpha'] = msd_alpha
+    fit_results.attrs['msd_effective_diffusion_coeff'] = msd_d_eff
+    fit_results.attrs['diffusion_coeff'] = d
+    fit_results.attrs['diffusion_coeff_std'] = d_std
+    fit_results.attrs['velocity'] = v
+    fit_results.attrs['velocity_std'] = v_std
+    if forced_qs is not None:
+        if (len(forced_qs)==2) and (forced_qs[0]<forced_qs[1]):
+            fit_results.attrs['good_q_range']=forced_qs
+    else:
+        fit_results.attrs['good_q_range'] = qrange
+
+
+    fig3 = hf.plot_one_tau_vs_q(fit_results, 'b', 0.2, y_position_of_text=0.2, use_new_tau=use_new_tau)
+    list_of_all_figs.append(fig3)
+
+    if ('StretchingExp' in fit_results.parameters.parameter):
+        fig4 = hf.plot_stretching_exponent(fit_results, 'g', 0.6)
+        list_of_all_figs.append(fig4)
+
+
+    if ('Tau2' in fit_results.parameters.parameter):
+
+        qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = get_tau_vs_q_fit(fit_results, use_tau2=True, use_new_tau=use_new_tau,
+                                                                                          forced_qs=forced_qs_for_tau2, update_good_q_range=True)
+        fit_results.attrs['tau2_effective_diffusion_coeff'] = d_eff
+        fit_results.attrs['tau2_tau_vs_q_slope'] = slope
+        fit_results.attrs['tau2_msd_alpha'] = msd_alpha
+        fit_results.attrs['tau2_msd_effective_diffusion_coeff'] = msd_d_eff
+        fit_results.attrs['tau2_diffusion_coeff'] = d
+        fit_results.attrs['tau2_diffusion_coeff_std'] = d_std
+        fit_results.attrs['tau2_velocity'] = v
+        fit_results.attrs['tau2_velocity_std'] = v_std
+        #fit_results.attrs['tau2_good_q_range'] = qrange
+        if forced_qs_for_tau2 != None:
+            if (len(forced_qs_for_tau2)==2) and (forced_qs_for_tau2[0]<forced_qs_for_tau2[1]):
+                fit_results.attrs['tau2_good_q_range']=forced_qs_for_tau2
+            else:
+                fit_results.attrs['tau2_good_q_range'] = qrange
+
+        fig3b = hf.plot_one_tau_vs_q(fit_results, 'c', 0.6, use_tau2=True, use_new_tau=use_new_tau)
+        list_of_all_figs.append(fig3b)
+        #fig3c = hf.plot_taus_together(fit_results, self.ddm_dataset, colormap='viridis')
+        fig3c = hf.plot_one_tau_vs_q(fit_results, 'b', 0.6, show_table=False, use_new_tau=use_new_tau)
+        fig3c = hf.plot_one_tau_vs_q(fit_results, 'c', 0.3, use_tau2=True, fig_to_use=fig3c, show_table=False, use_new_tau=use_new_tau)
+        list_of_all_figs.append(fig3c)
+        if ('StretchingExp2' in fit_results.parameters.parameter):
+            fig4b = hf.plot_stretching_exponent(fit_results, 'limegreen', 0.6, use_s2=True)
+            list_of_all_figs.append(fig4b)
+
+    fig5 = hf.plot_amplitude(fit_results)
+    list_of_all_figs.append(fig5)
+    fig6 = hf.plot_background(fit_results)
+    list_of_all_figs.append(fig6)
+    #fig7 = hf.plot_amplitude_over_background(fit_results, self.ddm_dataset)
+    #list_of_all_figs.append(fig7)
+    if ('Fraction1' in fit_results.parameters.parameter) or ('FractionBallistic' in fit_results.parameters.parameter):
+        fig8 = hf.plot_fraction(fit_results)
+        list_of_all_figs.append(fig8)
+    if ('SchulzNum' in fit_results.parameters.parameter):
+        fig9 = hf.plot_schulz(fit_results)
+        list_of_all_figs.append(fig9)
+    if ('SchulzNum2' in fit_results.parameters.parameter):
+        fig10 = hf.plot_schulz(fit_results, use2=True)
+        list_of_all_figs.append(fig10)
+    if 'NonErgodic' in fit_results.parameters.parameter:
+        fig11 = hf.plot_nonerg(fit_results)
+        list_of_all_figs.append(fig11)
+
+    if PDF_save:
+        with PdfPages(pdf_report_filename) as pdf:
+            for fgr in list_of_all_figs:
+                pdf.savefig(fgr, bbox_inches='tight')
+
+    if not show:
+        plt.close('all')
+        
+    return fit_results
+
+
+
 
 
 #see https://matplotlib.org/stable/gallery/event_handling/data_browser.html
@@ -1686,11 +2000,25 @@ class Browse_DDM_Fits:
         
 
 def interactive_fit_inspection(fit):
-    #ddm_matrix = fit.ddm_matrix_data
-    #lagtimes = fit.lagtime.values
-    #thry = fit.theory.values
-    qvals=fit.q.values
-    taus=fit.parameters.loc['Tau'].values
+    r"""Interactive plot of tau vs q to inspect each fit.
+    
+    Generates a decay time (tau) vs wavevector (q) plot on a log-log scale. Click 
+    a point to view a plot of the ISF or DDM matrix (whichever was used to fit) 
+    versus lag time for chosen q value. Pressing the 'N' or 'P' keys will also 
+    advance forward ('N'ext) or backwards ('P'revious) through the tau vs q points.
+    
+
+    Parameters
+    ----------
+    fit : xarray dataset
+        Results of fit to either DDM matrix or ISF.
+
+    Returns
+    -------
+    fig : matplotlib figure
+        Interactive figure
+
+    """
     
     fig, (ax, ax2) = plt.subplots(2, 1)
     ax.set_title('Decay time vs wavevector')

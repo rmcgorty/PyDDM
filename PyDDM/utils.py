@@ -70,7 +70,7 @@ def generate_pandas_table_fit_results(fit_results):
         #.highlight_between(subset='q', left=left_q_range, right=right_q_range)
     
 
-def plot_one_tau_vs_q(fit, ddmdata, plot_color, x_position_of_text, 
+def plot_one_tau_vs_q(fit, plot_color, x_position_of_text, 
                       y_position_of_text=0.96, 
                       tau_v_q_slope = None, diffcoeff=None,
                       use_new_tau=True, fig_to_use=None, 
@@ -151,8 +151,8 @@ def plot_one_tau_vs_q(fit, ddmdata, plot_color, x_position_of_text,
     
     ax.set_xlabel("q (μm$^{-1}$)", fontdict=font_plt_ax)
     ax.set_ylabel(ylabel_str, fontdict=font_plt_ax)
-    ax.xaxis.set_major_formatter(plt.FuncFormatter('{:.2f}'.format))
-    ax.yaxis.set_major_formatter(plt.FuncFormatter('{:.2f}'.format))
+    ax.xaxis.set_major_formatter(plt.FuncFormatter('{:.3f}'.format))
+    ax.yaxis.set_major_formatter(plt.FuncFormatter('{:.3f}'.format))
 
     if ylim != None:
         ax.set_ylim(ymin=ylim[0], ymax=ylim[1])
@@ -179,30 +179,10 @@ def plot_one_tau_vs_q(fit, ddmdata, plot_color, x_position_of_text,
     
     return fig
 
-
-def plot_taus_together(fit, ddmdata, colormap='virdris'):
-    
-    
-    fig = plt.figure(figsize=(9,9./1.618))
-    fractions=fit.parameters.loc['Fraction1',:].values
-    plt.scatter(ddmdata.q, fit.parameters.loc['Tau',:],c=fractions,cmap=colormap, label='First decay time')
-    plt.loglog()
-    plt.ylim(fit.parameters.loc['Tau',:].min(),fit.parameters.loc['Tau',:].max()+100)
-    plt.loglog(ddmdata.q, fit.parameters.loc['Tau2',:],'k+', label='Second decay time')
-    cbar=plt.colorbar()
-    cbar.set_label('Fraction of first exponent')
-    plt.legend()
-    plt.xlabel("q (μm$^-$$^1$)")
-    plt.ylabel("tau (s)")
-    
-    plt.title("Decay time vs wavevector", fontsize=14)
-
-    
-    return fig
     
 
 
-def plot_stretching_exponent(fit, ddmdata, plot_color, x_position_of_text,
+def plot_stretching_exponent(fit, plot_color, x_position_of_text,
                              axis_to_use=None,
                              low_good_q=None, hi_good_q=None, ylim=None,
                              use_s2=False):
@@ -220,7 +200,6 @@ def plot_stretching_exponent(fit, ddmdata, plot_color, x_position_of_text,
         stretch_exp = fit.parameters.loc['StretchingExp',:]
         title_str = "Stretching exponent vs wavevector"
 
-    
     if low_good_q is None:
         lower_index_for_good_q = fit.good_q_range[0]
     else:
@@ -239,9 +218,9 @@ def plot_stretching_exponent(fit, ddmdata, plot_color, x_position_of_text,
     plt.hlines(avg_stretching_exponent, q[lower_index_for_good_q], q[upper_index_for_good_q], linestyles='dashed')
     ax.set_xlabel("q (μm$^{-1}$)", fontdict=font_plt_ax)
     ax.set_ylabel("Stretching exponent", fontdict=font_plt_ax)
-    ax.xaxis.set_major_formatter(plt.FuncFormatter('{:.1f}'.format))
+    ax.xaxis.set_major_formatter(plt.FuncFormatter('{:.3f}'.format))
     ax.yaxis.set_major_formatter(plt.FuncFormatter('{:.2f}'.format))
-    ax.text(0.3,0.2,'avg stretching exp = %.2f' % avg_stretching_exponent, 
+    ax.text(0.3,0.2,'avg stretching exp = %.4f' % avg_stretching_exponent, 
             fontdict=font_plt,horizontalalignment='left', 
             verticalalignment='center', transform=ax.transAxes)
     if ylim is not None:
@@ -253,7 +232,7 @@ def plot_stretching_exponent(fit, ddmdata, plot_color, x_position_of_text,
     
     return fig
 
-def plot_fraction(fit, ddmdata, color='m'):
+def plot_fraction(fit, color='m'):
     if ('FractionBallistic' in fit.parameter.values):
         frac = fit.parameters.loc['FractionBallistic']
         ylabel_str = "Fraction moving ballistically"
@@ -264,43 +243,43 @@ def plot_fraction(fit, ddmdata, color='m'):
         print("No parameter called 'FractionBallistic' or 'Fraction1' found.")
         return None
     fig = plt.figure(figsize=(8,8./1.618))
-    plt.semilogx(ddmdata.q[1:], frac[1:], color=color, marker='o', linestyle='')  
+    plt.semilogx(fit.q[1:], frac[1:], color=color, marker='o', linestyle='')  
     plt.xlabel("q (μm$^{-1}$)")
     plt.ylabel(ylabel_str)
     plt.title("Fraction vs wavevector")
     return fig
 
-def plot_schulz(fit, ddmdata, color='m', use2=False):
+def plot_schulz(fit, color='m', use2=False):
     fig = plt.figure(figsize=(8,8./1.618))
     if not use2:
-        plt.loglog(ddmdata.q[1:], fit.parameters.loc['SchulzNum',:][1:], color=color, marker='o', linestyle='')
+        plt.loglog(fit.q[1:], fit.parameters.loc['SchulzNum',:][1:], color=color, marker='o', linestyle='')
         plt.ylabel("Schulz number")
     else:
-        plt.loglog(ddmdata.q[1:], fit.parameters.loc['SchulzNum2',:][1:], color=color, marker='o', linestyle='')
-        plt.ylabel("Second Schulz number")
+        if 'SchulzNum2' in fit.parameters.parameter:
+            plt.loglog(fit.q[1:], fit.parameters.loc['SchulzNum2',:][1:], color=color, marker='o', linestyle='')
+            plt.ylabel("Second Schulz number")
     plt.xlabel("q (μm$^{-1}$)")
     plt.title("Schulz number vs wavevector")
     return fig
 
-def plot_background(fit, ddmdata, color='m', color2='k'):
+def plot_background(fit, color='m', color2='k'):
 
     figB = plt.figure(figsize=(8,8./1.618))
-    if ('Background' in fit.parameter.values):
-        plt.semilogx(ddmdata.q[1:], fit.parameters.loc['Background',:][1:], color+'o', label="Background from fitting radial averages")  
-    plt.hlines(ddmdata.B,ddmdata.q[1],ddmdata.q.max(),color2, linestyles='dashed', label="Background from direct FFT")
+    if ('Background' in fit.parameters.parameter):
+        plt.semilogx(fit.q[1:], fit.parameters.loc['Background',:][1:], color+'o', label="Background from fitting DDM data")  
+    plt.hlines(fit.B,fit.q[1],fit.q.max(),color2, linestyles='dashed', label="Background from Fourier transforms of images")
     plt.xlabel("q (μm$^{-1}$)")
     plt.ylabel("Background (a.u.)")
     plt.legend()
     plt.title("Background vs wavevector")
     return figB
 
-def plot_amplitude(fit, ddmdata, color1='c', color2='k'):
+def plot_amplitude(fit, color1='c', color2='k'):
     figA = plt.figure(figsize=(8,8./1.618))
-    
-    if ('Amplitude' in fit.parameter.values):
-        plt.loglog(ddmdata.q[1:], fit.parameters.loc['Amplitude',:][1:],color1+'o', label='Amplitude from fit to DDM matrix')
-    #determinded from direct FFT transforms
-    plt.loglog(ddmdata.q[1:], ddmdata.Amplitude[1:], color2+'.', label='Amplitude from direct FFT')
+    if ('Amplitude' in fit.parameters.parameter):
+        plt.loglog(fit.q[1:], fit.parameters.loc['Amplitude',:][1:],color1+'o', label='Amplitude from fits to DDM matrix')
+    if 'A' in fit.data_vars:
+        plt.loglog(fit.q[1:], fit.A[1:], color2+'.', label='Amplitude from Fourier transform of images')
     #plt.ylim(0,ddmdata.amplitude.max()+100)
     plt.xlabel("q (μm$^{-1}$)")
     plt.ylabel("Amplitude (a.u.)")
@@ -308,33 +287,34 @@ def plot_amplitude(fit, ddmdata, color1='c', color2='k'):
     plt.title("Amplitude vs wavevector")
     return figA
 
-def plot_nonerg(fit, ddmdata, plt_color='darkblue'):
+def plot_nonerg(fit, plt_color='darkblue'):
     fig,axs = plt.subplots(2,1,figsize=(8,8./1.618))
-    axs[0].semilogy(ddmdata.q[1:], fit.parameters.loc['NonErgodic'][1:],'o',color=plt_color)
-    axs[0].set_xlabel("q (μm$^{-1}$)")
-    axs[0].set_ylabel("Non-ergodicity parameter")
-    axs[0].tick_params(axis="both",which="both",direction="in")
-    axs[1].semilogy(ddmdata.q[1:]**2, fit.parameters.loc['NonErgodic'][1:],'o',color=plt_color)
-    axs[1].set_xlabel("q$^2$ (μm$^{-2}$)")
-    axs[1].set_ylabel("Non-ergodicity parameter")
-    axs[1].tick_params(axis="both",which="both",direction="in")
-    plt.suptitle("Non-ergodicity parameter")
+    if 'NonErgodic' in fit.parameters.parameter:
+        axs[0].semilogy(fit.q[1:], fit.parameters.loc['NonErgodic'][1:],'o',color=plt_color)
+        axs[0].set_xlabel("q (μm$^{-1}$)")
+        axs[0].set_ylabel("Non-ergodicity parameter")
+        axs[0].tick_params(axis="both",which="both",direction="in")
+        axs[1].semilogy(fit.q[1:]**2, fit.parameters.loc['NonErgodic'][1:],'o',color=plt_color)
+        axs[1].set_xlabel("q$^2$ (μm$^{-2}$)")
+        axs[1].set_ylabel("Non-ergodicity parameter")
+        axs[1].tick_params(axis="both",which="both",direction="in")
+        plt.suptitle("Non-ergodicity parameter")
     return fig
 
 
-def plot_amplitude_over_background(fit, ddmdata, plt_color = 'g'):
+def plot_amplitude_over_background(fit, plt_color = 'g'):
     fig = plt.figure(figsize=(8,8./1.618))
     
     if ('Amplitude' in fit.parameter.values):
         amp = fit.parameters.loc['Amplitude',:][1:]
     else:
-        amp = ddmdata.Amplitude[1:]
+        amp = fit.A[1:]
     if ('Background' in fit.parameter.values):
         bg = fit.parameters.loc['Background',:][1:]
     else:
-        bg = np.ones_like(amp.values) * ddmdata.B.values
+        bg = np.ones_like(amp.values) * fit.B.values
     
-    plt.loglog(ddmdata.q[1:], amp/bg, plt_color+'o')
+    plt.loglog(fit.q[1:], amp/bg, plt_color+'o')
 
     plt.xlabel("q (μm$^{-1}$)")
     plt.ylabel("Amplitude / Background (a.u.)")
@@ -342,7 +322,7 @@ def plot_amplitude_over_background(fit, ddmdata, plt_color = 'g'):
     
     return fig
 
-def plot_to_inspect_fit(q_index_to_plot, fit, ddmdata, axis_to_use = None, ylim=None, 
+def plot_to_inspect_fit(q_index_to_plot, fit, axis_to_use = None, ylim=None, 
                         oneplotcolor='r', show_legend=True, scale_by_q_to_power=0,
                         show_colorbar=False, print_params=True):
     if axis_to_use is None:
@@ -352,15 +332,25 @@ def plot_to_inspect_fit(q_index_to_plot, fit, ddmdata, axis_to_use = None, ylim=
     
     if type(fit) is not xr.core.dataset.Dataset:
         print("Must pass the fitting results as an xarray Dataset")
-        return 0
+        return
     
     cellText = []
     
     times = fit.lagtime
     if fit.data_to_use == 'ISF':
-        data = ddmdata.ISF
+        if 'isf_data' in fit.data_vars:
+            data = fit.isf_data
+        else:
+            print("'isf_data' not in ", fit.data_vars)
+            return
     elif fit.data_to_use == 'DDM Matrix':
-        data = ddmdata.ravs
+        if 'ddm_matrix_data' in fit.data_vars:
+            data = fit.ddm_matrix_data
+        elif 'ravs' in fit.data_vars:
+            data = fit.ravs
+        else:
+            print("'ddm_matrix_data' not in ", fit.data_vars)
+            return
         
     xlabel_str = "Lag time (s)"
     ylabel_str = f"{fit.data_to_use}"
@@ -421,7 +411,7 @@ def plot_to_inspect_fit(q_index_to_plot, fit, ddmdata, axis_to_use = None, ylim=
     return fig
 
 
-def plot_to_inspect_fit_2x2subplot(q_index_to_plot, fit, ddmdata, ylim=None,
+def plot_to_inspect_fit_2x2subplot(q_index_to_plot, fit, ylim=None,
                                    oneplotcolor='r', print_params=True):
 
     if type(fit) is not xr.core.dataset.Dataset:
@@ -430,13 +420,23 @@ def plot_to_inspect_fit_2x2subplot(q_index_to_plot, fit, ddmdata, ylim=None,
     
     times = fit.lagtime
     if fit.data_to_use == 'ISF':
-        data = ddmdata.ISF
+        ISF = True
         ylabel_str = "ISF"
-        ISF=True
+        if 'isf_data' in fit.data_vars:
+            data = fit.isf_data
+        else:
+            print("'isf_data' not in ", fit.data_vars)
+            return
     elif fit.data_to_use == 'DDM Matrix':
-        data = ddmdata.ravs
-        ylabel_str = "Radially averaged DDM matrix"
-        ISF=False
+        ISF = False
+        ylabel_str = "DDM matrix"
+        if 'ddm_matrix_data' in fit.data_vars:
+            data = fit.ddm_matrix_data
+        elif 'ravs' in fit.data_vars:
+            data = fit.ravs
+        else:
+            print("'ddm_matrix_data' not in ", fit.data_vars)
+            return
         
     xlabel_str = "Lag time (s)"
     
