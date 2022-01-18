@@ -1,0 +1,655 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PyDDM.ddm_calc.generate_mask &#8212; PyDDM v0.1.0 documentation</title>
+    
+  <link href="../_static/css/theme.css" rel="stylesheet">
+  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
+
+    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PyDDM.ddm_calc.get_FF_DDM_matrix" href="PyDDM.ddm_calc.get_FF_DDM_matrix.html" />
+    <link rel="prev" title="PyDDM.ddm_calc.generateLogDistributionOfTimeLags" href="PyDDM.ddm_calc.generateLogDistributionOfTimeLags.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">PyDDM v0.1.0 documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <ul class="nav bd-sidenav">
+ <li class="toctree-l1 has-children">
+  <a class="reference internal" href="../usage.html">
+   Usage
+  </a>
+  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
+  <label for="toctree-checkbox-1">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul>
+   <li class="toctree-l2">
+    <a class="reference internal" href="../Provide_info_for_analysis.html">
+     Parameters for DDM analysis
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../walkthrough.html">
+   Walkthrough
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Walkthrough%20-%20simple.html">
+   Simple walkthrough
+  </a>
+ </li>
+</ul>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active has-children">
+  <a class="reference internal" href="PyDDM.html">
+   PyDDM
+  </a>
+  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
+  <label for="toctree-checkbox-2">
+   <i class="fas fa-chevron-down">
+   </i>
+  </label>
+  <ul class="current">
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.html">
+     PyDDM.ISF_and_DDMmatrix_theoretical_models
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
+    <label for="toctree-checkbox-3">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.html">
+     PyDDM.ddm_analysis_and_fitting
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
+    <label for="toctree-checkbox-4">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.apply_binning.html">
+       PyDDM.ddm_analysis_and_fitting.apply_binning
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.fit_report.html">
+       PyDDM.ddm_analysis_and_fitting.fit_report
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit.html">
+       PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection.html">
+       PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.newt.html">
+       PyDDM.ddm_analysis_and_fitting.newt
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background.html">
+       PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel.html">
+       PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html">
+       PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.html">
+       PyDDM.ddm_analysis_and_fitting.DDM_Analysis
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html">
+       PyDDM.ddm_analysis_and_fitting.DDM_Fit
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 current active has-children">
+    <a class="reference internal" href="PyDDM.ddm_calc.html">
+     PyDDM.ddm_calc
+    </a>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+    <label for="toctree-checkbox-5">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.computeDDMMatrix.html">
+       PyDDM.ddm_calc.computeDDMMatrix
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.determining_A_and_B.html">
+       PyDDM.ddm_calc.determining_A_and_B
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.execute_LSQ_fit.html">
+       PyDDM.ddm_calc.execute_LSQ_fit
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.execute_ScipyCurveFit_fit.html">
+       PyDDM.ddm_calc.execute_ScipyCurveFit_fit
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.find_radial_average.html">
+       PyDDM.ddm_calc.find_radial_average
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.fit_ddm.html">
+       PyDDM.ddm_calc.fit_ddm
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.fit_ddm_all_qs.html">
+       PyDDM.ddm_calc.fit_ddm_all_qs
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.generateLogDistributionOfTimeLags.html">
+       PyDDM.ddm_calc.generateLogDistributionOfTimeLags
+      </a>
+     </li>
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
+       PyDDM.ddm_calc.generate_mask
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.get_FF_DDM_matrix.html">
+       PyDDM.ddm_calc.get_FF_DDM_matrix
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.get_MSD_from_DDM_data.html">
+       PyDDM.ddm_calc.get_MSD_from_DDM_data
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.new_ddm_matrix.html">
+       PyDDM.ddm_calc.new_ddm_matrix
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.newt.html">
+       PyDDM.ddm_calc.newt
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.radial_avg_ddm_matrix.html">
+       PyDDM.ddm_calc.radial_avg_ddm_matrix
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.window_function.html">
+       PyDDM.ddm_calc.window_function
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.IPythonStreamHandler.html">
+       PyDDM.ddm_calc.IPythonStreamHandler
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.html">
+     PyDDM.fit_parameters_dictionaries
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
+    <label for="toctree-checkbox-6">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not.html">
+       PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes.html">
+       PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values.html">
+       PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.populate_intial_guesses.html">
+       PyDDM.fit_parameters_dictionaries.populate_intial_guesses
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters.html">
+       PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.return_parameter_names.html">
+       PyDDM.fit_parameters_dictionaries.return_parameter_names
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.return_possible_fitting_models.html">
+       PyDDM.fit_parameters_dictionaries.return_possible_fitting_models
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_fixed.html">
+       PyDDM.fit_parameters_dictionaries.set_parameter_fixed
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits.html">
+       PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess.html">
+       PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_limits.html">
+       PyDDM.fit_parameters_dictionaries.set_parameter_limits
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display.html">
+       PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display
+      </a>
+     </li>
+    </ul>
+   </li>
+   <li class="toctree-l2 has-children">
+    <a class="reference internal" href="PyDDM.utils.html">
+     PyDDM.utils
+    </a>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <label for="toctree-checkbox-7">
+     <i class="fas fa-chevron-down">
+     </i>
+    </label>
+    <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.generate_pandas_table_fit_results.html">
+       PyDDM.utils.generate_pandas_table_fit_results
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.get_schulz_dist.html">
+       PyDDM.utils.get_schulz_dist
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.get_velocity_variance.html">
+       PyDDM.utils.get_velocity_variance
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.newt.html">
+       PyDDM.utils.newt
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_amplitude.html">
+       PyDDM.utils.plot_amplitude
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_amplitude_over_background.html">
+       PyDDM.utils.plot_amplitude_over_background
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_background.html">
+       PyDDM.utils.plot_background
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_fraction.html">
+       PyDDM.utils.plot_fraction
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_nonerg.html">
+       PyDDM.utils.plot_nonerg
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_one_tau_vs_q.html">
+       PyDDM.utils.plot_one_tau_vs_q
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_schulz.html">
+       PyDDM.utils.plot_schulz
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_stretching_exponent.html">
+       PyDDM.utils.plot_stretching_exponent
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_to_inspect_fit.html">
+       PyDDM.utils.plot_to_inspect_fit
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.plot_to_inspect_fit_2x2subplot.html">
+       PyDDM.utils.plot_to_inspect_fit_2x2subplot
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.view_colormap.html">
+       PyDDM.utils.view_colormap
+      </a>
+     </li>
+    </ul>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="../_sources/_autosummary/PyDDM.ddm_calc.generate_mask.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+            
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>PyDDM.ddm_calc.generate_mask</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                    </div>
+                </div>
+            </div>
+            
+              <div>
+                
+  <div class="section" id="pyddm-ddm-calc-generate-mask">
+<h1>PyDDM.ddm_calc.generate_mask<a class="headerlink" href="#pyddm-ddm-calc-generate-mask" title="Permalink to this headline">¶</a></h1>
+<dl class="py function">
+<dt id="PyDDM.ddm_calc.generate_mask">
+<code class="sig-prename descclassname">PyDDM.ddm_calc.</code><code class="sig-name descname">generate_mask</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">im</span></em>, <em class="sig-param"><span class="n">centralAngle</span></em>, <em class="sig-param"><span class="n">angRange</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_calc.generate_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a mask of the same size as <cite>im</cite> to avoid radially averaging the
+whole DDM matrix.</p>
+<p>If the DDM matrix is not to be radially averaged, we can use a mask
+to average values of the matrix only in some angular range around
+a central angle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>im</strong> (<em>ndarray</em>) – Image (2D) of same size you want the mask to be.</p></li>
+<li><p><strong>centralAngle</strong> (<em>float</em>) – Central angle of the angular range to average over</p></li>
+<li><p><strong>angRange</strong> (<em>float</em>) – Range to overage over.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>mask</strong> – Mask with 1s corresponding to the angular region specified and 0s elsewhere.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+              </div>
+              
+            
+                <!-- Previous / next buttons -->
+<div class='prev-next-area'> 
+    <a class='left-prev' id="prev-link" href="PyDDM.ddm_calc.generateLogDistributionOfTimeLags.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">PyDDM.ddm_calc.generateLogDistributionOfTimeLags</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="PyDDM.ddm_calc.get_FF_DDM_matrix.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">PyDDM.ddm_calc.get_FF_DDM_matrix</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            
+        </div>
+    </div>
+    <footer class="footer">
+  <p>
+    
+      By Ryan McGorty and Hannah Noor Verwei<br/>
+    
+        &copy; Copyright 2021, Ryan McGorty and Hannah Noor Verwei.<br/>
+  </p>
+</footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+
+  </body>
+</html>
