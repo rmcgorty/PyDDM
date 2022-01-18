@@ -569,6 +569,31 @@ class DDM_Analysis:
         ddm_dataset.close()
 
         return ddm_dataset
+    
+    
+    def resave_ddm_dataset(self, ddmdataset, file_name = None):
+        r"""
+        Resave the DDM dataset. 
+
+        Parameters
+        ----------
+        ddmdataset : xarray dataset
+            DDM dataset
+        file_name : string or None, optional
+            DESCRIPTION. The default is None.
+
+
+        """
+        if file_name is None:
+            file_name = f"{self.data_dir}{self.filename_for_saving_data}"
+        try:
+            ddmdataset.to_netcdf(f"{file_name}_ddmmatrix.nc", mode='w')
+        except:
+            print(f'Could not save data set as: {file_name}_ddmmatrix.nc')
+            name_alternative=input("Provide an alternative name (do not include .nc suffix) [MUST SPECIFY FULL PATH!]: ")
+            ddmdataset.to_netcdf(f"{name_alternative}.nc", mode='w')
+            print("note this name should be entered in the yaml file for fitting")
+        ddmdataset.close()
 
 
     def generate_plots(self, ddmdataset, pdf_to_save_to=None, q_to_see=1.5, num=None):
