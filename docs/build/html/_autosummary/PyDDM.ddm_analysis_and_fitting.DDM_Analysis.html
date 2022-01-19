@@ -586,7 +586,7 @@
 <h1>PyDDM.ddm_analysis_and_fitting.DDM_Analysis<a class="headerlink" href="#pyddm-ddm-analysis-and-fitting-ddm-analysis" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis">
-<em class="property">class </em><code class="sig-prename descclassname">PyDDM.ddm_analysis_and_fitting.</code><code class="sig-name descname">DDM_Analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_yaml</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">DDM_Analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_yaml</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Performs preprossing of data, such as cropping, windowing etc. DDM calculations are performed on the processed time series
 to produce a xarray DataSet with DDM matrix, radial averages and ISF. The analysis parameters are provided by the user in
@@ -620,7 +620,7 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 </table>
 <dl class="py method">
 <dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix">
-<code class="sig-name descname">calculate_DDM_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fast_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">calculate_DDM_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fast_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">maximal_overlap</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function that handels the computation of DDM_matrix for multiple (time or space) windows of same movie
 Calculates the DDM matrix and radial averages then estimates
 amplitude (A) and background (B) based on direct fourier transform (FFT)

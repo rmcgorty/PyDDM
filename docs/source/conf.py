@@ -66,6 +66,9 @@ language = 'en'
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+#If this is True, will have the 'PyDDM' in front of all modules/functions
+add_module_names = False
+
 
 # -- Options for HTML output -------------------------------------------------
 

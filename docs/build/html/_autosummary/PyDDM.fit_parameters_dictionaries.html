@@ -589,7 +589,7 @@ the DDM matrix or the ISF. It also contains functions for setting the initial
 guesses and bounds for the fitting parameters for these models.</p>
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.ddm_matrix_single_exponential">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">ddm_matrix_single_exponential</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_single_exponential" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ddm_matrix_single_exponential</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_single_exponential" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -603,11 +603,16 @@ a simple exponential function is desired.</p>
 This dictionary also contains the key <cite>data_to_use</cite> which is equal to ‘DDM Matrix’. The key <cite>parameter_info</cite> is set
 to a list of dictionaries. This is a <strong>4</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(\tau\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, and
 <span class="math notranslate nohighlight">\(s\)</span>. These are given the parameter names, respectively: ‘Amplitude’, ‘Tau’, ‘Background’ and ‘StretchingExp’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘DDM Matrix - Single Exponential’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;DDM Matrix - Single Exponential&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.ddm_matrix_single_exponential_nonerg">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">ddm_matrix_single_exponential_nonerg</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_single_exponential_nonerg" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ddm_matrix_single_exponential_nonerg</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_single_exponential_nonerg" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -622,11 +627,16 @@ This dictionary also contains the key <cite>data_to_use</cite> which is equal to
 to a list of dictionaries. This is a <strong>5</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(\tau\)</span>, <span class="math notranslate nohighlight">\(B\)</span>,
 <span class="math notranslate nohighlight">\(s\)</span>, and <span class="math notranslate nohighlight">\(C\)</span>. These are given the parameter names, respectively: ‘Amplitude’, ‘Tau’, ‘Background’, ‘StretchingExp’, and
 ‘NonErgodic’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘DDM Matrix - Single Exponential - NonErgodic’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;DDM Matrix - Single Exponential - NonErgodic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.ddm_matrix_double_exponential">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">ddm_matrix_double_exponential</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_double_exponential" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ddm_matrix_double_exponential</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_double_exponential" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -642,11 +652,16 @@ This dictionary also contains the key <cite>data_to_use</cite> which is equal to
 to a list of dictionaries. This is a <strong>7</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(\tau_1\)</span>,
 <span class="math notranslate nohighlight">\(s_1\)</span>, <span class="math notranslate nohighlight">\(\tau_2\)</span>, and <span class="math notranslate nohighlight">\(s_2\)</span>. These are given the parameter names, respectively: ‘Amplitude’, ‘Background’, ‘Fraction1’,
 ‘Tau’, ‘StretchingExp’, ‘Tau2’, and ‘StretchingExp2’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘DDM Matrix - Double Exponential’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;DDM Matrix - Double Exponential&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.ddm_matrix_exponential_ballistic">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">ddm_matrix_exponential_ballistic</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_exponential_ballistic" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ddm_matrix_exponential_ballistic</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_exponential_ballistic" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -664,11 +679,16 @@ This dictionary also contains the key <cite>data_to_use</cite> which is equal to
 to a list of dictionaries. This is a <strong>7</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, <span class="math notranslate nohighlight">\(\tau_1\)</span>,
 <span class="math notranslate nohighlight">\(s\)</span>, <span class="math notranslate nohighlight">\(\tau_2\)</span>, <span class="math notranslate nohighlight">\(a\)</span>, and <span class="math notranslate nohighlight">\(Z\)</span>. These are given the parameter names, respectively: ‘Amplitude’, ‘Background’,
 ‘Tau’, ‘StretchingExp’, ‘Tau2’, ‘FractionBallistic’, and ‘SchulzNum’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘DDM Matrix - Exponential and Ballistic’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;DDM Matrix - Exponential and Ballistic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.ddm_matrix_ballistic">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">ddm_matrix_ballistic</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_ballistic" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">ddm_matrix_ballistic</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.ddm_matrix_ballistic" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -686,11 +706,16 @@ This dictionary also contains the key <cite>data_to_use</cite> which is equal to
 to a list of dictionaries. This is a <strong>4</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(B\)</span>, <span class="math notranslate nohighlight">\(\tau\)</span>,
 and <span class="math notranslate nohighlight">\(Z\)</span>. These are given the parameter names, respectively: ‘Amplitude’, ‘Background’,
 ‘Tau’, and ‘SchulzNum’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘DDM Matrix - Ballistic’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;DDM Matrix - Ballistic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.isf_single_exponential">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">isf_single_exponential</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_single_exponential" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">isf_single_exponential</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_single_exponential" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -704,11 +729,16 @@ a simple exponential function is desired.</p>
 This dictionary also contains the key <cite>data_to_use</cite> which is equal to ‘ISF’. The key <cite>parameter_info</cite> is set
 to a list of dictionaries. This is a <strong>2</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(\tau\)</span> and
 <span class="math notranslate nohighlight">\(s\)</span>. These are given the parameter names, respectively: ‘Tau’ and ‘StretchingExp’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘ISF - Single Exponential’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;ISF - Single Exponential&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.isf_single_exponential_nonerg">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">isf_single_exponential_nonerg</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_single_exponential_nonerg" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">isf_single_exponential_nonerg</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_single_exponential_nonerg" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -720,11 +750,16 @@ This model fits the ISF to <span class="math notranslate nohighlight">\(f(q,\Del
 This dictionary also contains the key <cite>data_to_use</cite> which is equal to ‘ISF’. The key <cite>parameter_info</cite> is set
 to a list of dictionaries. This is a <strong>3</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(\tau\)</span>,
 <span class="math notranslate nohighlight">\(s\)</span>, and <span class="math notranslate nohighlight">\(C\)</span>. These are given the parameter names, respectively: ‘Tau’, ‘StretchingExp’, and ‘NonErgodic’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘ISF - Single Exponential - NonErgodic’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;ISF - Single Exponential - NonErgodic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.isf_double_exponential">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">isf_double_exponential</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_double_exponential" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">isf_double_exponential</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_double_exponential" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -739,11 +774,16 @@ This dictionary also contains the key <cite>data_to_use</cite> which is equal to
 to a list of dictionaries. This is a <strong>5</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(\tau_1\)</span>,
 <span class="math notranslate nohighlight">\(s_1\)</span>, <span class="math notranslate nohighlight">\(\tau_2\)</span>, and <span class="math notranslate nohighlight">\(s_2\)</span>. These are given the parameter names, respectively: ‘Fraction1’, ‘Tau’, ‘StretchingExp’,
 ‘Tau2’, and ‘StretchingExp2’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘ISF - Double Exponential’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;ISF - Double Exponential&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.isf_exponential_ballistic">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">isf_exponential_ballistic</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_exponential_ballistic" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">isf_exponential_ballistic</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_exponential_ballistic" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -760,11 +800,16 @@ This dictionary also contains the key <cite>data_to_use</cite> which is equal to
 to a list of dictionaries. This is a <strong>5</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(\tau_1\)</span>,
 <span class="math notranslate nohighlight">\(s\)</span>, <span class="math notranslate nohighlight">\(\tau_2\)</span>, <span class="math notranslate nohighlight">\(a\)</span>, and <span class="math notranslate nohighlight">\(Z\)</span>. These are given the parameter names, respectively:
 ‘Tau’, ‘StretchingExp’, ‘Tau2’, ‘FractionBallistic’, and ‘SchulzNum’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘ISF - Exponential and Ballistic’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;ISF - Exponential and Ballistic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py data">
 <dt id="PyDDM.fit_parameters_dictionaries.isf_ballistic">
-<code class="sig-prename descclassname">PyDDM.fit_parameters_dictionaries.</code><code class="sig-name descname">isf_ballistic</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_ballistic" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">isf_ballistic</code><a class="headerlink" href="#PyDDM.fit_parameters_dictionaries.isf_ballistic" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Type</dt>
 <dd class="field-odd"><p>dict</p>
@@ -779,6 +824,11 @@ Schulz number and characterizes the distribution of velocities.</p>
 This dictionary also contains the key <cite>data_to_use</cite> which is equal to ‘ISF’. The key <cite>parameter_info</cite> is set
 to a list of dictionaries. This is a <strong>2</strong> element list corresponding to the parameters <span class="math notranslate nohighlight">\(\tau\)</span>  and
 <span class="math notranslate nohighlight">\(Z\)</span>. These are given the parameter names, respectively: ‘Tau’, and ‘SchulzNum’.</p>
+<p><strong>Note:</strong> To use this model, set the <code class="docutils literal notranslate"><span class="pre">model</span></code> parameter in your yaml file to <strong>‘ISF - Ballistic’</strong>. Or, once
+you have initialized <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a>, you can switch to this model with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">my_fit_class</span><span class="o">.</span><span class="n">reload_fit_model_by_name</span><span class="p">(</span><span class="s1">&#39;ISF - Ballistic&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <p class="rubric">Functions</p>

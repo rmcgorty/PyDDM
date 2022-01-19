@@ -15,7 +15,12 @@ guesses and bounds for the fitting parameters for these models.
     For this dictionary, the `model_function` key is set to :py:func:`PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM`. 
     This dictionary also contains the key `data_to_use` which is equal to 'DDM Matrix'. The key `parameter_info` is set 
     to a list of dictionaries. This is a **4** element list corresponding to the parameters :math:`A`, :math:`\\tau`, :math:`B`, and 
-    :math:`s`. These are given the parameter names, respectively: 'Amplitude', 'Tau', 'Background' and 'StretchingExp'. 
+    :math:`s`. These are given the parameter names, respectively: 'Amplitude', 'Tau', 'Background' and 'StretchingExp'.
+    
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'DDM Matrix - Single Exponential'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('DDM Matrix - Single Exponential')
 
 .. data:: ddm_matrix_single_exponential_nonerg
 
@@ -31,6 +36,11 @@ guesses and bounds for the fitting parameters for these models.
     to a list of dictionaries. This is a **5** element list corresponding to the parameters :math:`A`, :math:`\\tau`, :math:`B`, 
     :math:`s`, and :math:`C`. These are given the parameter names, respectively: 'Amplitude', 'Tau', 'Background', 'StretchingExp', and 
     'NonErgodic'. 
+    
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'DDM Matrix - Single Exponential - NonErgodic'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('DDM Matrix - Single Exponential - NonErgodic')
 
 .. data:: ddm_matrix_double_exponential
 
@@ -47,6 +57,11 @@ guesses and bounds for the fitting parameters for these models.
     to a list of dictionaries. This is a **7** element list corresponding to the parameters :math:`A`, :math:`B`, :math:`a`, :math:`\\tau_1`,  
     :math:`s_1`, :math:`\\tau_2`, and :math:`s_2`. These are given the parameter names, respectively: 'Amplitude', 'Background', 'Fraction1', 
     'Tau', 'StretchingExp', 'Tau2', and 'StretchingExp2'. 
+    
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'DDM Matrix - Double Exponential'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('DDM Matrix - Double Exponential')
     
 .. data:: ddm_matrix_exponential_ballistic
 
@@ -66,6 +81,11 @@ guesses and bounds for the fitting parameters for these models.
     :math:`s`, :math:`\\tau_2`, :math:`a`, and :math:`Z`. These are given the parameter names, respectively: 'Amplitude', 'Background',  
     'Tau', 'StretchingExp', 'Tau2', 'FractionBallistic', and 'SchulzNum'. 
     
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'DDM Matrix - Exponential and Ballistic'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('DDM Matrix - Exponential and Ballistic')
+    
 .. data:: ddm_matrix_ballistic
 
     :type: dict
@@ -84,6 +104,11 @@ guesses and bounds for the fitting parameters for these models.
     and :math:`Z`. These are given the parameter names, respectively: 'Amplitude', 'Background',  
     'Tau', and 'SchulzNum'. 
     
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'DDM Matrix - Ballistic'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('DDM Matrix - Ballistic')
+    
 .. data:: isf_single_exponential
 
     :type: dict
@@ -98,6 +123,11 @@ guesses and bounds for the fitting parameters for these models.
     to a list of dictionaries. This is a **2** element list corresponding to the parameters :math:`\\tau` and 
     :math:`s`. These are given the parameter names, respectively: 'Tau' and 'StretchingExp'. 
     
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'ISF - Single Exponential'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('ISF - Single Exponential')
+    
 .. data:: isf_single_exponential_nonerg
 
     :type: dict
@@ -109,6 +139,11 @@ guesses and bounds for the fitting parameters for these models.
     This dictionary also contains the key `data_to_use` which is equal to 'ISF'. The key `parameter_info` is set 
     to a list of dictionaries. This is a **3** element list corresponding to the parameters :math:`\\tau`,  
     :math:`s`, and :math:`C`. These are given the parameter names, respectively: 'Tau', 'StretchingExp', and 'NonErgodic'. 
+    
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'ISF - Single Exponential - NonErgodic'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('ISF - Single Exponential - NonErgodic')
 
 .. data:: isf_double_exponential
 
@@ -124,6 +159,11 @@ guesses and bounds for the fitting parameters for these models.
     to a list of dictionaries. This is a **5** element list corresponding to the parameters :math:`a`, :math:`\\tau_1`,  
     :math:`s_1`, :math:`\\tau_2`, and :math:`s_2`. These are given the parameter names, respectively: 'Fraction1', 'Tau', 'StretchingExp', 
     'Tau2', and 'StretchingExp2'. 
+    
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'ISF - Double Exponential'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('ISF - Double Exponential')
     
 .. data:: isf_exponential_ballistic
 
@@ -142,6 +182,11 @@ guesses and bounds for the fitting parameters for these models.
     :math:`s`, :math:`\\tau_2`, :math:`a`, and :math:`Z`. These are given the parameter names, respectively:   
     'Tau', 'StretchingExp', 'Tau2', 'FractionBallistic', and 'SchulzNum'. 
     
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'ISF - Exponential and Ballistic'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('ISF - Exponential and Ballistic')
+    
 .. data:: isf_ballistic
 
     :type: dict
@@ -156,6 +201,11 @@ guesses and bounds for the fitting parameters for these models.
     This dictionary also contains the key `data_to_use` which is equal to 'ISF'. The key `parameter_info` is set 
     to a list of dictionaries. This is a **2** element list corresponding to the parameters :math:`\\tau`  and 
     :math:`Z`. These are given the parameter names, respectively: 'Tau', and 'SchulzNum'. 
+    
+    **Note:** To use this model, set the ``model`` parameter in your yaml file to **'ISF - Ballistic'**. Or, once 
+    you have initialized :py:class:`PyDDM.ddm_analysis_and_fitting.DDM_Fit`, you can switch to this model with::
+    
+        my_fit_class.reload_fit_model_by_name('ISF - Ballistic')
     
 """
 
