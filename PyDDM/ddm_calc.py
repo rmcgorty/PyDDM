@@ -193,7 +193,8 @@ def new_ddm_matrix(imageArray):
     return np.real(inverse_fft_in_times)
 
 
-def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, quiet=False):
+def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, quiet=False,
+                    maximal_overlap=False):
     r'''Calculates DDM matrix
     
     This function calculates the DDM matrix at the lag times provided by `dts`.  
@@ -247,6 +248,8 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
     if fast_mode:
         w = np.where(steps_in_diffs < 20)
         steps_in_diffs[w] = 20
+    if maximal_overlap:
+        steps_in_diffs = np.ones_like(dts)
 
     #To record the number of pairs of images for each lag time
     num_pairs_per_dt = []

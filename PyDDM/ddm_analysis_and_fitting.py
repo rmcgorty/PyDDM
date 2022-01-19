@@ -370,7 +370,7 @@ class DDM_Analysis:
 
 
 
-    def calculate_DDM_matrix(self, fast_mode=False, quiet=False):
+    def calculate_DDM_matrix(self, fast_mode=False, quiet=False, maximal_overlap=False):
         '''Function that handels the computation of DDM_matrix for multiple (time or space) windows of same movie
             Calculates the DDM matrix and radial averages then estimates
             amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -407,12 +407,12 @@ class DDM_Analysis:
                 print("Calculating the DDM matrix in fast mode...")
 
             #print(f"Calculating the DDM matrix for {self.filename}...")
-            self._computeDDMMatrix(quiet=quiet)
+            self._computeDDMMatrix(quiet=quiet, maximal_overlap=maximal_overlap)
 
 
 
     #Do not call this function, instead call analysis_flow
-    def _computeDDMMatrix(self, quiet=False):
+    def _computeDDMMatrix(self, quiet=False, maximal_overlap=False):
         '''
         Calculates the DDM matrix and radial averages then estimates
         amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -442,11 +442,14 @@ class DDM_Analysis:
             if type(self.im)==list:
                 for i,im in enumerate(self.im):
                     print(f"Getting DDM matrix for {i+1} of {len(self.im)}...")
-                    d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, fast_mode = self.fast_mode, quiet=quiet)
+                    d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, fast_mode = self.fast_mode, quiet=quiet,
+                                                               maximal_overlap=maximal_overlap)
                     self.ddm_matrix.append(d_matrix)
                 self.num_pairs_per_dt = num_pairs
             else:
-                self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, fast_mode = self.fast_mode, quiet=quiet)
+                self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, 
+                                                                              fast_mode = self.fast_mode, quiet=quiet,
+                                                                              maximal_overlap=maximal_overlap)
             self.ddm_matrix_fastmode = self.fast_mode
             end_time = time.time()
         except:
