@@ -21,8 +21,7 @@ Welcome to PyDDM's documentation!
    
    gettingstarted
    usage
-   walkthrough
-   Walkthrough - simple
+   Basic walkthrough <Walkthrough - simple>
 
 .. autosummary::
    :toctree: _autosummary
