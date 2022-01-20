@@ -399,15 +399,16 @@ class DDM_Analysis:
             print(f"The file {filename_to_be_used} already exists. So perhaps the DDM matrix was calculated already?")
             answer = input("Do you still want to calculate the DDM matrix? (y/n): ").lower().strip()
             if answer == "n" or answer=="no":
-                quit_now = True
+                self.ddm_dataset = xr.open_dataset(filename_to_be_used)
+                self.ddm_dataset.close()
+                return
 
-        if not quit_now:
-            self.fast_mode=fast_mode
-            if self.fast_mode:
-                print("Calculating the DDM matrix in fast mode...")
+        self.fast_mode=fast_mode
+        if self.fast_mode:
+            print("Calculating the DDM matrix in fast mode...")
 
-            #print(f"Calculating the DDM matrix for {self.filename}...")
-            self._computeDDMMatrix(quiet=quiet, maximal_overlap=maximal_overlap)
+        #print(f"Calculating the DDM matrix for {self.filename}...")
+        self._computeDDMMatrix(quiet=quiet, maximal_overlap=maximal_overlap)
 
 
 
