@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Parameters for DDM analysis" href="Provide_info_for_analysis.html" />
-    <link rel="prev" title="Welcome to PyDDM’s documentation!" href="index.html" />
+    <link rel="prev" title="Getting Started" href="gettingstarted.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -72,6 +72,11 @@
 </form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item active">
         <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="gettingstarted.html">
+   Getting Started
+  </a>
+ </li>
  <li class="toctree-l1 current active has-children">
   <a class="current reference internal" href="#">
    Usage
@@ -84,7 +89,7 @@
   <ul>
    <li class="toctree-l2">
     <a class="reference internal" href="Provide_info_for_analysis.html">
-     Parameters for DDM analysis
+     What metadata to provide in the YAML file
     </a>
    </li>
   </ul>
@@ -570,18 +575,18 @@
             <nav id="bd-toc-nav" aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#installation">
-   Installation
+  <a class="reference internal nav-link" href="#python-environment">
+   Python Environment
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#enter-analysis-information">
-   Enter analysis information
+  <a class="reference internal nav-link" href="#setting-the-analysis-parameters">
+   Setting the Analysis Parameters
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ready-to-analyse">
-   Ready to analyse
+  <a class="reference internal nav-link" href="#analyzing-your-data">
+   Analyzing your Data
   </a>
  </li>
 </ul>
@@ -605,18 +610,18 @@
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#installation">
-   Installation
+  <a class="reference internal nav-link" href="#python-environment">
+   Python Environment
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#enter-analysis-information">
-   Enter analysis information
+  <a class="reference internal nav-link" href="#setting-the-analysis-parameters">
+   Setting the Analysis Parameters
   </a>
  </li>
  <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#ready-to-analyse">
-   Ready to analyse
+  <a class="reference internal nav-link" href="#analyzing-your-data">
+   Analyzing your Data
   </a>
  </li>
 </ul>
@@ -630,40 +635,44 @@
                 
   <div class="section" id="usage">
 <h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>To use PyDDM, first download the following modules:</p>
-<blockquote>
-<div><p><strong>PyDDM</strong></p>
-<p>This contains two modules which are relevant for usage:</p>
-<ul class="simple">
-<li><p>ddm_analysis</p></li>
-<li><p>ddm_fit</p></li>
-</ul>
-</div></blockquote>
+<div class="section" id="python-environment">
+<h2>Python Environment<a class="headerlink" href="#python-environment" title="Permalink to this headline">¶</a></h2>
+<p>It is recommended that you work with <a class="reference external" href="https://jupyter.org/">Jupyter Notebook</a> to
+go through the DDM analysis. The ‘walkthroughs’ and ‘tutorials’ here will be done
+in a Jupyter Notebook (these notebooks can be downloaded from the <a class="reference external" href="https://github.com/rmcgorty/PyDDM">GitHub repository</a>).</p>
 </div>
-<div class="section" id="enter-analysis-information">
-<h2>Enter analysis information<a class="headerlink" href="#enter-analysis-information" title="Permalink to this headline">¶</a></h2>
-<p>Make a file with information for analysis using YAML file.</p>
-<p>YAML is a data serialization language, more information: <a class="reference external" href="https://yaml.org/">YAML_website</a></p>
-<p>Use default provided <a class="reference download internal" download="" href="_downloads/94ef1df9aba7bd08218a95e199255082/example_data.yml"><code class="xref download docutils literal notranslate"><span class="pre">Example_YAML_file</span></code></a></p>
+<div class="section" id="setting-the-analysis-parameters">
+<h2>Setting the Analysis Parameters<a class="headerlink" href="#setting-the-analysis-parameters" title="Permalink to this headline">¶</a></h2>
+<p>Parameters such as the frame rate, pixel size, and file path to the data are all
+passed to the DDM functions using YAML. Image pre-processing can be done based off
+parameters such as <code class="docutils literal notranslate"><span class="pre">binning</span></code> and <code class="docutils literal notranslate"><span class="pre">crop_to_roi</span></code>. Calculation of the DDM matrix requires
+specification of how many lag times to calculate and over what range. Fitting the DDM
+matrix requires a specified model and initial guesses for all parameters. These details and more can
+be included in a single YAML file.</p>
+<p>You can find an example YAML file for DDM analysis <a class="reference download internal" download="" href="_downloads/94ef1df9aba7bd08218a95e199255082/example_data.yml"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+<p>More details on what goes into the YAML parameters file can be found here.</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="Provide_info_for_analysis.html">Parameters for DDM analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Provide_info_for_analysis.html">What metadata to provide in the YAML file</a></li>
 </ul>
 </div>
 </div>
-<div class="section" id="ready-to-analyse">
-<h2>Ready to analyse<a class="headerlink" href="#ready-to-analyse" title="Permalink to this headline">¶</a></h2>
-<p>The analysis is performed in two steps (reflected by the two Pythonmodules):</p>
-<blockquote>
-<div><ol class="arabic simple">
-<li><p>DDM analysis to calculate the DDM matrix and ISF</p></li>
-<li><p>Fitting with multiple mathematical models</p></li>
-</ol>
-</div></blockquote>
-<p>Initate instance of class</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> <span class="nv">ddm_class</span><span class="o">=</span>ddm_analysis<span class="o">(</span><span class="s1">&#39;example.yaml&#39;</span><span class="o">)</span>
+<div class="section" id="analyzing-your-data">
+<h2>Analyzing your Data<a class="headerlink" href="#analyzing-your-data" title="Permalink to this headline">¶</a></h2>
+<p>Working through the ‘walkthroughs’ is the best way to get acquainted  with the code and
+how to use it. Example data is provided in the GitHub repository which will allow you to
+follow along with the walkthrough and play around with it.</p>
+<p>But for a quick introduction, the analysis begins with importing the PyDDM code,
+initializing  the <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Analysis.html#PyDDM.ddm_analysis_and_fitting.DDM_Analysis" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Analysis</span></code></a> class to load the
+data and <a class="reference internal" href="Provide_info_for_analysis.html"><span class="doc">metadata</span></a>, and running the <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Analysis.html#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix()</span></code></a>
+method. Moving on to fitting of the DDM matrix, one then initializes the
+<a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit"><code class="xref py py-class docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit</span></code></a> class and runs the
+<a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Fit.html#PyDDM.ddm_analysis_and_fitting.DDM_Fit.fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit.fit"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Fit.fit()</span></code></a> method.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ddm_analysis_and_fitting</span> <span class="k">as</span> <span class="nn">ddm</span>
+<span class="n">ddm_calc</span> <span class="o">=</span> <span class="n">ddm</span><span class="o">.</span><span class="n">DDM_Analysis</span><span class="p">(</span><span class="s2">&quot;my_ddm_parameters.yml&quot;</span><span class="p">)</span>
+<span class="n">ddm_calc</span><span class="o">.</span><span class="n">calculate_DDM_matrix</span><span class="p">()</span>
+<span class="n">ddm_fit</span> <span class="o">=</span> <span class="n">ddm</span><span class="o">.</span><span class="n">DDM_Fit</span><span class="p">(</span><span class="n">ddm_calc</span><span class="o">.</span><span class="n">data_yaml</span><span class="p">)</span>
+<span class="n">fit01</span> <span class="o">=</span> <span class="n">ddm_fit</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -675,11 +684,11 @@
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="index.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="gettingstarted.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Welcome to PyDDM’s documentation!</p>
+            <p class="prev-next-title">Getting Started</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="Provide_info_for_analysis.html" title="next page">

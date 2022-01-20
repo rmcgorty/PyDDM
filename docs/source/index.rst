@@ -19,6 +19,7 @@ Welcome to PyDDM's documentation!
 .. toctree::
    :maxdepth: 1
    
+   gettingstarted
    usage
    walkthrough
    Walkthrough - simple
