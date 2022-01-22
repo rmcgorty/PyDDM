@@ -1186,6 +1186,24 @@ class DDM_Fit:
 
 
     def extract_MSD(self, fit=None, qrange=None):
+        r"""
+        
+
+        Parameters
+        ----------
+        fit : TYPE, optional
+            DESCRIPTION. The default is None.
+        qrange : TYPE, optional
+            DESCRIPTION. The default is None.
+
+        Returns
+        -------
+        msd : TYPE
+            DESCRIPTION.
+        msd_std : TYPE
+            DESCRIPTION.
+
+        """
         if fit == None:
             fit_keys = list(self.fittings)
             fit = self.fittings[fit_keys[-1]]['fit'] #gets the latest fit
