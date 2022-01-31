@@ -41,14 +41,6 @@ formatter = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
 ch.setFormatter(formatter)
 logger.addHandler(ch)
 
-logger2 = logging.getLogger("DDM Analysis")
-logger2.setLevel(logging.DEBUG)
-ch2 = logging.StreamHandler()
-#ch = IPythonStreamHandler()
-ch2.setLevel(logging.DEBUG)
-formatter2 = logging.Formatter('%(name)s - %(message)s')
-ch2.setFormatter(formatter2)
-logger2.addHandler(ch2)
 
 comp_name = socket.gethostname()
 
@@ -170,8 +162,8 @@ def generateLogDistributionOfTimeLags(start,stop,numPoints):
             numberOfPoints = len(np.unique(listOfLagTimes))
         return np.unique(listOfLagTimes)
 
-def new_ddm_matrix(imageArray):
-    r"""More experimental method for getting DDM matrix.
+def _new_ddm_matrix(imageArray):
+    r"""Alternative method for getting DDM matrix.
     
     More to come later. 
     
@@ -193,8 +185,8 @@ def new_ddm_matrix(imageArray):
     return np.real(inverse_fft_in_times)
 
 
-def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, quiet=False,
-                    maximal_overlap=False):
+def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
+                     overlap_method=2):
     r'''Calculates DDM matrix
     
     This function calculates the DDM matrix at the lag times provided by `dts`.  
@@ -207,9 +199,8 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
         1D array of the lag times for which to calculate the DDM matrix
     use_BH_windowing : {True, False}, optional
         Apply Blackman-Harris windowing to the images if True. Default is False. 
-    fast_mode : {True, False}, optional
-        Calculates the DDM matrix using few Fourier transformed image pairs per lag time. 
-        Default is False.
+    overlap_method : {0,1,2}, optional
+        Default is 1.
     quiet : {True, False}, optional
         If True, prints updates as the computation proceeds
         
@@ -242,13 +233,17 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, fast_mode=False, q
     #Initializes array for Fourier transforms of differences
     ddm_mat = np.zeros((len(dts), ndx, ndy),dtype=np.float)
 
-    #We *don't* take the Fourier transform of *every* possible difference
+    #We *don't* necessarily want to take the Fourier transform of *every* possible difference
     #of images separated by a given lag time. 
-    steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
-    if fast_mode:
-        w = np.where(steps_in_diffs < 20)
-        steps_in_diffs[w] = 20
-    if maximal_overlap:
+    if overlap_method == 0:
+        steps_in_diffs = dts
+    elif overlap_method == 1:
+        steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
+        w = np.where(steps_in_diffs > 50)
+        steps_in_diffs[w] = 50
+    elif overlap_method == 2:
+        steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
+    elif overlap_method == 3:
         steps_in_diffs = np.ones_like(dts)
 
     #To record the number of pairs of images for each lag time

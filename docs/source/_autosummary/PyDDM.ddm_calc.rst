@@ -1,4 +1,4 @@
-PyDDM.ddm\_calc
+﻿PyDDM.ddm\_calc
 ===============
 
 .. automodule:: PyDDM.ddm_calc
@@ -26,7 +26,6 @@ PyDDM.ddm\_calc
       generate_mask
       get_FF_DDM_matrix
       get_MSD_from_DDM_data
-      new_ddm_matrix
       newt
       radial_avg_ddm_matrix
       window_function

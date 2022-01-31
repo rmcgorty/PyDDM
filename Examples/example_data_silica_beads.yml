@@ -1,4 +1,4 @@
-DataDirectory: 'C:/Users/Ryan/Documents/GitHub/PyDDM/Examples/'
+DataDirectory: 'C:/Users/rmcgorty/Documents/GitHub/PyDDM/Examples/'
 FileName: 'images_nobin_40x_128x128_8bit.tif'
 Metadata:
   pixel_size: 0.242 # size of pixel in um

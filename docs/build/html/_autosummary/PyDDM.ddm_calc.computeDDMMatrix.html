@@ -318,11 +318,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.new_ddm_matrix.html">
-       PyDDM.ddm_calc.new_ddm_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.ddm_calc.newt.html">
        PyDDM.ddm_calc.newt
       </a>
@@ -593,7 +588,7 @@
 <h1>PyDDM.ddm_calc.computeDDMMatrix<a class="headerlink" href="#pyddm-ddm-calc-computeddmmatrix" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="PyDDM.ddm_calc.computeDDMMatrix">
-<code class="sig-name descname">computeDDMMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">imageArray</span></em>, <em class="sig-param"><span class="n">dts</span></em>, <em class="sig-param"><span class="n">use_BH_windowing</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fast_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">maximal_overlap</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_calc.computeDDMMatrix" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">computeDDMMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">imageArray</span></em>, <em class="sig-param"><span class="n">dts</span></em>, <em class="sig-param"><span class="n">use_BH_windowing</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">overlap_method</span><span class="o">=</span><span class="default_value">2</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_calc.computeDDMMatrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates DDM matrix</p>
 <p>This function calculates the DDM matrix at the lag times provided by <cite>dts</cite>.</p>
 <dl class="field-list simple">
@@ -602,8 +597,7 @@
 <li><p><strong>imageArray</strong> (<em>array</em>) – 3D array of images. First dimension should be time.</p></li>
 <li><p><strong>dts</strong> (<em>array</em>) – 1D array of the lag times for which to calculate the DDM matrix</p></li>
 <li><p><strong>use_BH_windowing</strong> (<em>{True</em><em>, </em><em>False}</em><em>, </em><em>optional</em>) – Apply Blackman-Harris windowing to the images if True. Default is False.</p></li>
-<li><p><strong>fast_mode</strong> (<em>{True</em><em>, </em><em>False}</em><em>, </em><em>optional</em>) – Calculates the DDM matrix using few Fourier transformed image pairs per lag time.
-Default is False.</p></li>
+<li><p><strong>overlap_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2}</em><em>, </em><em>optional</em>) – Default is 1.</p></li>
 <li><p><strong>quiet</strong> (<em>{True</em><em>, </em><em>False}</em><em>, </em><em>optional</em>) – If True, prints updates as the computation proceeds</p></li>
 </ul>
 </dd>

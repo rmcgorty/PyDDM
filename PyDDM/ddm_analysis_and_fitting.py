@@ -51,7 +51,9 @@ def apply_binning(im, binsize):
     return binned_series
 
 
-def recalculate_ISF_with_new_background(ddm_dataset, background):
+def recalculate_ISF_with_new_background(ddm_dataset, 
+                                        background_method = None,
+                                        background_val = None):
     r"""
     The intermediate scattering function (ISF) is re-calculated from the DDM matrix, with the given background value.
     
@@ -63,16 +65,25 @@ def recalculate_ISF_with_new_background(ddm_dataset, background):
     transforms of all images and averaging those together. See the function :py:func:`PyDDM.ddm_calc.determining_A_and_B`. With 
     that function and by assuming that the background is a constant with wavevector (i.e., independent of :math:`q`) we can determine 
     :math:`A(q)` and :math:`B`. With :math:`D(q,\Delta t)`, :math:`A(q)`, and :math:`B`, we can then find the ISF :math:`f(q, \Delta t)`. 
-    This is done automatically when calculating the DDM matrix from the time series of images. For that, we assume that the 
-    amplitude goes to zero by the last 10% of the wavevectors. But, this might not be the case. This may over estimate the 
-    background. Therefore, one may want to adjust the background value and recalculate the ISF. 
+    This is done automatically when calculating the DDM matrix from the time series of images. 
+    
+    There are multiple methods for estimating the background. You may select one of four methods available by setting the 
+    paramter `background_method` to 0, 1, 2 or 3. Alternatively, you may set the parameter `background_val` to the value of 
+    the background that you want to use. 
     
     Parameters
     ----------
     ddm_dataset : xarray Dataset
         Dataset calculated with :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix`
-    background : float
-        Esimate of the background parameter
+    background_method : {0,1,2,3}, optional
+        Method for calculating the background. 
+        If 0, then we look at :math:`\left< | \tilde{I}(q, t) |^2 \right>_t` and assume that :math:`A(q)` goes to
+        zero by the last 10% of q values. 
+        If 1, then we estimate the background to be the minimum of the DDM matrix.
+        If 2, then we estimate the background to be :math:`\left< DDM\_Matrix(q_{max}, \Delta t) \right>_{\Delta t}`
+        If 3, then we estimate the background to be zero. 
+    background_val : float, optional
+        Default is None. If not None, then will use this value for :math:`B`.
 
     Returns
     -------
@@ -80,19 +91,49 @@ def recalculate_ISF_with_new_background(ddm_dataset, background):
         New Dataset with the variables `Amplitude` and `ISF` adjusted.
 
     """
-    if ("avg_image_ft" in ddm_dataset) and ("ddm_matrix" in ddm_dataset):
-        ddm_dataset['B'] = background
-        ddm_dataset["Amplitude"] = 2 * ddm_dataset['avg_image_ft']-background
-        ddm_dataset['ISF'] = 1-(ddm_dataset.ddm_matrix-background)/ddm_dataset.Amplitude
-        return ddm_dataset
-    elif ("av_fft_offrame" in ddm_dataset) and ("ravs" in ddm_dataset):
-        ddm_dataset['B'] = background
-        ddm_dataset["Amplitude"] = 2 * ddm_dataset['av_fft_offrame']-background
-        ddm_dataset['ISF'] = 1-(ddm_dataset.ravs-background)/ddm_dataset.Amplitude
-        return ddm_dataset
-    else:
-        return None
     
+            
+    if background_method is not None:
+        if background_method not in [0,1,2,3]:
+            print("The `background_method` option must be either 0, 1, 2 or 3. Setting to 0.")
+            background_method = 0
+        if "avg_image_ft" in ddm_dataset:
+            avg_ft = ddm_dataset['avg_image_ft']
+        elif "av_fft_offrame" in ddm_dataset:
+            avg_ft = ddm_dataset['av_fft_offrame']
+        if background_method==0:
+            number_of_hi_qs = int(0.1*len(ddm_dataset.q))
+            ddm_dataset['B'] = 2*avg_ft[-1*number_of_hi_qs:].mean()
+            ddm_dataset['B_std'] = 2*avg_ft[-1*number_of_hi_qs:].std()
+        elif background_method==1:
+            ddm_dataset['B'] = ddm_dataset.ddm_matrix[1:,1:].min()
+        elif background_method==2:
+            ddm_dataset['B'] = ddm_dataset.ddm_matrix[1:,-1].mean()
+        elif background_method==3:
+            ddm_dataset['B'] = 0
+        ddm_dataset['Amplitude'] = 2 * avg_ft - ddm_dataset.B
+        ddm_dataset['ISF'] = 1-(ddm_dataset.ddm_matrix-ddm_dataset.B)/ddm_dataset.Amplitude
+        ddm_dataset.attrs['BackgroundMethod'] = background_method
+        return ddm_dataset
+            
+    if background_val is not None:
+        if ("avg_image_ft" in ddm_dataset) and ("ddm_matrix" in ddm_dataset):
+            ddm_dataset['B'] = background_val
+            ddm_dataset['Amplitude'] = 2 * ddm_dataset['avg_image_ft']-background_val
+            ddm_dataset['ISF'] = 1-(ddm_dataset.ddm_matrix-background_val)/ddm_dataset.Amplitude
+            ddm_dataset.attrs['BackgroundMethod'] = "None"
+            return ddm_dataset
+        elif ("av_fft_offrame" in ddm_dataset) and ("ravs" in ddm_dataset):
+            ddm_dataset['B'] = background_val
+            ddm_dataset['Amplitude'] = 2 * ddm_dataset['av_fft_offrame']-background_val
+            ddm_dataset['ISF'] = 1-(ddm_dataset.ravs-background_val)/ddm_dataset.Amplitude
+            ddm_dataset.attrs['BackgroundMethod'] = "None"
+            return ddm_dataset
+        else:
+            print("No changes to ddm_dataset made. Returning same dataset as was passed.")
+            return ddm_dataset
+
+
 def newt(t,s):
     r"""
     This function is used to determine a new time when a distribution of decay times are present. The new time is the average over all the decay times.
@@ -370,7 +411,7 @@ class DDM_Analysis:
 
 
 
-    def calculate_DDM_matrix(self, fast_mode=False, quiet=False, maximal_overlap=False, 
+    def calculate_DDM_matrix(self, quiet=False, overlap_method = 2, 
                              background_method = 0):
         r"""Calculates the DDM matrix
         This function computes the DDM matrix. The radially averaged DDM matrix will
@@ -381,31 +422,34 @@ class DDM_Analysis:
 
         Parameters
         ----------
+        quiet : boolean (optional)
+            If set to `False`, then when calculating the DDM matrix, a message will print out at 
+            about every fourth time lag calculated (with a timestamp)
+        overlap_method : {0,1,2,3}, optional
+            Determines how overlapped the different image pairs are. Let's say you are finding all pairs 
+            of images separated by a lag time of 10 frames. You'd have frame 1 and 11, 2 and 12, 3 and 13, etc. 
+            One could use *each* possible pair when calculating the DDM matrix (overlap_method=3, maximally 
+            overlapping pairs). One could only look at non-overlapping pairs, like frame 1 and 11, 11 and 21, 21 and 31, etc 
+            (overlap_method=0, non-overlapping). Or one could do something in between. For overlap_method=2 (the DEFAULT), there will be 
+            about 3 or 4 pairs (at most) between two frames. That is, if we have a lag time of 10 frames, we will 
+            use the pairs of frame 1 and 11, 5 and 15, 9 and 19, etc. For overlap_method=1, we do something similar to
+            overlap_method=2, but we compute *at most* 50 image differences per lag time. So for example, with a lag time of 1 frame and 
+            a movie that has 1000 frames, we could theoretically use 999 differences of images (and we would for the other methods). But 
+            for overlap_method=2, we would only use 50 of those. This is for quickening up the computation. 
+        background_method : {0,1,2,3}, optional
+            Determines how we estimate the :math:`B` parameter. This can be done by lookinag the average of the 
+            Fourier transform of each image (not image difference!) squared (that's background_method=0). We could 
+            also use the minimum of the DDM matrix (background_method=1). Or we could use the average DDM matrix for 
+            the largest q (background_method=2). Or we could just set :math:`B` to zero (background_method=3).
+            
+        Returns
+        -------
+        ddm_dataset : xarray Dataset
+            Dataset containing the DDM matrix, the estimate of the background and amplitude, the ISF, etc. Coordinates 
+            of these variables will be the wavevector (either as q_x, q_y or the magnitude q), lagtime, etc.
 
 
         """
-        '''Function that handels the computation of DDM_matrix for multiple (time or space) windows of same movie
-            Calculates the DDM matrix and radial averages then estimates
-            amplitude (A) and background (B) based on direct fourier transform (FFT)
-            of images (instead of FFT of difference images). Determines the ISF from
-            A, B and radial averages. The data set is saved as netCDF file and a
-            pdf report is produced
-
-            :param fast_mode: Fast computation of the DDM matrix, by setting all the lagtimes above a value to a maximum.
-            :type fast_mode: bool
-            :param quiet: Should be False
-            :type quiet: bool
-
-            :return:
-                * ddm_dataset (*Dataset*)- xarray Dataset with:
-                                            - DDM matrix, radial averages, intermediate scattering fucntion (ISF), Amplitude and background (B).
-                                            - coordinates are: wavectors (q_x,q_y and magnitude:q), lagtime
-                                            - attributes contains Meta data
-
-
-
-            '''
-        quit_now = False
 
         filename_to_be_used = f"{self.data_dir}{self.filename_for_saving_data}_ddmmatrix.nc"
         if os.path.exists(filename_to_be_used):
@@ -416,18 +460,15 @@ class DDM_Analysis:
                 self.ddm_dataset.close()
                 return
 
-        self.fast_mode=fast_mode
-        if self.fast_mode:
-            print("Calculating the DDM matrix in fast mode...")
 
         #print(f"Calculating the DDM matrix for {self.filename}...")
-        self._computeDDMMatrix(quiet=quiet, maximal_overlap=maximal_overlap, 
+        self._computeDDMMatrix(quiet=quiet, overlap_method=overlap_method, 
                                background_method = background_method)
 
 
 
     #Do not call this function, instead call analysis_flow
-    def _computeDDMMatrix(self, quiet=False, maximal_overlap=False, background_method=0):
+    def _computeDDMMatrix(self, quiet=False, overlap_method=2, background_method=0):
         '''
         Calculates the DDM matrix and radial averages then estimates
         amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -445,9 +486,13 @@ class DDM_Analysis:
             self.q_x=self.q_y
             self.q=np.arange(0,self.im.shape[1]/2)*2*np.pi*(1./(self.im.shape[1]*self.pixel_size))
             
-        if background_method not in [0,1,2]:
-            print("The `background_method` option must be either 0, 1, or 2. Setting to 0.")
+        if background_method not in [0,1,2,3]:
+            print("The `background_method` option must be either 0, 1, 2 or 3. Setting to 0.")
             background_method = 0
+            
+        if overlap_method not in [0,1,2,3]:
+            print("The `overlap_method` option must be either 0, 1, 2, or 3. Setting to 2.")
+            overlap_method = 2
 
 
         if (type(self.im)==list) or (type(self.im)==np.ndarray):
@@ -461,18 +506,18 @@ class DDM_Analysis:
             if type(self.im)==list:
                 for i,im in enumerate(self.im):
                     print(f"Getting DDM matrix for {i+1} of {len(self.im)}...")
-                    d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, fast_mode = self.fast_mode, quiet=quiet,
-                                                               maximal_overlap=maximal_overlap)
+                    d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, quiet=quiet,
+                                                               overlap_method=overlap_method)
                     self.ddm_matrix.append(d_matrix)
                 self.num_pairs_per_dt = num_pairs
             else:
                 self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, 
-                                                                              fast_mode = self.fast_mode, quiet=quiet,
-                                                                              maximal_overlap=maximal_overlap)
-            self.ddm_matrix_fastmode = self.fast_mode
+                                                                              quiet=quiet,
+                                                                              overlap_method=overlap_method)
+
             end_time = time.time()
         except:
-            print("Unable to get DDM matrix")
+            print("Unable to get DDM matrix.")
             return False
 
         print("DDM matrix took %s seconds to compute." % (end_time - start_time))
@@ -505,16 +550,18 @@ class DDM_Analysis:
             self.ddm_dataset = []
             for i in range(len(self.im)):
                 filename = f"{self.data_dir}{self.filename_for_saving_data}_{i:02}"
-                ds = self._create_dataset_and_report(filename, i)
+                ds = self._create_dataset_and_report(filename, num=i, background_method=background_method, 
+                                                     overlap_method=overlap_method)
                 self.ddm_dataset.append(ds)
         else:
             filename = f"{self.data_dir}{self.filename_for_saving_data}"
-            self.ddm_dataset = self._create_dataset_and_report(filename)
+            self.ddm_dataset = self._create_dataset_and_report(filename, background_method=background_method, 
+                                                               overlap_method=overlap_method)
 
         return True
 
 
-    def _create_dataset_and_report(self, file_name, num=None, background_method=0):
+    def _create_dataset_and_report(self, file_name, num=None, background_method=0, overlap_method=None):
 
         if type(self.ddm_matrix)==list:
             if (num==None) or (len(self.ddm_matrix)<num):
@@ -542,6 +589,9 @@ class DDM_Analysis:
                                       'q':'μm$^{-1}$',
                                       'x':'pixels', 'y':'pixels',
                                       'info':'ddm_matrix is the averages of FFT difference images, ravs are the radial averages'})
+        
+        ddm_dataset.attrs['BackgroundMethod'] = background_method
+        ddm_dataset.attrs['OverlapMethod'] = overlap_method
 
         ddm_dataset['avg_image_ft'] = (('q'), ravfft[0,:]) # av_fft_offrame=0.5*(A+B) #was 'av_fft_offrame'
         
@@ -554,12 +604,17 @@ class DDM_Analysis:
         if background_method==0:
             ddm_dataset['B'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].mean()
             ddm_dataset['B_std'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].std()
+            print(f" Background estimate ± std is {ddm_dataset.B.values:.2f} ± {ddm_dataset.B_std.values:.2f}")
         elif background_method==1:
-            ddm_dataset['B'] = ddm_dataset[1:,1:].min()
+            ddm_dataset['B'] = ddm_dataset.ddm_matrix[1:,1:].min()
+            print(f" Background estimate is {ddm_dataset.B.values:.2f}")
         elif background_method==2:
+            ddm_dataset['B'] = ddm_dataset.ddm_matrix[1:,-1].mean()
+            print(f" Background estimate is {ddm_dataset.B.values:.2f}")
+        elif background_method==3:
             ddm_dataset['B'] = 0
+            print(f" Background estimate is {ddm_dataset.B.values:.2f}")
         
-        print(f" Background estimate ± std is {ddm_dataset.B.values:.2f} ± {ddm_dataset.B_std.values:.2f}")
 
         # Calculate amplitude: av_fft_frame=0.5(A+B)->A=2*av_fft_frame-B
         ddm_dataset["Amplitude"] = 2 * ddm_dataset['avg_image_ft']-ddm_dataset.B
@@ -693,9 +748,9 @@ class DDM_Analysis:
         fig2=plt.figure(figsize=(6, 6/1.2))
         plt.semilogy(ddmdataset.coords['q'][3:], ddmdataset.avg_image_ft[3:],'ro')
         plt.xlabel("q μm$^{-1}$")
-        plt.ylabel("0.5 * (A+B)")
+        plt.ylabel(r"$\left< | \tilde{I}(q, t) |^2 \right>_t$")
         plt.hlines(0.5*ddmdataset.B.values, ddmdataset.coords['q'][3], ddmdataset.coords['q'][-1], linestyles='dashed')
-        plt.title(f"Estimation of background (B) and amplitude (A), based on average of \n FFT directly from frames. Dashed line at {0.5*ddmdataset.B.values:.2f}. \n So background ~ {ddmdataset.B.values:.0f}", fontsize=10)
+        plt.title(f"Used to estimate background (B) and amplitude (A). Dashed line at {0.5*ddmdataset.B.values:.2f}. \n Background ~ {ddmdataset.B.values:.0f}", fontsize=10)
         if pdf_to_save_to != None:
             pdf_to_save_to.savefig()
 
@@ -1110,6 +1165,10 @@ class DDM_Fit:
         fit_results.attrs['FileName'] = self.ddm_dataset.FileName
         fit_results.attrs['pixel_size'] = self.ddm_dataset.pixel_size
         fit_results.attrs['frame_rate'] = self.ddm_dataset.frame_rate
+        if "BackgroundMethod" in self.ddm_dataset.attrs:
+            fit_results.attrs['BackgroundMethod'] = self.ddm_dataset.BackgroundMethod
+        if "OverlapMethod" in self.ddm_dataset.attrs:
+            fit_results.attrs['OverlapMethod'] = self.ddm_dataset.OverlapMethod
 
         return fit_results
 

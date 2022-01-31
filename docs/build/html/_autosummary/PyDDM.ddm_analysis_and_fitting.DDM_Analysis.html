@@ -318,11 +318,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.new_ddm_matrix.html">
-       PyDDM.ddm_calc.new_ddm_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.ddm_calc.newt.html">
        PyDDM.ddm_calc.newt
       </a>
@@ -606,7 +601,7 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_DDM_matrix</span></code></a></p></td>
-<td><p>Function that handels the computation of DDM_matrix for multiple (time or space) windows of same movie Calculates the DDM matrix and radial averages then estimates amplitude (A) and background (B) based on direct fourier transform (FFT) of images (instead of FFT of difference images).</p></td>
+<td><p>Calculates the DDM matrix This function computes the DDM matrix.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_plots</span></code></a></p></td>
 <td><p>Generates plot, which can be saved as PDF, to summarize the DDM matrix calulations.</p></td>
@@ -627,33 +622,40 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 </table>
 <dl class="py method">
 <dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix">
-<code class="sig-name descname">calculate_DDM_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fast_mode</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">maximal_overlap</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function that handels the computation of DDM_matrix for multiple (time or space) windows of same movie
-Calculates the DDM matrix and radial averages then estimates
-amplitude (A) and background (B) based on direct fourier transform (FFT)
-of images (instead of FFT of difference images). Determines the ISF from
-A, B and radial averages. The data set is saved as netCDF file and a
-pdf report is produced</p>
+<code class="sig-name descname">calculate_DDM_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">overlap_method</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="n">background_method</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the DDM matrix
+This function computes the DDM matrix. The radially averaged DDM matrix will
+then also be found, along with estimates of the background and amplitude. From
+the amplitude and background, we can extract the intermediate scattering function
+(ISF) from the DDM matrix. All of these computed variables will be stored as
+an xarray Dataset.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fast_mode</strong> (<em>bool</em>) – Fast computation of the DDM matrix, by setting all the lagtimes above a value to a maximum.</p></li>
-<li><p><strong>quiet</strong> (<em>bool</em>) – Should be False</p></li>
+<li><p><strong>quiet</strong> (<em>boolean</em><em> (</em><em>optional</em><em>)</em>) – If set to <cite>False</cite>, then when calculating the DDM matrix, a message will print out at
+about every fourth time lag calculated (with a timestamp)</p></li>
+<li><p><strong>overlap_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3}</em><em>, </em><em>optional</em>) – Determines how overlapped the different image pairs are. Let’s say you are finding all pairs
+of images separated by a lag time of 10 frames. You’d have frame 1 and 11, 2 and 12, 3 and 13, etc.
+One could use <em>each</em> possible pair when calculating the DDM matrix (overlap_method=3, maximally
+overlapping pairs). One could only look at non-overlapping pairs, like frame 1 and 11, 11 and 21, 21 and 31, etc
+(overlap_method=0, non-overlapping). Or one could do something in between. For overlap_method=2 (the DEFAULT), there will be
+about 3 or 4 pairs (at most) between two frames. That is, if we have a lag time of 10 frames, we will
+use the pairs of frame 1 and 11, 5 and 15, 9 and 19, etc. For overlap_method=1, we do something similar to
+overlap_method=2, but we compute <em>at most</em> 50 image differences per lag time. So for example, with a lag time of 1 frame and
+a movie that has 1000 frames, we could theoretically use 999 differences of images (and we would for the other methods). But
+for overlap_method=2, we would only use 50 of those. This is for quickening up the computation.</p></li>
+<li><p><strong>background_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3}</em><em>, </em><em>optional</em>) – Determines how we estimate the <span class="math notranslate nohighlight">\(B\)</span> parameter. This can be done by lookinag the average of the
+Fourier transform of each image (not image difference!) squared (that’s background_method=0). We could
+also use the minimum of the DDM matrix (background_method=1). Or we could use the average DDM matrix for
+the largest q (background_method=2). Or we could just set <span class="math notranslate nohighlight">\(B\)</span> to zero (background_method=3).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><dl class="simple">
-<dt>ddm_dataset (<em>Dataset</em>)- xarray Dataset with:</dt><dd><ul>
-<li><p>DDM matrix, radial averages, intermediate scattering fucntion (ISF), Amplitude and background (B).</p></li>
-<li><p>coordinates are: wavectors (q_x,q_y and magnitude:q), lagtime</p></li>
-<li><p>attributes contains Meta data</p></li>
-</ul>
+<dd class="field-even"><p><strong>ddm_dataset</strong> – Dataset containing the DDM matrix, the estimate of the background and amplitude, the ISF, etc. Coordinates
+of these variables will be the wavevector (either as q_x, q_y or the magnitude q), lagtime, etc.</p>
 </dd>
-</dl>
-</li>
-</ul>
-</p>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>xarray Dataset</p>
 </dd>
 </dl>
 </dd></dl>

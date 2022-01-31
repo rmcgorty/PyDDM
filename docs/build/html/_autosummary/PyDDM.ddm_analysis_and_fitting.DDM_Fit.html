@@ -318,11 +318,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.new_ddm_matrix.html">
-       PyDDM.ddm_calc.new_ddm_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.ddm_calc.newt.html">
        PyDDM.ddm_calc.newt
       </a>
@@ -608,8 +603,13 @@ Graphs of the fits are produced and can be saved as PDF.</p>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">error_in_fit</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_MSD</span></code></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Fit.extract_MSD" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit.extract_MSD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_MSD</span></code></a></p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param fit</dt>
+<dd class="field-odd"><p>DESCRIPTION. The default is None.</p>
+</dd>
+</dl>
+</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Fit.fit" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit.fit"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fit</span></code></a></p></td>
 <td><p>Fits the DDM data</p></td>
@@ -646,6 +646,26 @@ Graphs of the fits are produced and can be saved as PDF.</p>
 </tr>
 </tbody>
 </table>
+<dl class="py method">
+<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Fit.extract_MSD">
+<code class="sig-name descname">extract_MSD</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">qrange</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Fit.extract_MSD" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fit</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is None.</p></li>
+<li><p><strong>qrange</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>msd</strong> (<em>TYPE</em>) – DESCRIPTION.</p></li>
+<li><p><strong>msd_std</strong> (<em>TYPE</em>) – DESCRIPTION.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt id="PyDDM.ddm_analysis_and_fitting.DDM_Fit.fit">
 <code class="sig-name descname">fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">save</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">name_fit</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">use_lsqr_cf</span><span class="o">=</span><span class="default_value">[False, True]</span></em>, <em class="sig-param"><span class="n">update_tau_based_on_estimated_diffcoeff</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">estimated_diffcoeff</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">update_tau_based_on_estimated_velocity</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">estimated_velocity</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">update_tau2_based_on_estimated_diffcoeff</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">estimated_diffcoeff2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">update_tau2_based_on_estimated_velocity</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">estimated_velocity2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">update_limits_on_tau</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">updated_lims_on_tau_fraction</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">use_A_from_images_as_guess</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">update_limits_on_A</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">updated_lims_on_A_fraction</span><span class="o">=</span><span class="default_value">0.1</span></em>, <em class="sig-param"><span class="n">debug</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">display_table</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Fit.fit" title="Permalink to this definition">¶</a></dt>

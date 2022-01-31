@@ -318,11 +318,6 @@
       </a>
      </li>
      <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.new_ddm_matrix.html">
-       PyDDM.ddm_calc.new_ddm_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.ddm_calc.newt.html">
        PyDDM.ddm_calc.newt
       </a>
@@ -593,7 +588,7 @@
 <h1>PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background<a class="headerlink" href="#pyddm-ddm-analysis-and-fitting-recalculate-isf-with-new-background" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
 <dt id="PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background">
-<code class="sig-name descname">recalculate_ISF_with_new_background</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddm_dataset</span></em>, <em class="sig-param"><span class="n">background</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">recalculate_ISF_with_new_background</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddm_dataset</span></em>, <em class="sig-param"><span class="n">background_method</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">background_val</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background" title="Permalink to this definition">¶</a></dt>
 <dd><p>The intermediate scattering function (ISF) is re-calculated from the DDM matrix, with the given background value.</p>
 <p>Recall the relationship between the DDM matrix (<span class="math notranslate nohighlight">\(D(q,\Delta t)\)</span>) and the ISF (<span class="math notranslate nohighlight">\(f(q, \Delta t)\)</span>):</p>
 <div class="math notranslate nohighlight">
@@ -602,14 +597,21 @@
 transforms of all images and averaging those together. See the function <a class="reference internal" href="PyDDM.ddm_calc.determining_A_and_B.html#PyDDM.ddm_calc.determining_A_and_B" title="PyDDM.ddm_calc.determining_A_and_B"><code class="xref py py-func docutils literal notranslate"><span class="pre">PyDDM.ddm_calc.determining_A_and_B()</span></code></a>. With
 that function and by assuming that the background is a constant with wavevector (i.e., independent of <span class="math notranslate nohighlight">\(q\)</span>) we can determine
 <span class="math notranslate nohighlight">\(A(q)\)</span> and <span class="math notranslate nohighlight">\(B\)</span>. With <span class="math notranslate nohighlight">\(D(q,\Delta t)\)</span>, <span class="math notranslate nohighlight">\(A(q)\)</span>, and <span class="math notranslate nohighlight">\(B\)</span>, we can then find the ISF <span class="math notranslate nohighlight">\(f(q, \Delta t)\)</span>.
-This is done automatically when calculating the DDM matrix from the time series of images. For that, we assume that the
-amplitude goes to zero by the last 10% of the wavevectors. But, this might not be the case. This may over estimate the
-background. Therefore, one may want to adjust the background value and recalculate the ISF.</p>
+This is done automatically when calculating the DDM matrix from the time series of images.</p>
+<p>There are multiple methods for estimating the background. You may select one of four methods available by setting the
+paramter <cite>background_method</cite> to 0, 1, 2 or 3. Alternatively, you may set the parameter <cite>background_val</cite> to the value of
+the background that you want to use.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ddm_dataset</strong> (<em>xarray Dataset</em>) – Dataset calculated with <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.html#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix"><code class="xref py py-meth docutils literal notranslate"><span class="pre">PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix()</span></code></a></p></li>
-<li><p><strong>background</strong> (<em>float</em>) – Esimate of the background parameter</p></li>
+<li><p><strong>background_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3}</em><em>, </em><em>optional</em>) – Method for calculating the background.
+If 0, then we look at <span class="math notranslate nohighlight">\(\left&lt; | \tilde{I}(q, t) |^2 \right&gt;_t\)</span> and assume that <span class="math notranslate nohighlight">\(A(q)\)</span> goes to
+zero by the last 10% of q values.
+If 1, then we estimate the background to be the minimum of the DDM matrix.
+If 2, then we estimate the background to be <span class="math notranslate nohighlight">\(\left&lt; DDM\_Matrix(q_{max}, \Delta t) \right&gt;_{\Delta t}\)</span>
+If 3, then we estimate the background to be zero.</p></li>
+<li><p><strong>background_val</strong> (<em>float</em><em>, </em><em>optional</em>) – Default is None. If not None, then will use this value for <span class="math notranslate nohighlight">\(B\)</span>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
