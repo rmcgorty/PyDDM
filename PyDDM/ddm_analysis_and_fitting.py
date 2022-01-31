@@ -370,7 +370,20 @@ class DDM_Analysis:
 
 
 
-    def calculate_DDM_matrix(self, fast_mode=False, quiet=False, maximal_overlap=False):
+    def calculate_DDM_matrix(self, fast_mode=False, quiet=False, maximal_overlap=False, 
+                             background_method = 0):
+        r"""Calculates the DDM matrix
+        This function computes the DDM matrix. The radially averaged DDM matrix will
+        then also be found, along with estimates of the background and amplitude. From 
+        the amplitude and background, we can extract the intermediate scattering function 
+        (ISF) from the DDM matrix. All of these computed variables will be stored as 
+        an xarray Dataset. 
+
+        Parameters
+        ----------
+
+
+        """
         '''Function that handels the computation of DDM_matrix for multiple (time or space) windows of same movie
             Calculates the DDM matrix and radial averages then estimates
             amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -408,12 +421,13 @@ class DDM_Analysis:
             print("Calculating the DDM matrix in fast mode...")
 
         #print(f"Calculating the DDM matrix for {self.filename}...")
-        self._computeDDMMatrix(quiet=quiet, maximal_overlap=maximal_overlap)
+        self._computeDDMMatrix(quiet=quiet, maximal_overlap=maximal_overlap, 
+                               background_method = background_method)
 
 
 
     #Do not call this function, instead call analysis_flow
-    def _computeDDMMatrix(self, quiet=False, maximal_overlap=False):
+    def _computeDDMMatrix(self, quiet=False, maximal_overlap=False, background_method=0):
         '''
         Calculates the DDM matrix and radial averages then estimates
         amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -430,6 +444,10 @@ class DDM_Analysis:
             self.q_y=np.sort(np.fft.fftfreq(self.im.shape[1], d=self.pixel_size))*2*np.pi
             self.q_x=self.q_y
             self.q=np.arange(0,self.im.shape[1]/2)*2*np.pi*(1./(self.im.shape[1]*self.pixel_size))
+            
+        if background_method not in [0,1,2]:
+            print("The `background_method` option must be either 0, 1, or 2. Setting to 0.")
+            background_method = 0
 
 
         if (type(self.im)==list) or (type(self.im)==np.ndarray):
@@ -496,7 +514,7 @@ class DDM_Analysis:
         return True
 
 
-    def _create_dataset_and_report(self, file_name, num=None):
+    def _create_dataset_and_report(self, file_name, num=None, background_method=0):
 
         if type(self.ddm_matrix)==list:
             if (num==None) or (len(self.ddm_matrix)<num):
@@ -530,9 +548,17 @@ class DDM_Analysis:
         #Get last 10% of q. Average used for estimating background
         number_of_hi_qs = int(0.1*len(self.q))
         
-        ddm_dataset['B'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].mean()
-        ddm_dataset['B_std'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].std()
+        #Number of image differences used to calculate DDM matrix for each lagtime
         ddm_dataset['num_pairs_per_dt'] = (('lagtime'),self.num_pairs_per_dt)
+        
+        if background_method==0:
+            ddm_dataset['B'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].mean()
+            ddm_dataset['B_std'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].std()
+        elif background_method==1:
+            ddm_dataset['B'] = ddm_dataset[1:,1:].min()
+        elif background_method==2:
+            ddm_dataset['B'] = 0
+        
         print(f" Background estimate ± std is {ddm_dataset.B.values:.2f} ± {ddm_dataset.B_std.values:.2f}")
 
         # Calculate amplitude: av_fft_frame=0.5(A+B)->A=2*av_fft_frame-B
@@ -570,7 +596,7 @@ class DDM_Analysis:
             self.generate_plots(ddm_dataset, pdf_to_save_to=pdf, num=num)
 
         #Release any resources linked to this object.
-        ddm_dataset.close()
+        #ddm_dataset.close() #The close() method should only be necessary when reading files, not writing files
 
         return ddm_dataset
     
