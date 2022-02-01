@@ -37,9 +37,7 @@ Provide the number of frames per second, e.g., *41.7*.
 
 Analysis_parameters
 ====================
-In the image below the application of the parameters is illustrated
-
-.. image:: ../Explanation_analysis_parameters.PNG
+Parameters for determining the DDM matrix.
   
 starting_frame_number
 ----------------------
