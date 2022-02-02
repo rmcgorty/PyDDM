@@ -889,6 +889,10 @@ class DDM_Fit:
             self.model_dict = copy.deepcopy(fpd.fitting_models[self.fit_model])
         if update_params:
             self.use_parameters_provided()
+            
+            
+    def print_fitting_models(self):
+        fpd.return_possible_fitting_models()
 
 
     def use_parameters_provided(self, print_par_names=False):
