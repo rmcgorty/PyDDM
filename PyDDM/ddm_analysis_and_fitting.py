@@ -228,9 +228,14 @@ class DDM_Analysis:
         if os.path.exists(self.data_dir+self.filename):
             #print('File path to image data exists.')
             #ddm.logger.info("File path to image data exists.")
-            self.metadata = self.content['Metadata']
-            self.pixel_size = self.metadata['pixel_size']
-            self.frame_rate = self.metadata['frame_rate']
+            if 'Metadata' in self.content:
+                self.metadata = self.content['Metadata']
+                self.pixel_size = self.metadata['pixel_size']
+                self.frame_rate = self.metadata['frame_rate']
+            else:
+                print("Image metadata not provided!!! Setting `pixel_size` and `frame_rate` to 1.")
+                self.pixel_size = 1
+                self.frame_rate = 1
             self.analysis_parameters = self.content['Analysis_parameters']
             if 'filename_for_saved_data' in self.analysis_parameters:
                 self.filename_for_saving_data = self.analysis_parameters['filename_for_saved_data']
@@ -244,7 +249,13 @@ class DDM_Analysis:
                 self.first_frame = self.analysis_parameters['starting_frame_number']
             else:
                 self.first_frame = 0
-            self.number_of_lag_times = self.analysis_parameters['number_lagtimes']
+            if 'number_lagtimes' in self.analysis_parameters:
+                self.number_of_lag_times = self.analysis_parameters['number_lagtimes']
+            elif 'number_lag_times' in self.analysis_parameters:
+                self.number_of_lag_times = self.analysis_parameters['number_lag_times']
+            else:
+                print("Number of lag times not specified!!! Setting to 50.")
+                self.number_of_lag_times = 50
             if 'first_lag_time' in self.analysis_parameters:
                 self.first_lag_time = self.analysis_parameters['first_lag_time']
             else:

@@ -6,7 +6,7 @@ Metadata:
 Analysis_parameters:
   starting_frame_number: 1
   ending_frame_number: 3000 #frame number to crop the video
-  number_lagtimes: 100 #number of lag times that will be sampled to calculate ddm matrix
+  number_lag_times: 100 #number of lag times that will be sampled to calculate ddm matrix
   first_lag_time: 1 #specify first lag time for ddm analysis in frame number
   last_lag_time: 2000 #in frame number
   crop_to_roi: # leave empty for no cropping [topleft,bottomleft,topright,bottomright] 
