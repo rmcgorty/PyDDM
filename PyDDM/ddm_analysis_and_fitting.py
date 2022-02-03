@@ -159,6 +159,8 @@ def newt(t,s):
     newt = (1./s)*gamma(1./s)*t
     return newt
 
+def print_fitting_models():
+    fpd.return_possible_fitting_models()
 
 
 class DDM_Analysis:
@@ -219,7 +221,7 @@ class DDM_Analysis:
         elif isinstance(self.data_yaml, dict):
             self.content = self.data_yaml.copy()
 
-
+        # The YAML data *MUST* include the paramters 'DataDirectory' and 'FileName'
         self.data_dir=self.content['DataDirectory']
         self.filename= self.content['FileName']
         
@@ -236,6 +238,7 @@ class DDM_Analysis:
                 print("Image metadata not provided!!! Setting `pixel_size` and `frame_rate` to 1.")
                 self.pixel_size = 1
                 self.frame_rate = 1
+                
             self.analysis_parameters = self.content['Analysis_parameters']
             if 'filename_for_saved_data' in self.analysis_parameters:
                 self.filename_for_saving_data = self.analysis_parameters['filename_for_saved_data']
@@ -269,8 +272,25 @@ class DDM_Analysis:
                 self.angle_range = self.analysis_parameters['angle_range']
             else:
                 self.angle_range = None
+            
+            #These paramters (overlap_method and background_method) could also 
+            #be set as passed parameter to the method `calculate_DDM_matrix`
+            self.overlap_method = None
+            self.background_method = None
+            if 'overlap_method' in self.analysis_parameters:
+                if self.analysis_parameters['overlap_method'] in [0,1,2,3]:
+                    self.overlap_method = self.analysis_parameters['overlap_method']
+                else:
+                    print("Parameter 'overlap_method' must be 0, 1, 2, or 3.")
+            if 'background_method' in self.analysis_parameters:
+                if self.analysis_parameters['background_method'] in [0,1,2,3]:
+                    self.background_method = self.analysis_parameters['background_method']
+                else:
+                    print("Parameter 'overlap_method' must be 0, 1, 2, or 3.")
+                
             print(f'Provided metadata: {self.metadata}')
             #ddm.logger2.info(f'Provided metadata: {self.metadata}')
+            
             return 1
         else:
             print('Error: check path to image file')
@@ -416,14 +436,11 @@ class DDM_Analysis:
                 print("Applying binning...")
                 print(f'Dimensions after binning {dims_after_binning}, the new pixel size {self.pixel_size}')
 
-        self.lag_times_frames = ddm.generateLogDistributionOfTimeLags(self.first_lag_time, self.last_lag_time,
-                                                                      self.number_of_lag_times)
-        self.lag_times = self.lag_times_frames / self.frame_rate
+        
 
 
 
-    def calculate_DDM_matrix(self, quiet=False, overlap_method = 2, 
-                             background_method = 0):
+    def calculate_DDM_matrix(self, quiet=False, **kwargs):
         r"""Calculates the DDM matrix
         This function computes the DDM matrix. The radially averaged DDM matrix will
         then also be found, along with estimates of the background and amplitude. From 
@@ -436,7 +453,8 @@ class DDM_Analysis:
         quiet : boolean (optional)
             If set to `False`, then when calculating the DDM matrix, a message will print out at 
             about every fourth time lag calculated (with a timestamp)
-        overlap_method : {0,1,2,3}, optional
+        **overlap_method : {0,1,2,3}, optional
+            Optional keyword argument. Will be set to 2 if not specified here nor in the YAML file. 
             Determines how overlapped the different image pairs are. Let's say you are finding all pairs 
             of images separated by a lag time of 10 frames. You'd have frame 1 and 11, 2 and 12, 3 and 13, etc. 
             One could use *each* possible pair when calculating the DDM matrix (overlap_method=3, maximally 
@@ -447,11 +465,16 @@ class DDM_Analysis:
             overlap_method=2, but we compute *at most* 50 image differences per lag time. So for example, with a lag time of 1 frame and 
             a movie that has 1000 frames, we could theoretically use 999 differences of images (and we would for the other methods). But 
             for overlap_method=2, we would only use 50 of those. This is for quickening up the computation. 
-        background_method : {0,1,2,3}, optional
+        **background_method : {0,1,2,3}, optional
+            Optional keyword argument. Will be set to 0 if not specified here nor in the YAML file. 
             Determines how we estimate the :math:`B` parameter. This can be done by lookinag the average of the 
             Fourier transform of each image (not image difference!) squared (that's background_method=0). We could 
             also use the minimum of the DDM matrix (background_method=1). Or we could use the average DDM matrix for 
             the largest q (background_method=2). Or we could just set :math:`B` to zero (background_method=3).
+        **number_lag_times : int
+            Optional keyword argument. Must be set in the YAML file. 
+            You may pass this optional keyword argument if you want to overwrite the value for the number of lag 
+            times set in the YAML file. 
             
         Returns
         -------
@@ -471,15 +494,34 @@ class DDM_Analysis:
                 self.ddm_dataset.close()
                 return
 
+        if 'overlap_method' in kwargs:
+            self.overlap_method = kwargs['overlap_method']
+        if 'background_method' in kwargs:
+            self.background_method = kwargs['background_method']
+        if 'number_lag_times' in kwargs:
+            self.number_of_lag_times = kwargs['number_lag_times']
+            
+        #If 'overlap_method' or 'background_method' were *not* set in the YAML file, then
+        # those will be None. So check if None, and if so, set to default value. 
+        # These parameters must also be either 0, 1, 2, or 3. So check that as well. 
+        if (self.overlap_method is None) or (self.overlap_method not in [0,1,2,3]):
+            self.overlap_method = 2
+        if (self.background_method is None) or (self.background_method not in [0,1,2,3]):
+            self.background_method = 0
+            
+            
+        self.lag_times_frames = ddm.generateLogDistributionOfTimeLags(self.first_lag_time, self.last_lag_time,
+                                                                      self.number_of_lag_times)
+        self.lag_times = self.lag_times_frames / self.frame_rate
 
         #print(f"Calculating the DDM matrix for {self.filename}...")
-        self._computeDDMMatrix(quiet=quiet, overlap_method=overlap_method, 
-                               background_method = background_method)
+        self._computeDDMMatrix(quiet=quiet)
 
-
+        return self.ddm_dataset
+    
 
     #Do not call this function, instead call analysis_flow
-    def _computeDDMMatrix(self, quiet=False, overlap_method=2, background_method=0):
+    def _computeDDMMatrix(self, quiet=False):
         '''
         Calculates the DDM matrix and radial averages then estimates
         amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -497,20 +539,12 @@ class DDM_Analysis:
             self.q_x=self.q_y
             self.q=np.arange(0,self.im.shape[1]/2)*2*np.pi*(1./(self.im.shape[1]*self.pixel_size))
             
-        if background_method not in [0,1,2,3]:
-            print("The `background_method` option must be either 0, 1, 2 or 3. Setting to 0.")
-            background_method = 0
-            
-        if overlap_method not in [0,1,2,3]:
-            print("The `overlap_method` option must be either 0, 1, 2, or 3. Setting to 2.")
-            overlap_method = 2
-
-
         if (type(self.im)==list) or (type(self.im)==np.ndarray):
             pass
         else:
             print("Image data not yet read!")
             return False
+        
         start_time = time.time()
         self.ddm_matrix = []
         try:
@@ -518,13 +552,13 @@ class DDM_Analysis:
                 for i,im in enumerate(self.im):
                     print(f"Getting DDM matrix for {i+1} of {len(self.im)}...")
                     d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, quiet=quiet,
-                                                               overlap_method=overlap_method)
+                                                               overlap_method=self.overlap_method)
                     self.ddm_matrix.append(d_matrix)
                 self.num_pairs_per_dt = num_pairs
             else:
                 self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, 
                                                                               quiet=quiet,
-                                                                              overlap_method=overlap_method)
+                                                                              overlap_method=self.overlap_method)
 
             end_time = time.time()
         except:
@@ -561,18 +595,15 @@ class DDM_Analysis:
             self.ddm_dataset = []
             for i in range(len(self.im)):
                 filename = f"{self.data_dir}{self.filename_for_saving_data}_{i:02}"
-                ds = self._create_dataset_and_report(filename, num=i, background_method=background_method, 
-                                                     overlap_method=overlap_method)
+                ds = self._create_dataset_and_report(filename, num=i)
                 self.ddm_dataset.append(ds)
         else:
             filename = f"{self.data_dir}{self.filename_for_saving_data}"
-            self.ddm_dataset = self._create_dataset_and_report(filename, background_method=background_method, 
-                                                               overlap_method=overlap_method)
-
-        return True
+            self.ddm_dataset = self._create_dataset_and_report(filename)
 
 
-    def _create_dataset_and_report(self, file_name, num=None, background_method=0, overlap_method=None):
+
+    def _create_dataset_and_report(self, file_name, num=None):
 
         if type(self.ddm_matrix)==list:
             if (num==None) or (len(self.ddm_matrix)<num):
@@ -601,8 +632,8 @@ class DDM_Analysis:
                                       'x':'pixels', 'y':'pixels',
                                       'info':'ddm_matrix is the averages of FFT difference images, ravs are the radial averages'})
         
-        ddm_dataset.attrs['BackgroundMethod'] = background_method
-        ddm_dataset.attrs['OverlapMethod'] = overlap_method
+        ddm_dataset.attrs['BackgroundMethod'] = self.background_method
+        ddm_dataset.attrs['OverlapMethod'] = self.overlap_method
 
         ddm_dataset['avg_image_ft'] = (('q'), ravfft[0,:]) # av_fft_offrame=0.5*(A+B) #was 'av_fft_offrame'
         
@@ -612,30 +643,29 @@ class DDM_Analysis:
         #Number of image differences used to calculate DDM matrix for each lagtime
         ddm_dataset['num_pairs_per_dt'] = (('lagtime'),self.num_pairs_per_dt)
         
-        if background_method==0:
+        if self.background_method==0:
             ddm_dataset['B'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].mean()
             ddm_dataset['B_std'] = 2*ddm_dataset.avg_image_ft[-1*number_of_hi_qs:].std()
             print(f" Background estimate ± std is {ddm_dataset.B.values:.2f} ± {ddm_dataset.B_std.values:.2f}")
-        elif background_method==1:
+        elif self.background_method==1:
             ddm_dataset['B'] = ddm_dataset.ddm_matrix[1:,1:].min()
             print(f" Background estimate is {ddm_dataset.B.values:.2f}")
-        elif background_method==2:
+        elif self.background_method==2:
             ddm_dataset['B'] = ddm_dataset.ddm_matrix[1:,-1].mean()
             print(f" Background estimate is {ddm_dataset.B.values:.2f}")
-        elif background_method==3:
+        elif self.background_method==3:
             ddm_dataset['B'] = 0
             print(f" Background estimate is {ddm_dataset.B.values:.2f}")
         
 
         # Calculate amplitude: av_fft_frame=0.5(A+B)->A=2*av_fft_frame-B
-        ddm_dataset["Amplitude"] = 2 * ddm_dataset['avg_image_ft']-ddm_dataset.B
+        ddm_dataset["Amplitude"] = (2 * ddm_dataset['avg_image_ft']) - ddm_dataset.B
 
         # calculate ISF with new amplitude and background
         ddm_dataset['ISF']=1-(ddm_dataset.ddm_matrix-ddm_dataset.B)/ddm_dataset.Amplitude
 
         ##write yaml file data to xarray attribute in format accepeted by net cdf (no multiple dimension or Booleans)
         for i in self.content:
-
             if not i.startswith('Fit'):
                 try:
                     for j, k in self.content[i].items():
@@ -661,9 +691,6 @@ class DDM_Analysis:
         with PdfPages(f"{file_name}_report.pdf") as pdf:
             self.generate_plots(ddm_dataset, pdf_to_save_to=pdf, num=num)
 
-        #Release any resources linked to this object.
-        #ddm_dataset.close() #The close() method should only be necessary when reading files, not writing files
-
         return ddm_dataset
     
     
@@ -676,7 +703,9 @@ class DDM_Analysis:
         ddmdataset : xarray dataset
             DDM dataset
         file_name : string or None, optional
-            DESCRIPTION. The default is None.
+            Filename for saving data. The default is None. If None,
+            then will use what is set in the attribute 'filename_for_saving_data'. 
+            Note that '_ddmmatrix.nc' is appended to the end of the filename.
 
 
         """
@@ -791,7 +820,8 @@ class DDM_Analysis:
 
 class DDM_Fit:
     """
-    Set of functions to fit DDM matrix (image structure function) or ISF, the user can choose from a variety of mathematical models :py:mod:`PyDDM.ISF_and_DDMmatrix_theoretical_models`. 
+    Set of functions to fit DDM matrix (image structure function) or ISF, the user can choose from a 
+    variety of mathematical models :py:mod:`PyDDM.ISF_and_DDMmatrix_theoretical_models`. 
     Analysis paramters can be provided in a YAML file :doc:`More information here </Provide_info_for_analysis>`.
     Graphs of the fits are produced and can be saved as PDF.
 
@@ -890,9 +920,6 @@ class DDM_Fit:
         if update_params:
             self.use_parameters_provided()
             
-            
-    def print_fitting_models(self):
-        fpd.return_possible_fitting_models()
 
 
     def use_parameters_provided(self, print_par_names=False):
@@ -978,8 +1005,9 @@ class DDM_Fit:
         if filename is not None:
             if os.path.exists(filename):
                 print(f"Loading file {filename} ...")
-                self.ddm_dataset=xr.open_dataset(filename)
-                self.ddm_dataset.close()
+                with xr.open_dataset(filename) as ds:
+                    self.ddm_dataset = ds.load()
+                    self.ddm_dataset.close()
             else:
                 print(f"The file {filename} not found. Check for typos.")
         else:
@@ -992,8 +1020,9 @@ class DDM_Fit:
                 dataset_filename = f"{self.data_dir}{file_name}_ddmmatrix.nc"
             if os.path.exists(dataset_filename):
                 print(f"Loading file {dataset_filename} ...")
-                self.ddm_dataset=xr.open_dataset(dataset_filename)
-                self.ddm_dataset.close()
+                with xr.open_dataset(dataset_filename) as ds:
+                    self.ddm_dataset = ds.load()
+                    self.ddm_dataset.close()
             else:
                 print(f"File {dataset_filename} not found.")
                 fls = glob.glob(f"{self.data_dir}{file_name}*.nc")
@@ -1002,8 +1031,9 @@ class DDM_Fit:
                     for flnm in fls:
                         print(f"\t{flnm}")
                     print(f"By default, loading {fls[0]}")
-                    self.ddm_dataset=xr.open_dataset(fls[0])
-                    self.ddm_dataset.close()
+                    with xr.open_dataset(fls[0]) as ds:
+                        self.ddm_dataset = ds.load()
+                        self.ddm_dataset.close()
                     self.filename_noext = fls[0].split('\\')[-1][:-13]
 
 
@@ -1193,12 +1223,15 @@ class DDM_Fit:
         #Save the fit and parameter settings to a dictionary with a key value provided by the user
 
         if name_fit == None:
-            name_fit=input("Under what name would you want to save the generated fit in the dictionary 'fittings': ")
+            #name_fit=input("Under what name would you want to save the generated fit in the dictionary 'fittings': ")
+            num_fits_so_far = len(self.fittings.keys())
+            name_fit = "fit%02i" % (num_fits_so_far+1)
 
         if name_fit != None:
             self.fittings[name_fit]={'model':copy.deepcopy(self.fit_model),
                                      'settings':copy.deepcopy(self.model_dict['parameter_info'])}
             self.fittings[name_fit]['fit']=fit_results
+            
         return name_fit
 
 
