@@ -467,7 +467,7 @@ def return_possible_fitting_models():
     """
     model_dictionary_keys = fitting_models.keys()
     for i,model_name in enumerate(model_dictionary_keys):
-        print("%i - %s" % (i+1, model_name))
+        print("%i: '%s'" % (i+1, model_name))
         
 def return_parameter_names(parameter_dictionary, print_par_names=False):
     r"""

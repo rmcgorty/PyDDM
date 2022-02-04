@@ -22,7 +22,12 @@ import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 from matplotlib.backends.backend_pdf import PdfPages
-from nd2reader import ND2Reader #https://rbnvrw.github.io/nd2reader/index.html
+try:
+    from nd2reader import ND2Reader #https://github.com/Open-Science-Tools/nd2reader
+    able_to_open_nd2 = True
+except ModuleNotFoundError:
+    print("nd2reader module not found. Reading of .nd2 files disabled.")
+    able_to_open_nd2 = False
 
 
 import fit_parameters_dictionaries as fpd
@@ -324,24 +329,28 @@ class DDM_Analysis:
         '''
 
         if re.search(".\.nd2$", self.filename) is not None:
-            # Files with nd2 extension will be read using the package
-            #  nd2reader. Nikon systems may save data with this file type.
-            if 'channel' in self.metadata:
-                channel = self.metadata['channel']
+            if able_to_open_nd2:
+                # Files with nd2 extension will be read using the package
+                #  nd2reader. Nikon systems may save data with this file type.
+                if 'channel' in self.metadata:
+                    channel = self.metadata['channel']
+                else:
+                    print("Need to specify channel in yaml metadata. Defaulting to c=0.")
+                    channel = 0
+                with ND2Reader(self.data_dir+self.filename) as images:
+                    # Metadata in nd2 file should have pixel size and other information.
+                    #   However, data provided by user in yaml file will be used.
+                    #   Perhaps later perform check that nd2 file metadata and yaml metadata agree.
+                    print("According to nd2 file:")
+                    print('\t%d x %d px' % (images.metadata['width'], images.metadata['height']))
+                    print('\tPixel size of: %.2f microns' % images.metadata['pixel_microns'])
+                    print('\tNumber of frames: %i' % images.sizes['t'])
+                    im = np.zeros((images.sizes['t'], images.metadata['width'], images.metadata['height']), dtype=np.uint16)
+                    for i in range(images.sizes['t']):
+                        im[i] = images.get_frame_2D(t=i, c=channel)
             else:
-                print("Need to specify channel in yaml metadata. Defaulting to c=0.")
-                channel = 0
-            with ND2Reader(self.data_dir+self.filename) as images:
-                # Metadata in nd2 file should have pixel size and other information.
-                #   However, data provided by user in yaml file will be used.
-                #   Perhaps later perform check that nd2 file metadata and yaml metadata agree.
-                print("According to nd2 file:")
-                print('\t%d x %d px' % (images.metadata['width'], images.metadata['height']))
-                print('\tPixel size of: %.2f microns' % images.metadata['pixel_microns'])
-                print('\tNumber of frames: %i' % images.sizes['t'])
-                im = np.zeros((images.sizes['t'], images.metadata['width'], images.metadata['height']), dtype=np.uint16)
-                for i in range(images.sizes['t']):
-                    im[i] = images.get_frame_2D(t=i, c=channel)
+                print("It seems you have an nd2 file to open. But nd2reader not installed!")
+                return 
 
         if (re.search(".\.tif$", self.filename) is not None) or (re.search(".\.tiff$", self.filename) is not None):
             im = io.imread(self.data_dir + self.filename)
@@ -490,8 +499,9 @@ class DDM_Analysis:
             print(f"The file {filename_to_be_used} already exists. So perhaps the DDM matrix was calculated already?")
             answer = input("Do you still want to calculate the DDM matrix? (y/n): ").lower().strip()
             if answer == "n" or answer=="no":
-                self.ddm_dataset = xr.open_dataset(filename_to_be_used)
-                self.ddm_dataset.close()
+                with xr.open_dataset(filename_to_be_used) as ds:
+                    self.ddm_dataset = ds.load()
+                    self.ddm_dataset.close()
                 return
 
         if 'overlap_method' in kwargs:
@@ -1167,10 +1177,13 @@ class DDM_Fit:
             force_q_range = self.content['Fitting_parameters']['Good_q_range']
         else:
             force_q_range = None
-        if self.content['Fitting_parameters']['Auto_update_good_q_range']:
-            update_good_q_range = True
+        if 'Auto_update_good_q_range' in self.content['Fitting_parameters']:
+            if self.content['Fitting_parameters']['Auto_update_good_q_range']:
+                update_good_q_range = True
+            else:
+                update_good_q_range = False
         else:
-            update_good_q_range = False
+            update_good_q_range = True
 
         qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = get_tau_vs_q_fit(fit_results, forced_qs=force_q_range, 
                                                                                           update_good_q_range=update_good_q_range)
