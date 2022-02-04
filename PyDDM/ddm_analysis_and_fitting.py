@@ -1819,7 +1819,7 @@ def fit_report(fit_results, PDF_save=True, forced_qs=None, pdf_save_dir = "./",
         fit_results.attrs['good_q_range'] = qrange
 
 
-    fig3 = hf.plot_one_tau_vs_q(fit_results, 'b', 0.2, y_position_of_text=0.2, use_new_tau=use_new_tau)
+    fig3 = hf.plot_one_tau_vs_q(fit_results, 'b', use_new_tau=use_new_tau)
     list_of_all_figs.append(fig3)
 
     if ('StretchingExp' in fit_results.parameters.parameter):
@@ -1846,10 +1846,10 @@ def fit_report(fit_results, PDF_save=True, forced_qs=None, pdf_save_dir = "./",
             else:
                 fit_results.attrs['tau2_good_q_range'] = qrange
 
-        fig3b = hf.plot_one_tau_vs_q(fit_results, 'c', 0.6, use_tau2=True, use_new_tau=use_new_tau)
+        fig3b = hf.plot_one_tau_vs_q(fit_results, 'c', use_tau2=True, use_new_tau=use_new_tau)
         list_of_all_figs.append(fig3b)
-        fig3c = hf.plot_one_tau_vs_q(fit_results, 'b', 0.6, show_table=False, use_new_tau=use_new_tau)
-        fig3c = hf.plot_one_tau_vs_q(fit_results, 'c', 0.3, use_tau2=True, fig_to_use=fig3c, show_table=False, use_new_tau=use_new_tau)
+        fig3c = hf.plot_one_tau_vs_q(fit_results, 'b', show_table=False, use_new_tau=use_new_tau)
+        fig3c = hf.plot_one_tau_vs_q(fit_results, 'c', use_tau2=True, fig_to_use=fig3c, show_table=False, use_new_tau=use_new_tau)
         list_of_all_figs.append(fig3c)
         if ('StretchingExp2' in fit_results.parameters.parameter):
             fig4b = hf.plot_stretching_exponent(fit_results, 'limegreen', 0.6, use_s2=True)

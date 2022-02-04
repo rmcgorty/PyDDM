@@ -45,11 +45,7 @@ def view_colormap(cmap, axes=None, qminmax=None):
     
     
 def generate_pandas_table_fit_results(fit_results):
-    data = {}
-    data["q"] = fit_results.q
-    for par in fit_results.parameter:
-        data[str(par.values)] = fit_results.parameters.loc[par].values
-    pd_data_frame = pd.DataFrame(data = data)
+    pd_data_frame = generate_pandas_data(fit_results)
     cmap = plt.get_cmap('RdBu')
     if 'Tau' in fit_results.parameter:
         taus_over_qrange = fit_results.parameters.loc['Tau'][fit_results.good_q_range[0]:fit_results.good_q_range[1]]
@@ -66,12 +62,17 @@ def generate_pandas_table_fit_results(fit_results):
         right_q_range = None
     return pd_data_frame.style.background_gradient(cmap, subset='Tau', axis=0)
 
-        #\
-        #.highlight_between(subset='q', left=left_q_range, right=right_q_range)
+
+def generate_pandas_data(fit_results):
+    data = {}
+    data["q"] = fit_results.q
+    for par in fit_results.parameter:
+        data[str(par.values)] = fit_results.parameters.loc[par].values
+    pd_data_frame = pd.DataFrame(data = data)
+    return pd_data_frame
     
 
-def plot_one_tau_vs_q(fit, plot_color, x_position_of_text, 
-                      y_position_of_text=0.96, 
+def plot_one_tau_vs_q(fit, plot_color,
                       tau_v_q_slope = None, diffcoeff=None,
                       use_new_tau=True, fig_to_use=None, 
                       low_good_q=None, hi_good_q=None, ylim=None,
