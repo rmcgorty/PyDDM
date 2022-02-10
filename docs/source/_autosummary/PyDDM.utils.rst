@@ -1,4 +1,4 @@
-PyDDM.utils
+﻿PyDDM.utils
 ===========
 
 .. automodule:: PyDDM.utils
@@ -15,6 +15,7 @@ PyDDM.utils
       :toctree:
       :nosignatures:
    
+      generate_pandas_data
       generate_pandas_table_fit_results
       get_schulz_dist
       get_velocity_variance

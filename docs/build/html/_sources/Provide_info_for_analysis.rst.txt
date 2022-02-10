@@ -49,7 +49,7 @@ ending_frame_number
 --------------------
 The last frame to be analyzed, e.g., *3000*. If the last frame of the movie is the last frame for analysis, give *null*
  
-number_lagtimes
+number_lag_times
 ----------------
 The number of lag times to be samples, e.g., *40*.
  

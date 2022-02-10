@@ -27,7 +27,10 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "## Importing the necessary modules"
+    "## Importing the necessary modules\n",
+    "\n",
+    "We will ned to import [numpy](https://numpy.org/), [matplotlib](https://matplotlib.org/), and [xarray](https://xarray.pydata.org/en/stable/). \n",
+    "We will also import the [PyDDM](https://rmcgorty.github.io/PyDDM/) package. "
    ]
   },
   {
@@ -63,7 +66,7 @@
     "  pixel_size: 0.242 # size of pixel in um\n",
     "  frame_rate: 41.7 #frames per second\n",
     "Analysis_parameters:\n",
-    "  number_lagtimes: 40\n",
+    "  number_lag_times: 40\n",
     "  last_lag_time: 600\n",
     "  binning: no \n",
     "Fitting_parameters:\n",
@@ -82,31 +85,40 @@
   },
   {
    "cell_type": "code",
-   "execution_count": 2,
+   "execution_count": 1,
    "metadata": {},
    "outputs": [
     {
-     "name": "stdout",
-     "output_type": "stream",
-     "text": [
-      "Provided metadata: {'pixel_size': 0.242, 'frame_rate': 41.7}\n",
-      "Image shape: 3000-by-128-by-128\n",
-      "Number of frames to use for analysis: 3000\n",
-      "Maximum lag time (in frames): 600\n",
-      "Number of lag times to compute DDM matrix: 40\n"
+     "ename": "NameError",
+     "evalue": "name 'ddm' is not defined",
+     "output_type": "error",
+     "traceback": [
+      "\u001b[1;31m---------------------------------------------------------------------------\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m                                 Traceback (most recent call last)",
+      "\u001b[1;32m~\\AppData\\Local\\Temp/ipykernel_25016/792637493.py\u001b[0m in \u001b[0;36m<module>\u001b[1;34m\u001b[0m\n\u001b[0;32m      1\u001b[0m \u001b[1;31m#The yaml file `example_data_silica_beads.yml` contains the metadata and parameters above\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0;32m      2\u001b[0m \u001b[1;33m\u001b[0m\u001b[0m\n\u001b[1;32m----> 3\u001b[1;33m \u001b[0mddm_calc\u001b[0m \u001b[1;33m=\u001b[0m \u001b[0mddm\u001b[0m\u001b[1;33m.\u001b[0m\u001b[0mDDM_Analysis\u001b[0m\u001b[1;33m(\u001b[0m\u001b[1;34m\"../../Examples/example_data_silica_beads.yml\"\u001b[0m\u001b[1;33m)\u001b[0m\u001b[1;33m\u001b[0m\u001b[1;33m\u001b[0m\u001b[0m\n\u001b[0m",
+      "\u001b[1;31mNameError\u001b[0m: name 'ddm' is not defined"
      ]
     }
    ],
    "source": [
+    "#The yaml file `example_data_silica_beads.yml` contains the metadata and parameters above\n",
+    "\n",
     "ddm_calc = ddm.DDM_Analysis(\"../../Examples/example_data_silica_beads.yml\")"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "Below, with the method `calculate_DDM_matrix`, we compute the DDM matrix and some associated data. The data will be stored as an [xarray Dataset](https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html) as an attribute to `ddm_calc` called `ddm_dataset`.\n",
+    "\n",
+    "**Note**: There are a few optional arguments we can pass to `calculate_DDM_matrix`. There is an optional argument `quiet` (*True* or *False*, *False* by default). Then we have some optional keyword arguments (all of which could also be specified in the YAML file). These are: `overlap_method` which sets the degree of overlap between image pairs when finding all image differences for a each lag time and is either *0*, *1*, *2*, or *3*, `background_method` which sets how to estimate the background parameter *B* and is either *0*, *1*, *2*, or *3*, and `number_lag_times`. If any of these three keyword arguments are set here, the value specified in the YAML file will be overwritten. "
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 3,
-   "metadata": {
-    "scrolled": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stderr",
@@ -885,6 +897,10 @@
     }
    ],
    "source": [
+    "###############################################################\n",
+    "# Displaying a slice of the full three-dimensional DDM matrix #\n",
+    "###############################################################\n",
+    "\n",
     "lagtime_for_ddmmatrix = 10\n",
     "fig,ax = plt.subplots()\n",
     "plt.matshow(ddm_calc.ddm_dataset.ddm_matrix_full[lagtime_for_ddmmatrix], fignum=0, cmap='gray')\n",
@@ -929,6 +945,10 @@
     }
    ],
    "source": [
+    "######################################################################\n",
+    "# Plotting the radially averaged DDM matrix for a particular q-value #\n",
+    "######################################################################\n",
+    "\n",
     "q_index = 15 #index of the list of q values\n",
     "plt.figure(figsize=(10,10/1.618))\n",
     "plt.semilogx(ddm_calc.ddm_dataset.lagtime, ddm_calc.ddm_dataset.ddm_matrix[:,q_index], 'ro')\n",
@@ -948,7 +968,7 @@
    "cell_type": "markdown",
    "metadata": {},
    "source": [
-    "Since we are slicing this xarray dataset, let's use the opportunity to go over different ways of selecting data stored in a dataset. See the [xarray user guide](https://xarray.pydata.org/en/stable/user-guide/indexing.html) for more info. \n",
+    "Since we are slicing this [xarray dataset](https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html), let's use the opportunity to go over different ways of selecting data stored in a dataset. See the [xarray user guide](https://xarray.pydata.org/en/stable/user-guide/indexing.html) for more info. \n",
     "\n",
     "1. We can use the `isel` function (see [xarray.DataArray.isel](https://xarray.pydata.org/en/stable/generated/xarray.DataArray.isel.html)). \n",
     "```python\n",
@@ -960,6 +980,7 @@
     "plt.title(\"DDM matrix for q = %.3f \" % ddm_calc.ddm_dataset.q[q_index])\n",
     "```\n",
     "\n",
+    "\n",
     "2. We can select the desired *q* not based on its **index** but on its actual **value** with `sel` (see [xarray.DataArray.sel](https://xarray.pydata.org/en/stable/generated/xarray.DataArray.sel.html). Note that here we have to use `method = 'nearest'` since we do not have a *q* value of exactly 3 $\\mu$m$^{-1}$.\n",
     "```python\n",
     "q_index = 15 #index of the list of q values\n",
@@ -969,6 +990,7 @@
     "plt.ylabel(\"DDM matrix\")\n",
     "plt.title(\"DDM matrix for q = %.3f \" % ddm_calc.ddm_dataset.q[q_index])\n",
     "```\n",
+    "\n",
     "\n",
     "3. Lastly, we can create this plot (using whichever slicing method) with xarray's plotting function (which just wraps `matplotlib.pyplot`). For more, see [xarray.DataArray.plot](https://xarray.pydata.org/en/stable/generated/xarray.DataArray.plot.html).\n",
     "```python\n",
@@ -1002,9 +1024,7 @@
   {
    "cell_type": "code",
    "execution_count": 8,
-   "metadata": {
-    "scrolled": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "data": {
@@ -1030,6 +1050,10 @@
     }
    ],
    "source": [
+    "############################################################################################\n",
+    "# Plotting the average squared Fourier-transformed image as a function of the wavevector q #\n",
+    "############################################################################################\n",
+    "\n",
     "plt.figure(figsize=(10,10/1.618))\n",
     "plt.semilogy(ddm_calc.ddm_dataset.q[1:], ddm_calc.ddm_dataset.avg_image_ft[1:], 'ro')\n",
     "plt.xlabel(\"Wavevector, q ($\\mu$m$^{-1}$)\")\n",
@@ -1078,6 +1102,10 @@
     }
    ],
    "source": [
+    "#############################################################################################################\n",
+    "# Plotting the intermediate scattering function (ISF) for a particular value of q as a function of lag time #\n",
+    "#############################################################################################################\n",
+    "\n",
     "plt.figure(figsize=(10,10/1.618))\n",
     "plt.semilogx(ddm_calc.ddm_dataset.lagtime, ddm_calc.ddm_dataset.ISF.sel(q=1.5, method='nearest'), 'ro')\n",
     "plt.xlabel(\"Lag time (s)\")\n",
@@ -1130,7 +1158,11 @@
     }
    ],
    "source": [
-    "q_index = 63 #index of the list of q values\n",
+    "###################################################################################################\n",
+    "# Plotting the radially averaged DDM matrix for the greatest value of q as a function of lag time #\n",
+    "###################################################################################################\n",
+    "\n",
+    "q_index = -1 #index of the list of q values\n",
     "plt.figure(figsize=(10,10/1.618))\n",
     "plt.semilogx(ddm_calc.ddm_dataset.lagtime, ddm_calc.ddm_dataset.ddm_matrix[:,q_index], 'ro')\n",
     "plt.xlabel(\"Lag time (s)\")\n",
@@ -1803,7 +1835,7 @@
     "\n",
     "But, there are other ways. In [**Kurzthaler 2018**], they set the background, $B$, to zero. They note that for their fluorescence imaging \"the camera noise is usually negligible.\" However, they note that for bright-field of phase contrast modalities, the camera is not negligible and $B$ will be non-zero. \n",
     "\n",
-    "In [**4**], they approximate $B$ by $\\min \\left[ D(q, \\Delta t_{min}) \\right]$. But they note that the frame rate needs to be \"sufficiently small\" and that this will give an overestimate of $B$. \n",
+    "In [**Bayles 2017**], they approximate $B$ by $\\min \\left[ D(q, \\Delta t_{min}) \\right]$. But they note that the frame rate needs to be \"sufficiently small\" and that this will give an overestimate of $B$. To try this, use `background_method = 1` as an optional keyword parameter in the function `calculate_DDM_matrix` (or set the value of `background_method` in the YAML file under `Analysis_parameters`).\n",
     "\n",
     "\n",
     ">[**Cerbino 2017**] Cerbino, R., Piotti, D., Buscaglia, M. & Giavazzi, F. [Dark field differential dynamic microscopy enables accurate characterization of the roto-translational dynamics of bacteria and colloidal clusters.](https://doi.org/10.1088/1361-648X/aa9bc5) J. Phys.: Condens. Matter 30, 025901 (2017).\n",
@@ -1913,6 +1945,9 @@
     }
    ],
    "source": [
+    "#Note that to initialize the DDM_Fit class we need to pass it the YAML file containing the parameters \n",
+    "# *or* a dictionary with the same parameters. \n",
+    "\n",
     "ddm_fit = ddm.DDM_Fit(ddm_calc.data_yaml)"
    ]
   },
@@ -1973,15 +2008,15 @@
     }
    ],
    "source": [
+    "#Note that the method `fit` has many optional parameters\n",
+    "\n",
     "fit01 = ddm_fit.fit(name_fit = 'fit01', display_table=False, use_A_from_images_as_guess=True, update_limits_on_A=True)"
    ]
   },
   {
    "cell_type": "code",
    "execution_count": 16,
-   "metadata": {
-    "scrolled": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -2582,6 +2617,8 @@
     }
    ],
    "source": [
+    "#Generate plots for inspecting the outcome of the fits\n",
+    "\n",
     "ddm.fit_report(fit01, q_indices=[3,6,9,22], forced_qs=[4,16], use_new_tau=True, show=True)"
    ]
   },
@@ -2622,9 +2659,7 @@
   {
    "cell_type": "code",
    "execution_count": 18,
-   "metadata": {
-    "scrolled": false
-   },
+   "metadata": {},
    "outputs": [
     {
      "data": {
@@ -3263,6 +3298,10 @@
     }
    ],
    "source": [
+    "################################################################################################\n",
+    "# Plotting the characteristic decay time tau vs wavevector q determined from the last two fits #\n",
+    "################################################################################################\n",
+    "\n",
     "plt.figure(figsize=(10,10/1.618))\n",
     "plt.loglog(fit01.q, fit01.parameters.loc['Tau'], 'ro', label=\"Not updating tau's initial guess\")\n",
     "plt.loglog(fit02.q, fit02.parameters.loc['Tau'], 'bo', label=\"Updating tau's initial guess based on estimated diffusion coeff\")\n",
@@ -3959,6 +3998,10 @@
     }
    ],
    "source": [
+    "##################################################################################################\n",
+    "# Plotting the characteristic decay time tau vs wavevector q determined from the last three fits #\n",
+    "##################################################################################################\n",
+    "\n",
     "plt.figure(figsize=(10,10/1.618))\n",
     "plt.loglog(fit01.q, fit01.parameters.loc['Tau'], 'ro', label=\"Not updating tau's initial guess\")\n",
     "plt.loglog(fit02.q, fit02.parameters.loc['Tau'], 'bo', label=\"Updating tau's initial guess\")\n",
@@ -4028,6 +4071,10 @@
     }
    ],
    "source": [
+    "##################################################################################################\n",
+    "# Plotting the characteristic decay time tau vs wavevector q determined from the last three fits #\n",
+    "##################################################################################################\n",
+    "\n",
     "plt.figure(figsize=(10,10/1.618))\n",
     "plt.loglog(fit01.q, fit01.parameters.loc['Tau'], 'ro', label=\"Not updating tau's initial guess\")\n",
     "plt.loglog(fit02.q, fit02.parameters.loc['Tau'], 'bo', label=\"Updating tau's initial guess\")\n",
@@ -4099,6 +4146,10 @@
     }
    ],
    "source": [
+    "###############################################################################################\n",
+    "# Plotting the mean squared displacement as a function of lag time as determined from the ISF #\n",
+    "###############################################################################################\n",
+    "\n",
     "msd, msd_std = ddm_fit.extract_MSD(fit=fit01)\n",
     "poly_fit_results = np.polyfit(msd.lagtime[1:10], msd[1:10], 1)\n",
     "\n",

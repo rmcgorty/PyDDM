@@ -1,4 +1,4 @@
-﻿PyDDM.ddm\_analysis\_and\_fitting.DDM\_Analysis
+PyDDM.ddm\_analysis\_and\_fitting.DDM\_Analysis
 ===============================================
 
 .. currentmodule:: PyDDM.ddm_analysis_and_fitting

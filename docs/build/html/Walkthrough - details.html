@@ -226,6 +226,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.print_fitting_models.html">
+       PyDDM.ddm_analysis_and_fitting.print_fitting_models
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background.html">
        PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background
       </a>
@@ -421,6 +426,11 @@
      </i>
     </label>
     <ul>
+     <li class="toctree-l3">
+      <a class="reference internal" href="_autosummary/PyDDM.utils.generate_pandas_data.html">
+       PyDDM.utils.generate_pandas_data
+      </a>
+     </li>
      <li class="toctree-l3">
       <a class="reference internal" href="_autosummary/PyDDM.utils.generate_pandas_table_fit_results.html">
        PyDDM.utils.generate_pandas_table_fit_results
@@ -1002,6 +1012,7 @@ div.rendered_html tbody tr:hover {
 <div class="alert alert-block alert-info"><p>Tip: Before working through this, go through the simple walkthrough.</p>
 </div><div class="section" id="Importing-the-necessary-modules">
 <h2>Importing the necessary modules<a class="headerlink" href="#Importing-the-necessary-modules" title="Permalink to this headline">¶</a></h2>
+<p>We will ned to import <a class="reference external" href="https://numpy.org/">numpy</a>, <a class="reference external" href="https://matplotlib.org/">matplotlib</a>, and <a class="reference external" href="https://xarray.pydata.org/en/stable/">xarray</a>. We will also import the <a class="reference external" href="https://rmcgorty.github.io/PyDDM/">PyDDM</a> package.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -1032,7 +1043,7 @@ initialize <code class="docutils literal notranslate"><span class="pre">DDM_Anal
 <span class="s2">  pixel_size: 0.242 # size of pixel in um</span>
 <span class="s2">  frame_rate: 41.7 #frames per second</span>
 <span class="s2">Analysis_parameters:</span>
-<span class="s2">  number_lagtimes: 40</span>
+<span class="s2">  number_lag_times: 40</span>
 <span class="s2">  last_lag_time: 600</span>
 <span class="s2">  binning: no</span>
 <span class="s2">Fitting_parameters:</span>
@@ -1049,10 +1060,12 @@ initialize <code class="docutils literal notranslate"><span class="pre">DDM_Anal
 </pre></div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddm_calc</span> <span class="o">=</span> <span class="n">ddm</span><span class="o">.</span><span class="n">DDM_Analysis</span><span class="p">(</span><span class="s2">&quot;../../Examples/example_data_silica_beads.yml&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#The yaml file `example_data_silica_beads.yml` contains the metadata and parameters above</span>
+
+<span class="n">ddm_calc</span> <span class="o">=</span> <span class="n">ddm</span><span class="o">.</span><span class="n">DDM_Analysis</span><span class="p">(</span><span class="s2">&quot;../../Examples/example_data_silica_beads.yml&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1061,13 +1074,19 @@ initialize <code class="docutils literal notranslate"><span class="pre">DDM_Anal
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-Provided metadata: {&#39;pixel_size&#39;: 0.242, &#39;frame_rate&#39;: 41.7}
-Image shape: 3000-by-128-by-128
-Number of frames to use for analysis: 3000
-Maximum lag time (in frames): 600
-Number of lag times to compute DDM matrix: 40
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">~\AppData\Local\Temp/ipykernel_25016/792637493.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">      1</span> <span class="ansi-red-intense-fg ansi-bold">#The yaml file `example_data_silica_beads.yml` contains the metadata and parameters above</span>
+<span class="ansi-green-fg">      2</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 3</span><span class="ansi-yellow-intense-fg ansi-bold"> </span>ddm_calc <span class="ansi-yellow-intense-fg ansi-bold">=</span> ddm<span class="ansi-yellow-intense-fg ansi-bold">.</span>DDM_Analysis<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;../../Examples/example_data_silica_beads.yml&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-red-intense-fg ansi-bold">NameError</span>: name &#39;ddm&#39; is not defined
 </pre></div></div>
 </div>
+<p>Below, with the method <code class="docutils literal notranslate"><span class="pre">calculate_DDM_matrix</span></code>, we compute the DDM matrix and some associated data. The data will be stored as an <a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html">xarray Dataset</a> as an attribute to <code class="docutils literal notranslate"><span class="pre">ddm_calc</span></code> called <code class="docutils literal notranslate"><span class="pre">ddm_dataset</span></code>.</p>
+<p><strong>Note</strong>: There are a few optional arguments we can pass to <code class="docutils literal notranslate"><span class="pre">calculate_DDM_matrix</span></code>. There is an optional argument <code class="docutils literal notranslate"><span class="pre">quiet</span></code> (<em>True</em> or <em>False</em>, <em>False</em> by default). Then we have some optional keyword arguments (all of which could also be specified in the YAML file). These are: <code class="docutils literal notranslate"><span class="pre">overlap_method</span></code> which sets the degree of overlap between image pairs when finding all image differences for a each lag time and is either <em>0</em>, <em>1</em>, <em>2</em>, or <em>3</em>, <code class="docutils literal notranslate"><span class="pre">background_method</span></code> which sets how to estimate the
+background parameter <em>B</em> and is either <em>0</em>, <em>1</em>, <em>2</em>, or <em>3</em>, and <code class="docutils literal notranslate"><span class="pre">number_lag_times</span></code>. If any of these three keyword arguments are set here, the value specified in the YAML file will be overwritten.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
@@ -1106,28 +1125,28 @@ DDM matrix took 42.74850940704346 seconds to compute.
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_7_2.png" src="_images/Walkthrough_-_details_7_2.png" />
+<img alt="_images/Walkthrough_-_details_8_2.png" src="_images/Walkthrough_-_details_8_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_7_3.png" src="_images/Walkthrough_-_details_7_3.png" />
+<img alt="_images/Walkthrough_-_details_8_3.png" src="_images/Walkthrough_-_details_8_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_7_4.png" src="_images/Walkthrough_-_details_7_4.png" />
+<img alt="_images/Walkthrough_-_details_8_4.png" src="_images/Walkthrough_-_details_8_4.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_7_5.png" src="_images/Walkthrough_-_details_7_5.png" />
+<img alt="_images/Walkthrough_-_details_8_5.png" src="_images/Walkthrough_-_details_8_5.png" />
 </div>
 </div>
 <div class="section" id="Digging-into-the-DDM-xarray.Dataset">
@@ -1745,7 +1764,11 @@ Notice the data variables:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lagtime_for_ddmmatrix</span> <span class="o">=</span> <span class="mi">10</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###############################################################</span>
+<span class="c1"># Displaying a slice of the full three-dimensional DDM matrix #</span>
+<span class="c1">###############################################################</span>
+
+<span class="n">lagtime_for_ddmmatrix</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">matshow</span><span class="p">(</span><span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">ddm_matrix_full</span><span class="p">[</span><span class="n">lagtime_for_ddmmatrix</span><span class="p">],</span> <span class="n">fignum</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">)</span>
 
@@ -1775,7 +1798,7 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_13_1.png" src="_images/Walkthrough_-_details_13_1.png" />
+<img alt="_images/Walkthrough_-_details_14_1.png" src="_images/Walkthrough_-_details_14_1.png" />
 </div>
 </div>
 <p>The slice of the DDM matrix above looks pretty radially symmetric. This is expected as we are analyzing a video of silica particles diffusing randomly with no preferred direction. Because of this symmetry, we can radially average the DDM matrix to go from <span class="math notranslate nohighlight">\(D(q_x, q_y, \Delta t)\)</span> to <span class="math notranslate nohighlight">\(D(q, \Delta t)\)</span> where <span class="math notranslate nohighlight">\(q = \sqrt{q_x^2 + q_y^2}\)</span>.</p>
@@ -1784,7 +1807,11 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_index</span> <span class="o">=</span> <span class="mi">15</span> <span class="c1">#index of the list of q values</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">######################################################################</span>
+<span class="c1"># Plotting the radially averaged DDM matrix for a particular q-value #</span>
+<span class="c1">######################################################################</span>
+
+<span class="n">q_index</span> <span class="o">=</span> <span class="mi">15</span> <span class="c1">#index of the list of q values</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">lagtime</span><span class="p">,</span> <span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">ddm_matrix</span><span class="p">[:,</span><span class="n">q_index</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Lag time (s)&quot;</span><span class="p">)</span>
@@ -1797,12 +1824,12 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_15_0.png" src="_images/Walkthrough_-_details_15_0.png" />
+<img alt="_images/Walkthrough_-_details_16_0.png" src="_images/Walkthrough_-_details_16_0.png" />
 </div>
 </div>
 <div class="section" id="Different-data-selecting-methods">
 <h4>Different data selecting methods<a class="headerlink" href="#Different-data-selecting-methods" title="Permalink to this headline">¶</a></h4>
-<p>Since we are slicing this xarray dataset, let’s use the opportunity to go over different ways of selecting data stored in a dataset. See the <a class="reference external" href="https://xarray.pydata.org/en/stable/user-guide/indexing.html">xarray user guide</a> for more info.</p>
+<p>Since we are slicing this <a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html">xarray dataset</a>, let’s use the opportunity to go over different ways of selecting data stored in a dataset. See the <a class="reference external" href="https://xarray.pydata.org/en/stable/user-guide/indexing.html">xarray user guide</a> for more info.</p>
 <ol class="arabic simple">
 <li><p>We can use the <code class="docutils literal notranslate"><span class="pre">isel</span></code> function (see <a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.isel.html">xarray.DataArray.isel</a>).</p></li>
 </ol>
@@ -1843,7 +1870,11 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">############################################################################################</span>
+<span class="c1"># Plotting the average squared Fourier-transformed image as a function of the wavevector q #</span>
+<span class="c1">############################################################################################</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">q</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">avg_image_ft</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="s1">&#39;ro&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Wavevector, q ($\mu$m$^{-1}$)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\left&lt; | \tilde</span><span class="si">{I}</span><span class="s2">(q, t) |^2 \right&gt;_t$&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">)</span>
@@ -1867,7 +1898,7 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_20_1.png" src="_images/Walkthrough_-_details_20_1.png" />
+<img alt="_images/Walkthrough_-_details_21_1.png" src="_images/Walkthrough_-_details_21_1.png" />
 </div>
 </div>
 <p>The other methods for getting the background (and from the background then estimating the amplitude) are: * <code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 1: <span class="math notranslate nohighlight">\(B\)</span> will be the minimum of the DDM matrix * <code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 2: <span class="math notranslate nohighlight">\(B\)</span> will be the average (over all lag times) of the DDM matrix at the largest wavevector <span class="math notranslate nohighlight">\(q\)</span> * <code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 3: <span class="math notranslate nohighlight">\(B\)</span> = 0</p>
@@ -1877,7 +1908,11 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#############################################################################################################</span>
+<span class="c1"># Plotting the intermediate scattering function (ISF) for a particular value of q as a function of lag time #</span>
+<span class="c1">#############################################################################################################</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">lagtime</span><span class="p">,</span> <span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">ISF</span><span class="o">.</span><span class="n">sel</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">),</span> <span class="s1">&#39;ro&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Lag time (s)&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;ISF&quot;</span><span class="p">)</span>
@@ -1889,7 +1924,7 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_23_0.png" src="_images/Walkthrough_-_details_23_0.png" />
+<img alt="_images/Walkthrough_-_details_24_0.png" src="_images/Walkthrough_-_details_24_0.png" />
 </div>
 </div>
 </div>
@@ -1902,7 +1937,11 @@ sometimes referred to as the non-ergodicity parameter.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_index</span> <span class="o">=</span> <span class="mi">63</span> <span class="c1">#index of the list of q values</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###################################################################################################</span>
+<span class="c1"># Plotting the radially averaged DDM matrix for the greatest value of q as a function of lag time #</span>
+<span class="c1">###################################################################################################</span>
+
+<span class="n">q_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1">#index of the list of q values</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">semilogx</span><span class="p">(</span><span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">lagtime</span><span class="p">,</span> <span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">ddm_matrix</span><span class="p">[:,</span><span class="n">q_index</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Lag time (s)&quot;</span><span class="p">)</span>
@@ -1925,7 +1964,7 @@ sometimes referred to as the non-ergodicity parameter.</p>
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_26_1.png" src="_images/Walkthrough_-_details_26_1.png" />
+<img alt="_images/Walkthrough_-_details_27_1.png" src="_images/Walkthrough_-_details_27_1.png" />
 </div>
 </div>
 <p>The DDM matrix should go from the background, <span class="math notranslate nohighlight">\(B\)</span>, to the background plus amplitude, <span class="math notranslate nohighlight">\(B + A\)</span>, as a function of the lag time. From the above plot, it does look like we overestimated the background (perhaps the amplitude hadn’t gone quite to zero by the last wavevectors we measure?). From the plot, clearly the background is less than 195.</p>
@@ -2527,7 +2566,7 @@ Attributes: (12/24)
 <p>The default way that <strong>this</strong> code estimates the background is to compute the power spectrum of the images, as described above. That is, we find <span class="math notranslate nohighlight">\(\left&lt; | \tilde{I}(q, t) |^2 \right&gt;_t\)</span> and recognize that <span class="math notranslate nohighlight">\(\left&lt; | \tilde{I}(q, t) |^2 \right&gt;_t = 0.5 \times \left[ A(q) + B \right]\)</span> and assume that as <span class="math notranslate nohighlight">\(q \rightarrow q_{max}\)</span>, <span class="math notranslate nohighlight">\(A(q) \rightarrow 0\)</span>. Therefore, <span class="math notranslate nohighlight">\(\left&lt; | \tilde{I}(q_{max}, t) |^2 \right&gt;_t \approx 0.5\times B\)</span> (see [<strong>Cerbino 2017</strong>] or Eq. 5 in
 [<strong>Giavazzi 2018</strong>]).</p>
 <p>But, there are other ways. In [<strong>Kurzthaler 2018</strong>], they set the background, <span class="math notranslate nohighlight">\(B\)</span>, to zero. They note that for their fluorescence imaging “the camera noise is usually negligible.” However, they note that for bright-field of phase contrast modalities, the camera is not negligible and <span class="math notranslate nohighlight">\(B\)</span> will be non-zero.</p>
-<p>In [<strong>4</strong>], they approximate <span class="math notranslate nohighlight">\(B\)</span> by <span class="math notranslate nohighlight">\(\min \left[ D(q, \Delta t_{min}) \right]\)</span>. But they note that the frame rate needs to be “sufficiently small” and that this will give an overestimate of <span class="math notranslate nohighlight">\(B\)</span>.</p>
+<p>In [<strong>Bayles 2017</strong>], they approximate <span class="math notranslate nohighlight">\(B\)</span> by <span class="math notranslate nohighlight">\(\min \left[ D(q, \Delta t_{min}) \right]\)</span>. But they note that the frame rate needs to be “sufficiently small” and that this will give an overestimate of <span class="math notranslate nohighlight">\(B\)</span>. To try this, use <code class="docutils literal notranslate"><span class="pre">background_method</span> <span class="pre">=</span> <span class="pre">1</span></code> as an optional keyword parameter in the function <code class="docutils literal notranslate"><span class="pre">calculate_DDM_matrix</span></code> (or set the value of <code class="docutils literal notranslate"><span class="pre">background_method</span></code> in the YAML file under <code class="docutils literal notranslate"><span class="pre">Analysis_parameters</span></code>).</p>
 <blockquote>
 <div><p>[<strong>Cerbino 2017</strong>] Cerbino, R., Piotti, D., Buscaglia, M. &amp; Giavazzi, F. <a class="reference external" href="https://doi.org/10.1088/1361-648X/aa9bc5">Dark field differential dynamic microscopy enables accurate characterization of the roto-translational dynamics of bacteria and colloidal clusters.</a> J. Phys.: Condens. Matter 30, 025901 (2017).</p>
 </div></blockquote>
@@ -2548,7 +2587,10 @@ Attributes: (12/24)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddm_fit</span> <span class="o">=</span> <span class="n">ddm</span><span class="o">.</span><span class="n">DDM_Fit</span><span class="p">(</span><span class="n">ddm_calc</span><span class="o">.</span><span class="n">data_yaml</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Note that to initialize the DDM_Fit class we need to pass it the YAML file containing the parameters</span>
+<span class="c1"># *or* a dictionary with the same parameters.</span>
+
+<span class="n">ddm_fit</span> <span class="o">=</span> <span class="n">ddm</span><span class="o">.</span><span class="n">DDM_Fit</span><span class="p">(</span><span class="n">ddm_calc</span><span class="o">.</span><span class="n">data_yaml</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2645,7 +2687,9 @@ than 10%, we can change the optional parameter <code class="docutils literal not
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fit01</span> <span class="o">=</span> <span class="n">ddm_fit</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">name_fit</span> <span class="o">=</span> <span class="s1">&#39;fit01&#39;</span><span class="p">,</span> <span class="n">display_table</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_A_from_images_as_guess</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">update_limits_on_A</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Note that the method `fit` has many optional parameters</span>
+
+<span class="n">fit01</span> <span class="o">=</span> <span class="n">ddm_fit</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">name_fit</span> <span class="o">=</span> <span class="s1">&#39;fit01&#39;</span><span class="p">,</span> <span class="n">display_table</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">use_A_from_images_as_guess</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">update_limits_on_A</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2662,7 +2706,9 @@ Fit is saved in fittings dictionary with key &#39;fit01&#39;.
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ddm</span><span class="o">.</span><span class="n">fit_report</span><span class="p">(</span><span class="n">fit01</span><span class="p">,</span> <span class="n">q_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">22</span><span class="p">],</span> <span class="n">forced_qs</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">use_new_tau</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Generate plots for inspecting the outcome of the fits</span>
+
+<span class="n">ddm</span><span class="o">.</span><span class="n">fit_report</span><span class="p">(</span><span class="n">fit01</span><span class="p">,</span> <span class="n">q_indices</span><span class="o">=</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">22</span><span class="p">],</span> <span class="n">forced_qs</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">16</span><span class="p">],</span> <span class="n">use_new_tau</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -3164,42 +3210,42 @@ Attributes: (12/18)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_41_2.png" src="_images/Walkthrough_-_details_41_2.png" />
+<img alt="_images/Walkthrough_-_details_42_2.png" src="_images/Walkthrough_-_details_42_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_41_3.png" src="_images/Walkthrough_-_details_41_3.png" />
+<img alt="_images/Walkthrough_-_details_42_3.png" src="_images/Walkthrough_-_details_42_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_41_4.png" src="_images/Walkthrough_-_details_41_4.png" />
+<img alt="_images/Walkthrough_-_details_42_4.png" src="_images/Walkthrough_-_details_42_4.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_41_5.png" src="_images/Walkthrough_-_details_41_5.png" />
+<img alt="_images/Walkthrough_-_details_42_5.png" src="_images/Walkthrough_-_details_42_5.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_41_6.png" src="_images/Walkthrough_-_details_41_6.png" />
+<img alt="_images/Walkthrough_-_details_42_6.png" src="_images/Walkthrough_-_details_42_6.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_41_7.png" src="_images/Walkthrough_-_details_41_7.png" />
+<img alt="_images/Walkthrough_-_details_42_7.png" src="_images/Walkthrough_-_details_42_7.png" />
 </div>
 </div>
 </div>
@@ -3724,42 +3770,42 @@ Attributes: (12/18)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_45_1.png" src="_images/Walkthrough_-_details_45_1.png" />
+<img alt="_images/Walkthrough_-_details_46_1.png" src="_images/Walkthrough_-_details_46_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_45_2.png" src="_images/Walkthrough_-_details_45_2.png" />
+<img alt="_images/Walkthrough_-_details_46_2.png" src="_images/Walkthrough_-_details_46_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_45_3.png" src="_images/Walkthrough_-_details_45_3.png" />
+<img alt="_images/Walkthrough_-_details_46_3.png" src="_images/Walkthrough_-_details_46_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_45_4.png" src="_images/Walkthrough_-_details_45_4.png" />
+<img alt="_images/Walkthrough_-_details_46_4.png" src="_images/Walkthrough_-_details_46_4.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_45_5.png" src="_images/Walkthrough_-_details_45_5.png" />
+<img alt="_images/Walkthrough_-_details_46_5.png" src="_images/Walkthrough_-_details_46_5.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_45_6.png" src="_images/Walkthrough_-_details_45_6.png" />
+<img alt="_images/Walkthrough_-_details_46_6.png" src="_images/Walkthrough_-_details_46_6.png" />
 </div>
 </div>
 <p>It doesn’t appear that that helped much. In fact, we see that the <span class="math notranslate nohighlight">\(\tau\)</span> values appear to be “hitting the rails” of the bounds we imposed on the parameter.</p>
@@ -3769,7 +3815,11 @@ are off even well above our temporal resolution. So it is also not the case that
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">################################################################################################</span>
+<span class="c1"># Plotting the characteristic decay time tau vs wavevector q determined from the last two fits #</span>
+<span class="c1">################################################################################################</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fit01</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">fit01</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Tau&#39;</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Not updating tau&#39;s initial guess&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fit02</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">fit02</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Tau&#39;</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Updating tau&#39;s initial guess based on estimated diffusion coeff&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">y</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">fit01</span><span class="o">.</span><span class="n">frame_rate</span><span class="p">)</span>
@@ -3790,7 +3840,7 @@ are off even well above our temporal resolution. So it is also not the case that
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_48_1.png" src="_images/Walkthrough_-_details_48_1.png" />
+<img alt="_images/Walkthrough_-_details_49_1.png" src="_images/Walkthrough_-_details_49_1.png" />
 </div>
 </div>
 </div>
@@ -4334,49 +4384,53 @@ Attributes: (12/18)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_53_1.png" src="_images/Walkthrough_-_details_53_1.png" />
+<img alt="_images/Walkthrough_-_details_54_1.png" src="_images/Walkthrough_-_details_54_1.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_53_2.png" src="_images/Walkthrough_-_details_53_2.png" />
+<img alt="_images/Walkthrough_-_details_54_2.png" src="_images/Walkthrough_-_details_54_2.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_53_3.png" src="_images/Walkthrough_-_details_53_3.png" />
+<img alt="_images/Walkthrough_-_details_54_3.png" src="_images/Walkthrough_-_details_54_3.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_53_4.png" src="_images/Walkthrough_-_details_53_4.png" />
+<img alt="_images/Walkthrough_-_details_54_4.png" src="_images/Walkthrough_-_details_54_4.png" />
 </div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_53_5.png" src="_images/Walkthrough_-_details_53_5.png" />
+<img alt="_images/Walkthrough_-_details_54_5.png" src="_images/Walkthrough_-_details_54_5.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_53_6.png" src="_images/Walkthrough_-_details_53_6.png" />
+<img alt="_images/Walkthrough_-_details_54_6.png" src="_images/Walkthrough_-_details_54_6.png" />
 </div>
 </div>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">##################################################################################################</span>
+<span class="c1"># Plotting the characteristic decay time tau vs wavevector q determined from the last three fits #</span>
+<span class="c1">##################################################################################################</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fit01</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">fit01</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Tau&#39;</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Not updating tau&#39;s initial guess&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fit02</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">fit02</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Tau&#39;</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Updating tau&#39;s initial guess&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fit03</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">fit03</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Tau&#39;</span><span class="p">],</span> <span class="s1">&#39;go&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Restricting the stretching exponent&quot;</span><span class="p">)</span>
@@ -4400,7 +4454,7 @@ Attributes: (12/18)
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_54_1.png" src="_images/Walkthrough_-_details_54_1.png" />
+<img alt="_images/Walkthrough_-_details_55_1.png" src="_images/Walkthrough_-_details_55_1.png" />
 </div>
 </div>
 </div>
@@ -4420,7 +4474,11 @@ Attributes: (12/18)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">##################################################################################################</span>
+<span class="c1"># Plotting the characteristic decay time tau vs wavevector q determined from the last three fits #</span>
+<span class="c1">##################################################################################################</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="o">/</span><span class="mf">1.618</span><span class="p">))</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fit01</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">fit01</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Tau&#39;</span><span class="p">],</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Not updating tau&#39;s initial guess&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fit02</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">fit02</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Tau&#39;</span><span class="p">],</span> <span class="s1">&#39;bo&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Updating tau&#39;s initial guess&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">fit03</span><span class="o">.</span><span class="n">q</span><span class="p">,</span> <span class="n">fit03</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;Tau&#39;</span><span class="p">],</span> <span class="s1">&#39;go&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Restricting the stretching exponent&quot;</span><span class="p">)</span>
@@ -4446,7 +4504,7 @@ Text(0.5, 1.0, &#39;Lines correspond roughly to limits of temporal (horizontal l
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_57_1.png" src="_images/Walkthrough_-_details_57_1.png" />
+<img alt="_images/Walkthrough_-_details_58_1.png" src="_images/Walkthrough_-_details_58_1.png" />
 </div>
 </div>
 </div>
@@ -4468,7 +4526,11 @@ Text(0.5, 1.0, &#39;Lines correspond roughly to limits of temporal (horizontal l
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">msd</span><span class="p">,</span> <span class="n">msd_std</span> <span class="o">=</span> <span class="n">ddm_fit</span><span class="o">.</span><span class="n">extract_MSD</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="n">fit01</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###############################################################################################</span>
+<span class="c1"># Plotting the mean squared displacement as a function of lag time as determined from the ISF #</span>
+<span class="c1">###############################################################################################</span>
+
+<span class="n">msd</span><span class="p">,</span> <span class="n">msd_std</span> <span class="o">=</span> <span class="n">ddm_fit</span><span class="o">.</span><span class="n">extract_MSD</span><span class="p">(</span><span class="n">fit</span><span class="o">=</span><span class="n">fit01</span><span class="p">)</span>
 <span class="n">poly_fit_results</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">msd</span><span class="o">.</span><span class="n">lagtime</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="n">msd</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">10</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
 
 <span class="n">fig</span><span class="p">,</span><span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -4503,7 +4565,7 @@ Diffusion coefficient: 0.66499 um^2/s
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="_images/Walkthrough_-_details_60_2.png" src="_images/Walkthrough_-_details_60_2.png" />
+<img alt="_images/Walkthrough_-_details_61_2.png" src="_images/Walkthrough_-_details_61_2.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
