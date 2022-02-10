@@ -304,7 +304,8 @@ class DDM_Analysis:
 
     def set_filename_for_saving(self, filename, quiet=False):
         '''
-        Change file name to save the data to disk
+        Change file name to save the data to disk. This is the file that will 
+        store the `ddm_dataset` as a netCDF file (with extension .nc).
 
         :param filename: New file name
         :type filename: str
@@ -323,8 +324,6 @@ class DDM_Analysis:
 
         :return:
             * im (*numpy array*)- image series as numpy array
-
-
 
         '''
 
@@ -359,13 +358,15 @@ class DDM_Analysis:
 
 
     def setup(self):
-        '''This function uses the user provided data to prepare the movie for DDM analysis:
-            -crops the number of frames based on given max frame numbers
-            if wanted:
-            -crops the frame size (splits it in four tiles)
-            -splits it in four tiles
-            -binning
-            -applies window function'''
+        r"""Based off user-provided parameters, prepares images for the DDM analysis. 
+        
+        Using the parameters under the 'Analysis_parameters' section of the 
+        YAML file, this will get the image stack ready for DDM analysis. Possible 
+        things to do done include cropping the image to focus on a particular 
+        region of interest (ROI), binnning the image, applying a windowing function. 
+
+        """
+
 
         image_data = self._openImage()
         print("Image shape: %i-by-%i-by-%i" % image_data.shape)
