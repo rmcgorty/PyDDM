@@ -186,7 +186,7 @@ def _new_ddm_matrix(imageArray):
 
 
 def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
-                     overlap_method=2):
+                     overlap_method=2, **kwargs):
     r'''Calculates DDM matrix
     
     This function calculates the DDM matrix at the lag times provided by `dts`.  
@@ -203,7 +203,10 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
         Default is 1.
     quiet : {True, False}, optional
         If True, prints updates as the computation proceeds
-        
+    **number_differences_max : optional keyword argument
+        For `overlap_method` of 1, sets the maximum number of differences 
+        to find for a given lag time. If `overlap_method`=1 and this 
+        keyword argument is not given, defaults to 300
         
     Returns
     -------
@@ -214,8 +217,14 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
         1D array. Contains the number of image pairs that went into calculating the 
         DDM matrix for each lag time. Used for weighting fits to the DDM matrix.
     
-    
     '''
+    
+    if 'number_differences_max' in kwargs:
+        num_dif_max = kwargs['number_differences_max']
+        if num_dif_max is None:
+            num_dif_max = 300
+    else:
+        num_dif_max = 300
 
     if imageArray.ndim != 3:
         print("Images passed to `computeDDMMatrix` must be 3D array.")
@@ -238,9 +247,9 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
     if overlap_method == 0:
         steps_in_diffs = dts
     elif overlap_method == 1:
+        num_possible_diffs = ntimes - dts
+        steps_in_diffs = np.ceil(num_possible_diffs / num_dif_max).astype(np.int)
         steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
-        w = np.where(steps_in_diffs > 50)
-        steps_in_diffs[w] = 50
     elif overlap_method == 2:
         steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
     elif overlap_method == 3:

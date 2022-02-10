@@ -277,6 +277,10 @@ class DDM_Analysis:
                 self.angle_range = self.analysis_parameters['angle_range']
             else:
                 self.angle_range = None
+            if 'number_differences_max' in self.analysis_parameters:
+                self.num_dif_max = self.analysis_parameters['number_differences_max']
+            else:
+                self.num_dif_max = None
             
             #These paramters (overlap_method and background_method) could also 
             #be set as passed parameter to the method `calculate_DDM_matrix`
@@ -312,9 +316,10 @@ class DDM_Analysis:
 
 
         '''
-        self.filename_for_saving_data = filename
         if not quiet:
             print("Previous filename for saving ddm data was %s." % self.filename_for_saving_data)
+        self.filename_for_saving_data = filename
+        if not quiet:
             print("New filename for saving data will be %s." % self.filename_for_saving_data)
 
 
@@ -511,6 +516,11 @@ class DDM_Analysis:
             self.background_method = kwargs['background_method']
         if 'number_lag_times' in kwargs:
             self.number_of_lag_times = kwargs['number_lag_times']
+        if 'number_differences_max' in kwargs:
+            self.num_dif_max = kwargs['number_differences_max']
+        else:
+            self.num_dif_max = 300
+
             
         #If 'overlap_method' or 'background_method' were *not* set in the YAML file, then
         # those will be None. So check if None, and if so, set to default value. 
@@ -563,13 +573,15 @@ class DDM_Analysis:
                 for i,im in enumerate(self.im):
                     print(f"Getting DDM matrix for {i+1} of {len(self.im)}...")
                     d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, quiet=quiet,
-                                                               overlap_method=self.overlap_method)
+                                                               overlap_method=self.overlap_method,
+                                                               number_differences_max=self.num_dif_max)
                     self.ddm_matrix.append(d_matrix)
                 self.num_pairs_per_dt = num_pairs
             else:
                 self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, 
                                                                               quiet=quiet,
-                                                                              overlap_method=self.overlap_method)
+                                                                              overlap_method=self.overlap_method,
+                                                                              number_differences_max=self.num_dif_max)
 
             end_time = time.time()
         except:
