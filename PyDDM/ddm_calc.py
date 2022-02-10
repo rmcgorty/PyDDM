@@ -249,7 +249,6 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
     elif overlap_method == 1:
         num_possible_diffs = ntimes - dts
         steps_in_diffs = np.ceil(num_possible_diffs / num_dif_max).astype(np.int)
-        steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
     elif overlap_method == 2:
         steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
     elif overlap_method == 3:
