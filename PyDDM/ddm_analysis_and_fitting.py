@@ -627,7 +627,25 @@ class DDM_Analysis:
 
 
     def _create_dataset_and_report(self, file_name, num=None):
+        r"""
+        Creates the xarray Dataset and PDF report.
 
+        Parameters
+        ----------
+        file_name : string
+            This string with "_ddmmatrix.nc" appended at the end will 
+            be the name of the file the xarray Dataset is saved for. 
+        num : int, optional
+            If divividing into multiple ROIs, thsi will be used. 
+            The default is None.
+
+        Returns
+        -------
+        ddm_dataset : xarray Dataset
+            Dataset containing the DDM matrix and associated data
+            and metadata.
+
+        """
         if type(self.ddm_matrix)==list:
             if (num==None) or (len(self.ddm_matrix)<num):
                 num=0
@@ -946,7 +964,7 @@ class DDM_Fit:
 
 
     def use_parameters_provided(self, print_par_names=False):
-        """Gives the parameters and their values, as provided in the intiation file (YAML file)
+        """Gives the parameters and their values, as provided in the initiation file (YAML file)
 
         :param print_par_names: Default is False
         :type print_par_names: bool
@@ -1127,6 +1145,10 @@ class DDM_Fit:
         else:
             ddm_matrix_data = self.ddm_dataset.ddm_matrix
 
+        #Either the DDM matrix or the ISF will be fit. If fitting the DDM 
+        #matrix then the parameters A and B (amplitude and background) will 
+        #be fit parameters. If fitting the ISF, A and B will be determined 
+        #before doing the fit
         if self.model_dict['data_to_use'] == 'ISF':
             data_to_fit = self.ddm_dataset.ISF
         elif self.model_dict['data_to_use'] == 'DDM Matrix':

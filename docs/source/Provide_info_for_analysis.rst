@@ -99,6 +99,26 @@ angle_range
 Set to a number to avoid radially averaging the DDM matrix over all angles. Rather, only average over a subset of angles spanning this range. 
 If you do want to radially average the whole DDM matrix, then set to *null*. 
 
+overlap_method
+--------------
+Use to select different methods for figuring out how many pairs of images should be used to calculate the DDM matrix for a given lag time. The options are 0, 1, 2, or 3. Those correspond to:
+
+* *0*: **Non-overlapping** image pairs will be used. For example, if the lag time is 10 frames, then differences between images 1 and 11, 11 and 21, 21 and 31, will be taken and Fourier transformed. Naturally, for long lag times, there will be few pairs of images that contribute to the DDM matrix and, therefore, one might see noisiness in the DDM matrix at these long lag times. 
+* *1*: For each lag time, a maximum of XX image pairs will go into calculating the DDM matrix. By default, this number is 300. But the user may change this with the `number_differences_max` optional keyword argument passed to :py:meth:`PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix` or specified here in this YAML file. 
+* *2*: For each lag time, between images separated by the lag time, there will be ~3-4 image pairs used. So overlapping image pairs are considered but the amount of overlap is such that there will only be 3-4 pairs. For example, with a lag time of 10 frames, one might look at the image pairs 1 and 11, 4 and 14, 7 and 17, and 10 and 20. 
+* *3*: For each lag time, the *maximum* number of image pairs are used. So, for example, with a lag time of 10 frames, one would consider pairs 1 and 11, 2 and 12, 3 and 13, 4 and 14, etc. 
+
+background_method
+-----------------
+There are different methods for estimating the background paramater, *B*. The methods are selected by setting this parameter to 0, 1, 2, or 3. Those correspond to:
+
+* *0*: The average of the power spectrum of the images (not of the **differences** between images as is used to find the DDM matrix) is computed. We look at this function at the maximum 10% of wavevectors and take that value to be half the background. See Equation 6 in `Giavazzi, F., Malinverno, C., Scita, G. & Cerbino, R. Tracking-Free Determination of Single-Cell Displacements and Division Rates in Confluent Monolayers. Front. Phys. 6, (2018). <https://www.frontiersin.org/articles/10.3389/fphy.2018.00120/full>`_
+* *1*: The background is taken to be the minimum of the DDM matrix.
+* *2*: The background is taken to be the average (over all lag times) of the DDM matrix at the highest *q* value. 
+* *3*: The background is estimated to be 0. 
+
+
+
 Fitting_parameters
 ===================
 Parameters about how the DDM data will fit are given here.
