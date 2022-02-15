@@ -93,6 +93,40 @@ def dTheorySingleExp_Nonerg_DDM(lagtime,amplitude,tau,bg,s,C):
     ddm_matrix = amplitude * (1 - isf) + bg
     return ddm_matrix
 
+def dTheoryPolydisperse_DDM(lagtime,amplitude,tau,mu,bg):
+    r"""Theoretical model for the  DDM matrix to account for polydisperisty
+    
+    Parameters
+    ----------
+    lagtime : array
+        1D array of the lagtimes
+    amplitude : float
+        Amplitude, "A" in equation below
+    tau : float
+        The characteristic decay time
+    mu : float
+        To account for polydispersity
+    bg : float
+        Background term, "B" in equation below
+
+    Returns
+    -------
+    ddm_matrix : array
+        DDM matrix as shown in equation below
+
+    Notes
+    -----
+    This model is used when polydispersity is present.
+
+    .. math::
+        D(q,\Delta t) = A(q) \left[ 1 - \exp \left( -\frac{\Delta t}{\tau(q)} \right) \left( 1 + \frac{\mu \tau^2}{2} \right) \right] + B(q)
+
+    """
+    relative_polydisp = mu * tau * tau
+    isf = np.exp(-1 * (lagtime / tau)) * (1 + (relative_polydisp/2.0))
+    ddm_matrix = amplitude * (1 - isf) + bg
+    return ddm_matrix
+
 def dTheoryDoubleExp_DDM(lagtime,amp,bg,f,t1,s1,t2,s2):
     r'''
     Theoretical model for the DDM matrix with two exponential terms

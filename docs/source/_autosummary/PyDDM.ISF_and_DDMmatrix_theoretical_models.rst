@@ -1,4 +1,4 @@
-PyDDM.ISF\_and\_DDMmatrix\_theoretical\_models
+﻿PyDDM.ISF\_and\_DDMmatrix\_theoretical\_models
 ==============================================
 
 .. automodule:: PyDDM.ISF_and_DDMmatrix_theoretical_models
@@ -21,6 +21,7 @@ PyDDM.ISF\_and\_DDMmatrix\_theoretical\_models
       dTheoryDoubleExp_ISF
       dTheoryExpAndBallistic_DDM
       dTheoryExpAndBallistic_ISF
+      dTheoryPolydisperse_DDM
       dTheorySingleExp_DDM
       dTheorySingleExp_ISF
       dTheorySingleExp_Nonerg_DDM

@@ -407,6 +407,19 @@ ddm_matrix_double_ballistic['parameter_info'] = [
 ddm_matrix_double_ballistic['model_function'] = models.dTheoryTwoBallistic_DDM
 ddm_matrix_double_ballistic['data_to_use'] = 'DDM Matrix'
 
+ddm_matrix_polydisperse = {}
+ddm_matrix_polydisperse['parameter_info'] = [
+        {'n': 0, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "Amplitude", 'error': 0, 'step':0},
+        {'n': 1, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "Tau", 'error': 0, 'step':0},
+        {'n': 2, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "Mu", 'error': 0, 'step':0},
+        {'n': 3, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "Background", 'error': 0, 'step':0}]
+ddm_matrix_polydisperse['model_function'] = models.dTheoryPolydisperse_DDM
+ddm_matrix_polydisperse['data_to_use'] = 'DDM Matrix'
+
 
 fitting_models = {}
 fitting_models['DDM Matrix - Single Exponential'] = ddm_matrix_single_exponential
@@ -415,6 +428,7 @@ fitting_models['DDM Matrix - Exponential and Ballistic'] = ddm_matrix_exponentia
 fitting_models['DDM Matrix - Ballistic'] = ddm_matrix_ballistic
 fitting_models['DDM Matrix - Double Ballistic'] = ddm_matrix_double_ballistic
 fitting_models['DDM Matrix - Single Exponential - NonErgodic'] = ddm_matrix_single_exponential_nonerg
+fitting_models['DDM Matrix - Polydisperse'] = ddm_matrix_polydisperse
 
 fitting_models['ISF - Single Exponential'] = isf_single_exponential
 fitting_models['ISF - Double Exponential'] = isf_double_exponential

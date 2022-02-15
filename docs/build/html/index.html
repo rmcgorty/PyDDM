@@ -93,8 +93,6 @@
    </li>
   </ul>
  </li>
-</ul>
-<ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="Walkthrough%20-%20simple.html">
    Basic walkthrough
@@ -103,6 +101,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="Walkthrough%20-%20details.html">
    Advanced walkthrough
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html">
+   Adding a new DDM model
   </a>
  </li>
 </ul>
@@ -155,6 +158,11 @@
      <li class="toctree-l3">
       <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF.html">
        PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF
+      </a>
+     </li>
+     <li class="toctree-l3">
+      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM.html">
+       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM
       </a>
      </li>
      <li class="toctree-l3">
@@ -644,13 +652,9 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
-</ul>
-</div>
-<p>We also have two <strong>walkthroughs</strong>. The Jupyter Notebook files for both can be found in the <a class="reference external" href="https://github.com/rmcgorty/PyDDM/tree/main/Examples">examples folder</a> of the GitHub PyDDM repository. They both use the same sample data of diffusing colloidal particles. The first walkthrough goes over the basics of using this code. In the second walkthrough, some additional features of the code are discussed. Importantly, the second walkthrough also goes over a few aspects of DDM that one should pay attention to: finding the background parameter and considering the range of wavevectors over which the data is reliable. It also briefly goes over how to slice and extract data from xarray Datasets. More on that can be <a class="reference external" href="https://xarray.pydata.org/en/stable/user-guide/indexing.html">found here.</a></p>
-<div class="toctree-wrapper compound">
-<ul>
 <li class="toctree-l1"><a class="reference internal" href="Walkthrough%20-%20simple.html">Basic walkthrough</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Walkthrough%20-%20details.html">Advanced walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html">Adding a new DDM model</a></li>
 </ul>
 </div>
 <table class="longtable table autosummary">
@@ -664,6 +668,8 @@
 </tr>
 </tbody>
 </table>
+<p>Note the two <strong>walkthroughs</strong>. The Jupyter Notebook files for both of these can be found in the <a class="reference external" href="https://github.com/rmcgorty/PyDDM/tree/main/Examples">examples folder</a> of the GitHub PyDDM repository. They both use the same sample data of diffusing colloidal particles. The first walkthrough goes over the basics of using this code. In the second walkthrough, some additional features of the code are discussed. Importantly, the second walkthrough also goes over a few aspects of DDM that one should pay attention to: finding the background parameter and considering the range of wavevectors over which the data is reliable. It also briefly goes over how to slice and extract data from xarray Datasets. More on that can be <a class="reference external" href="https://xarray.pydata.org/en/stable/user-guide/indexing.html">found here.</a></p>
+<p>We also have instructions on how to add a new fitting function. This can be useful if you have a model for the intermediate scattering function that you want to employ.</p>
 </div>
 <div class="section" id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
