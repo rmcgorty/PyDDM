@@ -173,7 +173,7 @@ class DDM_Analysis:
     to produce a xarray DataSet with DDM matrix, radial averages and ISF. The analysis parameters are provided by the user in 
     a YAML file: :doc:`More information here </Provide_info_for_analysis>` """
 
-    def __init__(self, data_yaml):
+    def __init__(self, data_yaml, load_images=True):
         
         self.data_dir = None
         self.filename = None
@@ -185,7 +185,7 @@ class DDM_Analysis:
             print("Incorrect data type for analysis parameters. Argument must be filename or dictionary.")
         success = self.loadYAML()
         if success:
-            self.setup()
+            self.setup(load_images)
             self.computer_name = socket.gethostname()
 
 
@@ -323,7 +323,7 @@ class DDM_Analysis:
             print("New filename for saving data will be %s." % self.filename_for_saving_data)
 
 
-    def _openImage(self):
+    def _openImage(self, load_images):
         '''
         Opens .nd2 file or .tif file and returns image series as multidimensional numpy array
 
@@ -331,6 +331,8 @@ class DDM_Analysis:
             * im (*numpy array*)- image series as numpy array
 
         '''
+        if not load_images:
+            return None
 
         if re.search(".\.nd2$", self.filename) is not None:
             if able_to_open_nd2:
@@ -362,7 +364,7 @@ class DDM_Analysis:
         return im
 
 
-    def setup(self):
+    def setup(self, load_images):
         r"""Based off user-provided parameters, prepares images for the DDM analysis. 
         
         Using the parameters under the 'Analysis_parameters' section of the 
@@ -373,83 +375,86 @@ class DDM_Analysis:
         """
 
 
-        image_data = self._openImage()
-        print("Image shape: %i-by-%i-by-%i" % image_data.shape)
-
-        #crops the number of frames based on given max frame numbers
-        if self.last_frame is None:
-            self.im=image_data[self.first_frame::,:,:]
-        elif self.last_frame <= self.last_lag_time:
-            print('The last frame number should be higher than the frame for the last lag time')
-            self.last_lag_time = self.last_frame-1
-            print('Setting last_lag_time to %i.' % self.last_lag_time)
+        image_data = self._openImage(load_images)
+        if image_data is None:
+            print("Image not loaded.")
         else:
-            self.im=image_data[self.first_frame:self.last_frame,:,:]
-        print('Number of frames to use for analysis: %i' % self.im.shape[0])
-        print('Maximum lag time (in frames): %i' % self.last_lag_time)
-        print('Number of lag times to compute DDM matrix: %i' % self.number_of_lag_times)
+            print("Image shape: %i-by-%i-by-%i" % image_data.shape)
+    
+            #crops the number of frames based on given max frame numbers
+            if self.last_frame is None:
+                self.im=image_data[self.first_frame::,:,:]
+            elif self.last_frame <= self.last_lag_time:
+                print('The last frame number should be higher than the frame for the last lag time')
+                self.last_lag_time = self.last_frame-1
+                print('Setting last_lag_time to %i.' % self.last_lag_time)
+            else:
+                self.im=image_data[self.first_frame:self.last_frame,:,:]
+            print('Number of frames to use for analysis: %i' % self.im.shape[0])
+            print('Maximum lag time (in frames): %i' % self.last_lag_time)
+            print('Number of lag times to compute DDM matrix: %i' % self.number_of_lag_times)
+    
+            self.image_for_report = self.im[0]
 
-        self.image_for_report = self.im[0]
-
-        if 'crop_to_roi' in self.analysis_parameters:
-            if self.analysis_parameters['crop_to_roi'] is not None:
-                if len(self.analysis_parameters['crop_to_roi'])==4:
-                    #if there is a list with pixel coordinates for cropping the new image will be cropped
-                    crp_region = self.analysis_parameters['crop_to_roi']
-                    self.im = self.im[:, crp_region[0]:crp_region[1], crp_region[2]:crp_region[3]]
-                    print('New dimensions after cropping: %i-by-%i' % self.im.shape[1:])
-                else:
-                    print("For cropping images, 'crop_to_roi' must be list of four integers.")
-                    print("Using the full frame, dimensions: %i-by-%i." % self.im.shape[1:])
-        else:
-            #Just keep the whole frame
-            print("Using the full frame, dimensions: %i-by-%i." % self.im.shape[1:])
-
-        if 'split_into_4_rois' in self.analysis_parameters:
-            if self.analysis_parameters['split_into_4_rois']:
-                print('Splitting into four tiles...')
-                #split image into four tiles
-                newarr = np.dsplit(self.im,2) #splits vertically
-                roi0, roi1 = np.hsplit(newarr[0],2) #split horizontally
-                roi2, roi3 = np.hsplit(newarr[1],2)
-                print(f'New dimensions for ROIs: {roi0.shape}')
-                
+            if 'crop_to_roi' in self.analysis_parameters:
+                if self.analysis_parameters['crop_to_roi'] is not None:
+                    if len(self.analysis_parameters['crop_to_roi'])==4:
+                        #if there is a list with pixel coordinates for cropping the new image will be cropped
+                        crp_region = self.analysis_parameters['crop_to_roi']
+                        self.im = self.im[:, crp_region[0]:crp_region[1], crp_region[2]:crp_region[3]]
+                        print('New dimensions after cropping: %i-by-%i' % self.im.shape[1:])
+                    else:
+                        print("For cropping images, 'crop_to_roi' must be list of four integers.")
+                        print("Using the full frame, dimensions: %i-by-%i." % self.im.shape[1:])
+            else:
+                #Just keep the whole frame
+                print("Using the full frame, dimensions: %i-by-%i." % self.im.shape[1:])
+    
+            if 'split_into_4_rois' in self.analysis_parameters:
+                if self.analysis_parameters['split_into_4_rois']:
+                    print('Splitting into four tiles...')
+                    #split image into four tiles
+                    newarr = np.dsplit(self.im,2) #splits vertically
+                    roi0, roi1 = np.hsplit(newarr[0],2) #split horizontally
+                    roi2, roi3 = np.hsplit(newarr[1],2)
+                    print(f'New dimensions for ROIs: {roi0.shape}')
+                    
+                    if 'use_windowing_function' in self.analysis_parameters:
+                        if self.analysis_parameters['use_windowing_function']:
+                            print("Applying windowing function to each ROI...")
+                            roi0 = ddm.window_function(roi0)*roi0
+                            roi1 = ddm.window_function(roi1)*roi1
+                            roi2 = ddm.window_function(roi2)*roi2
+                            roi3 = ddm.window_function(roi3)*roi3
+        
+                    self.im = [roi0, roi1, roi2, roi3]
+    
+            else:
                 if 'use_windowing_function' in self.analysis_parameters:
                     if self.analysis_parameters['use_windowing_function']:
-                        print("Applying windowing function to each ROI...")
-                        roi0 = ddm.window_function(roi0)*roi0
-                        roi1 = ddm.window_function(roi1)*roi1
-                        roi2 = ddm.window_function(roi2)*roi2
-                        roi3 = ddm.window_function(roi3)*roi3
+                        print("Applying windowing function...")
+                        self.im=ddm.window_function(self.im)*self.im
     
-                self.im = [roi0, roi1, roi2, roi3]
-
-        else:
-            if 'use_windowing_function' in self.analysis_parameters:
-                if self.analysis_parameters['use_windowing_function']:
-                    print("Applying windowing function...")
-                    self.im=ddm.window_function(self.im)*self.im
-
-        #After cropping, the images might be binned, this is done before splitting in tiles
-        if 'binning' in self.analysis_parameters:
-            if self.analysis_parameters['binning']:
-                if 'bin_size' in self.analysis_parameters:
-                    self.binsize = self.analysis_parameters['bin_size']
-                else:
-                    print("Bin size not set! Using 2x2 binning. Re-run with 'binning' as false if no binning desired.")
-                    self.binsize = 2
-                if type(self.im) == list:
-                    for i,im in enumerate(self.im):
-                        self.im[i] = apply_binning(im, self.binsize)
-                    dims_after_binning = self.im[0].shape
-                else:
-                    self.im = apply_binning(self.im, self.binsize)
-                    dims_after_binning = self.im.shape
-
-                #The number of pixels has been reduced by binning procedure, therefore the pixel size overwritten:
-                self.pixel_size = self.pixel_size*self.binsize
-                print("Applying binning...")
-                print(f'Dimensions after binning {dims_after_binning}, the new pixel size {self.pixel_size}')
+            #After cropping, the images might be binned, this is done before splitting in tiles
+            if 'binning' in self.analysis_parameters:
+                if self.analysis_parameters['binning']:
+                    if 'bin_size' in self.analysis_parameters:
+                        self.binsize = self.analysis_parameters['bin_size']
+                    else:
+                        print("Bin size not set! Using 2x2 binning. Re-run with 'binning' as false if no binning desired.")
+                        self.binsize = 2
+                    if type(self.im) == list:
+                        for i,im in enumerate(self.im):
+                            self.im[i] = apply_binning(im, self.binsize)
+                        dims_after_binning = self.im[0].shape
+                    else:
+                        self.im = apply_binning(self.im, self.binsize)
+                        dims_after_binning = self.im.shape
+    
+                    #The number of pixels has been reduced by binning procedure, therefore the pixel size overwritten:
+                    self.pixel_size = self.pixel_size*self.binsize
+                    print("Applying binning...")
+                    print(f'Dimensions after binning {dims_after_binning}, the new pixel size {self.pixel_size}')
 
         
 
@@ -477,7 +482,8 @@ class DDM_Analysis:
             (overlap_method=0, non-overlapping). Or one could do something in between. For overlap_method=2 (the DEFAULT), there will be 
             about 3 or 4 pairs (at most) between two frames. That is, if we have a lag time of 10 frames, we will 
             use the pairs of frame 1 and 11, 5 and 15, 9 and 19, etc. For overlap_method=1, we do something similar to
-            overlap_method=2, but we compute *at most* 50 image differences per lag time. So for example, with a lag time of 1 frame and 
+            overlap_method=2, but we compute *at most* `number_differences_max` (default:300) image differences per lag time. 
+            So for example, with a lag time of 1 frame and 
             a movie that has 1000 frames, we could theoretically use 999 differences of images (and we would for the other methods). But 
             for overlap_method=2, we would only use 50 of those. This is for quickening up the computation. 
         **background_method : {0,1,2,3}, optional
@@ -599,6 +605,16 @@ class DDM_Analysis:
         else:
             self.ravs = ddm.radial_avg_ddm_matrix(self.ddm_matrix, centralAngle=self.central_angle,
                                                   angRange=self.angle_range)
+            
+            
+        if type(self.im)==list:
+            self.AF = []
+            for i,d in enumerate(self.ddm_matrix):
+                af = self.find_alignment_factor(d)
+                self.AF.append(af)
+        else:
+            self.AF = self.find_alignment_factor(self.ddm_matrix)
+            
 
         #Determine Amplitude and Background from radial averages of directly fourier transformed images (not difference images)
         # Note: windowing (if applicable) already applied to self.im, so "use_BH_filter" should be False always
@@ -654,16 +670,19 @@ class DDM_Analysis:
             ravfft = self.ravfft[num]
             ravs = self.ravs[num]
             image0 = self.im[num][0].astype(np.float64)
+            AF = self.AF[num]
         else:
             ddm_matrix = self.ddm_matrix
             ravfft = self.ravfft
             ravs = self.ravs
             image0 = self.im[0].astype(np.float64)
+            AF = self.AF
 
         #Put ddm_matrix and radial averages in a dataset:
         ddm_dataset=xr.Dataset({'ddm_matrix_full':(['lagtime', 'q_y','q_x'], ddm_matrix), #was 'ddm_matrix'
                                 'ddm_matrix':(['lagtime', 'q'], ravs), #was 'ravs'
-                                'first_image':(['y','x'], image0)},
+                                'first_image':(['y','x'], image0),
+                                'alignment_factor':(['lagtime','q'], AF)},
                                coords={'lagtime': self.lag_times,
                                        'framelag':('frames', self.lag_times_frames),
                                        'q_y':self.q_y, 'q_x':self.q_x, 'q':self.q,
@@ -733,6 +752,75 @@ class DDM_Analysis:
             self.generate_plots(ddm_dataset, pdf_to_save_to=pdf, num=num)
 
         return ddm_dataset
+    
+    
+    def find_alignment_factor_one_lagtime(self, ddmmatrix2d, orientation_axis=0, 
+                                          remove_vert_line=True, remove_hor_line=True):
+        r"""
+        
+
+        Parameters
+        ----------
+        orientation_axis : TYPE, optional
+            DESCRIPTION. The default is np.pi/4.
+
+        Returns
+        -------
+        None.
+
+        """
+        ddm_matrix_at_lagtime = ddmmatrix2d.copy()
+        nx,ny = ddm_matrix_at_lagtime.shape
+        if remove_vert_line:
+            ddm_matrix_at_lagtime[:,int(ny/2)]=0
+        if remove_hor_line:
+            ddm_matrix_at_lagtime[int(nx/2),:]=0
+        x = np.arange(-1*ny/2, ny/2, 1)
+        y = np.arange(-1*nx/2, nx/2, 1)
+        xx,yy = np.meshgrid(x,y)
+        cos2theta = np.cos(2*np.arctan(1.0*xx/yy) + orientation_axis)
+        cos2theta[int(nx/2),int(ny/2)]=0
+        
+        dists = np.sqrt(np.arange(-1*nx/2, nx/2)[:,None]**2 + np.arange(-1*ny/2, ny/2)[None,:]**2)
+    
+        bins = np.arange(max(nx,ny)/2+1)
+        histo_of_bins = np.histogram(dists, bins)[0]
+        
+        af_numerator = np.histogram(dists, bins, weights=ddm_matrix_at_lagtime*cos2theta)[0]
+        af_denominator = np.histogram(dists, bins, weights=ddm_matrix_at_lagtime)[0]
+        
+        return af_numerator / af_denominator
+    
+    
+        
+    def find_alignment_factor(self, ddmmatrix3d, orientation_axis=0, 
+                              remove_vert_line=True, remove_hor_line=True):
+        r"""
+        
+
+        Parameters
+        ----------
+        orientation_axis : TYPE, optional
+            DESCRIPTION. The default is np.pi/4.
+
+        Returns
+        -------
+        None.
+
+        """
+        AF = self.find_alignment_factor_one_lagtime(ddmmatrix3d[0], orientation_axis=orientation_axis,
+                                                    remove_vert_line=remove_vert_line,
+                                                    remove_hor_line=remove_hor_line)
+        af_size = len(AF)
+        num_lag_times = len(self.lag_times)
+        all_af = np.zeros((num_lag_times, af_size))
+        all_af[0] = AF
+        for i in range(1,num_lag_times):
+            all_af[i] = self.find_alignment_factor_one_lagtime(ddmmatrix3d[i], orientation_axis=orientation_axis,
+                                                               remove_vert_line=remove_vert_line,
+                                                               remove_hor_line=remove_hor_line)
+        return all_af
+        
     
     
     def resave_ddm_dataset(self, ddmdataset, file_name = None):

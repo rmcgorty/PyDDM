@@ -796,7 +796,9 @@ def generate_mask(im, centralAngle, angRange):
     return mask
 
 
-def find_radial_average(im, mask=None, centralAngle=None, angRange=None):
+def find_radial_average(im, mask=None, centralAngle=None, angRange=None,
+                        remove_vert_line=True,
+                        remove_hor_line=False):
     r"""
     Computes the radial average of a single 2D matrix.
 
@@ -824,6 +826,11 @@ def find_radial_average(im, mask=None, centralAngle=None, angRange=None):
         mask = generate_mask(im, centralAngle, angRange)
     elif mask==None:
         mask = np.ones_like(im)
+        
+    if remove_vert_line:
+        im[:,int(ny/2)]=0
+    if remove_hor_line:
+        im[int(nx/2),:]=0
 
     #dists = np.sqrt(np.fft.fftfreq(shape[0])[:,None]**2 +  np.fft.fftfreq(shape[1])[None,:]**2)
 
@@ -841,7 +848,8 @@ def find_radial_average(im, mask=None, centralAngle=None, angRange=None):
 
 def radial_avg_ddm_matrix(ddm_matrix, mask=None,
                           centralAngle=None, angRange=None,
-                          remove_vert_line=True):
+                          remove_vert_line=True,
+                          remove_hor_line=False):
     r"""Radially averages DDM matrix. 
     
     For DDM analysis, if we can assume isotropic dynamics, we radially average 
@@ -885,18 +893,22 @@ def radial_avg_ddm_matrix(ddm_matrix, mask=None,
     elif mask==None:
         mask = np.ones_like(ddm_matrix[0])
 
-    array_to_radial_avg = ddm_matrix[0]
+    array_to_radial_avg = ddm_matrix[0].copy()
     if remove_vert_line:
         array_to_radial_avg[:,int(ny/2)]=0
+    if remove_hor_line:
+        array_to_radial_avg[int(nx/2),:]=0
     h = np.histogram(dists, bins, weights=mask*array_to_radial_avg)[0]
 
     ravs = np.zeros((ddm_matrix.shape[0], len(h)))
     ravs[0] = h/histo_of_bins
 
     for i in range(1,ddm_matrix.shape[0]):
-        array_to_radial_avg = ddm_matrix[i]
+        array_to_radial_avg = ddm_matrix[i].copy()
         if remove_vert_line:
             array_to_radial_avg[:,int(ny/2)]=0
+        if remove_hor_line:
+            array_to_radial_avg[int(nx/2),:]=0
         h = np.histogram(dists, bins, weights=mask*array_to_radial_avg)[0]
         ravs[i] = h/histo_of_bins
     return ravs
