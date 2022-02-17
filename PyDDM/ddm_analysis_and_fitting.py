@@ -239,6 +239,10 @@ class DDM_Analysis:
                 self.metadata = self.content['Metadata']
                 self.pixel_size = self.metadata['pixel_size']
                 self.frame_rate = self.metadata['frame_rate']
+                if 'channel' in self.metadata:
+                    self.channel = self.metadata['channel']
+                else:
+                    self.channel = None
             else:
                 print("Image metadata not provided!!! Setting `pixel_size` and `frame_rate` to 1.")
                 self.pixel_size = 1
@@ -249,6 +253,9 @@ class DDM_Analysis:
                 self.filename_for_saving_data = self.analysis_parameters['filename_for_saved_data']
             else:
                 self.filename_for_saving_data = self.filename[:-4]
+                if self.channel is not None:
+                    if self.channel in [0,1,2,3]:
+                        self.filename_for_saving_data = "%s_c=%i" % (self.filename_for_saving_data, self.channel)
             if 'ending_frame_number' in self.analysis_parameters:
                 self.last_frame = self.analysis_parameters['ending_frame_number']
             else:
@@ -338,11 +345,9 @@ class DDM_Analysis:
             if able_to_open_nd2:
                 # Files with nd2 extension will be read using the package
                 #  nd2reader. Nikon systems may save data with this file type.
-                if 'channel' in self.metadata:
-                    channel = self.metadata['channel']
-                else:
+                if self.channel is None:
                     print("Need to specify channel in yaml metadata. Defaulting to c=0.")
-                    channel = 0
+                    self.channel = 0
                 with ND2Reader(self.data_dir+self.filename) as images:
                     # Metadata in nd2 file should have pixel size and other information.
                     #   However, data provided by user in yaml file will be used.
@@ -353,7 +358,7 @@ class DDM_Analysis:
                     print('\tNumber of frames: %i' % images.sizes['t'])
                     im = np.zeros((images.sizes['t'], images.metadata['width'], images.metadata['height']), dtype=np.uint16)
                     for i in range(images.sizes['t']):
-                        im[i] = images.get_frame_2D(t=i, c=channel)
+                        im[i] = images.get_frame_2D(t=i, c=self.channel)
             else:
                 print("It seems you have an nd2 file to open. But nd2reader not installed!")
                 return 
@@ -610,10 +615,11 @@ class DDM_Analysis:
         if type(self.im)==list:
             self.AF = []
             for i,d in enumerate(self.ddm_matrix):
-                af = self.find_alignment_factor(d)
+                af,af_axis = self.find_alignment_factor(d)
                 self.AF.append(af)
         else:
-            self.AF = self.find_alignment_factor(self.ddm_matrix)
+            self.AF,af_axis = self.find_alignment_factor(self.ddm_matrix)
+        self.af_axis = af_axis
             
 
         #Determine Amplitude and Background from radial averages of directly fourier transformed images (not difference images)
@@ -694,6 +700,7 @@ class DDM_Analysis:
         
         ddm_dataset.attrs['BackgroundMethod'] = self.background_method
         ddm_dataset.attrs['OverlapMethod'] = self.overlap_method
+        ddm_dataset.attrs['AlignmentFactorAxis'] = self.af_axis
 
         ddm_dataset['avg_image_ft'] = (('q'), ravfft[0,:]) # av_fft_offrame=0.5*(A+B) #was 'av_fft_offrame'
         
@@ -729,12 +736,23 @@ class DDM_Analysis:
             if not i.startswith('Fit'):
                 try:
                     for j, k in self.content[i].items():
+                        '''
                         if k==True:
                             ddm_dataset.attrs[j]= 'yes'
                         elif k==False or k==None:
                             ddm_dataset.attrs[j]= 'no'
                         else:
                             ddm_dataset.attrs[j]=k
+                        '''
+                        if k is None:
+                            ddm_dataset.attrs[j] = 'None'
+                        elif isinstance(k, bool):
+                            if k==True:
+                                ddm_dataset.attrs[j] = 'True'
+                            elif k==False:
+                                ddm_dataset.attrs[j] = 'False'
+                        else:
+                            ddm_dataset.attrs[j] = k
                 except:
                     ddm_dataset.attrs[i]=self.content[i]
 
@@ -778,7 +796,8 @@ class DDM_Analysis:
         x = np.arange(-1*ny/2, ny/2, 1)
         y = np.arange(-1*nx/2, nx/2, 1)
         xx,yy = np.meshgrid(x,y)
-        cos2theta = np.cos(2*np.arctan(1.0*xx/yy) + orientation_axis)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            cos2theta = np.cos(2*np.arctan(1.0*xx/yy) + orientation_axis)
         cos2theta[int(nx/2),int(ny/2)]=0
         
         dists = np.sqrt(np.arange(-1*nx/2, nx/2)[:,None]**2 + np.arange(-1*ny/2, ny/2)[None,:]**2)
@@ -788,8 +807,9 @@ class DDM_Analysis:
         
         af_numerator = np.histogram(dists, bins, weights=ddm_matrix_at_lagtime*cos2theta)[0]
         af_denominator = np.histogram(dists, bins, weights=ddm_matrix_at_lagtime)[0]
-        
-        return af_numerator / af_denominator
+        with np.errstate(divide='ignore', invalid='ignore'):
+            af = af_numerator / af_denominator
+        return af
     
     
         
@@ -819,7 +839,7 @@ class DDM_Analysis:
             all_af[i] = self.find_alignment_factor_one_lagtime(ddmmatrix3d[i], orientation_axis=orientation_axis,
                                                                remove_vert_line=remove_vert_line,
                                                                remove_hor_line=remove_hor_line)
-        return all_af
+        return all_af, orientation_axis
         
     
     
