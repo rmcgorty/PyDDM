@@ -289,6 +289,81 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
 
     return ddm_mat, num_pairs_per_dt
 
+def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=False,
+                              overlap_method=2, **kwargs):
+    r'''Calculates DDM matrix as a function of time at given lag time
+    
+    This function calculates the DDM matrix at a given lag time. Does *not* 
+    average over time. This allows you to see the spread in the DDM matrix. 
+    Inspired by the analysis done in: Gao, Y., Kim, J. & Helgeson, M. E. 
+    Microdynamics and arrest of coarsening during spinodal decomposition in 
+    thermoreversible colloidal gels. Soft Matter 11, 6360–6370 (2015) 
+    
+    Parameters
+    ----------
+    imageArray : array
+        3D array of images. First dimension should be time. 
+    dt : int
+        lag time for which to calculate the DDM matrix (in unit of frames)
+    use_BH_windowing : {True, False}, optional
+        Apply Blackman-Harris windowing to the images if True. Default is False. 
+    overlap_method : {0,1,2}, optional
+        Default is 1.
+    quiet : {True, False}, optional
+        If True, prints updates as the computation proceeds
+    **number_differences_max : optional keyword argument
+        For `overlap_method` of 1, sets the maximum number of differences 
+        to find for a given lag time. If `overlap_method`=1 and this 
+        keyword argument is not given, defaults to 300
+        
+    Returns
+    -------
+    ddm_mat : array
+        The DDM matrix for given lag time. First dimension is time. 
+        Other two are the x and y wavevectors.
+    radial_avg_ddm : array
+        Radial average of ddm_mat
+    
+    '''
+    
+    if 'number_differences_max' in kwargs:
+        num_dif_max = kwargs['number_differences_max']
+        if num_dif_max is None:
+            num_dif_max = 300
+    else:
+        num_dif_max = 300
+
+    if imageArray.ndim != 3:
+        print("Images passed to `computeDDMMatrix` must be 3D array.")
+        return
+
+    #Applies the Blackman-Harris window if desired
+    if use_BH_windowing:
+        filterfunction = window_function(imageArray)
+    else:
+        filterfunction = np.ones_like(imageArray[0])
+
+    #Determines the dimensions of the data set (number of frames, x- and y-resolution in pixels
+    ntimes, ndx, ndy = imageArray.shape
+    
+    #Number of image differences:
+    num_possible_diffs = ntimes - dt
+
+    #Initializes array for Fourier transforms of differences
+    ddm_mat = np.zeros((len(num_possible_diffs), ndx, ndy),dtype=np.float)
+
+    #Calculates all differences of images with a delay time dt
+    all_diffs = filterfunction*(imageArray[dt:].astype(np.float) - imageArray[0:(-1*dt)].astype(np.float))
+
+    #Loop through each image difference and take the fourier transform
+    for i in range(0,all_diffs.shape[0]):
+        temp = np.fft.fft2(all_diffs[i]) # - all_diffs_new[i].mean())
+        ddm_mat[i] = abs(temp*np.conj(temp))/(ndx*ndy)
+
+    radial_avg_ddm = radial_avg_ddm_matrix(ddm_mat)
+
+    return ddm_mat, radial_avg_ddm
+
 
 def get_FF_DDM_matrix(imageFile, dts, submean=True,
                        useBH_windowing=False):
