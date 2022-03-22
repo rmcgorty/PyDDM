@@ -771,6 +771,40 @@ class DDM_Analysis:
 
         return ddm_dataset
     
+    def variationInDDMMatrix(self, lagtime, orientation_axis=0):
+        #Calculate q_x and q_y and q which will function as coordinates
+        if type(self.im)==list:
+            '''
+            self.q_y=np.sort(np.fft.fftfreq(self.im[0].shape[1], d=self.pixel_size))*2*np.pi
+            self.q_x=self.q_y
+            self.q=np.arange(0,self.im[0].shape[1]/2)*2*np.pi*(1./(self.im[0].shape[1]*self.pixel_size))
+            '''
+            print("Not yet implemented for series of movies. Just use a single movie.")
+        else:
+            self.q_y=np.sort(np.fft.fftfreq(self.im.shape[1], d=self.pixel_size))*2*np.pi
+            self.q_x=self.q_y
+            self.q=np.arange(0,self.im.shape[1]/2)*2*np.pi*(1./(self.im.shape[1]*self.pixel_size))
+            
+        ddmmat, radav_ddmmat = ddm.temporalVarianceDDMMatrix(self.im, lagtime)
+        
+        number_of_times = ddmmat.shape[0]
+        times = np.arange(number_of_times) / self.frame_rate
+        
+        AF,af_axis = self.find_alignment_factor(ddmmat, orientation_axis=orientation_axis)
+            
+        #Put ddm_matrix and radial averages in a dataset:
+        ddm_dataset=xr.Dataset({'ddm_matrix_full':(['time', 'q_y','q_x'], ddmmat), 
+                                'ddm_matrix':(['time', 'q'], radav_ddmmat), 
+                                'alignment_factor':(['time','q'], AF),
+                                'lagtime_frames':(lagtime),
+                                'lagtime':(lagtime/self.frame_rate)},
+                               coords={'time': times,
+                                       'q_y':self.q_y, 'q_x':self.q_x, 'q':self.q})
+        
+        ddm_dataset.attrs['AlignmentFactorAxis'] = af_axis
+        
+        return ddm_dataset
+        
     
     def find_alignment_factor_one_lagtime(self, ddmmatrix2d, orientation_axis=0, 
                                           remove_vert_line=True, remove_hor_line=True):
@@ -832,7 +866,7 @@ class DDM_Analysis:
                                                     remove_vert_line=remove_vert_line,
                                                     remove_hor_line=remove_hor_line)
         af_size = len(AF)
-        num_lag_times = len(self.lag_times)
+        num_lag_times = ddmmatrix3d.shape[0]
         all_af = np.zeros((num_lag_times, af_size))
         all_af[0] = AF
         for i in range(1,num_lag_times):

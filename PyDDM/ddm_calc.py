@@ -350,7 +350,7 @@ def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=Fals
     num_possible_diffs = ntimes - dt
 
     #Initializes array for Fourier transforms of differences
-    ddm_mat = np.zeros((len(num_possible_diffs), ndx, ndy),dtype=np.float)
+    ddm_mat = np.zeros((num_possible_diffs, ndx, ndy),dtype=np.float)
 
     #Calculates all differences of images with a delay time dt
     all_diffs = filterfunction*(imageArray[dt:].astype(np.float) - imageArray[0:(-1*dt)].astype(np.float))
