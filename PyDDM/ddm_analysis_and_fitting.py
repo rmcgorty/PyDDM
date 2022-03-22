@@ -785,23 +785,53 @@ class DDM_Analysis:
             self.q_x=self.q_y
             self.q=np.arange(0,self.im.shape[1]/2)*2*np.pi*(1./(self.im.shape[1]*self.pixel_size))
             
-        ddmmat, radav_ddmmat = ddm.temporalVarianceDDMMatrix(self.im, lagtime)
-        
-        number_of_times = ddmmat.shape[0]
-        times = np.arange(number_of_times) / self.frame_rate
-        
-        AF,af_axis = self.find_alignment_factor(ddmmat, orientation_axis=orientation_axis)
+        if np.isscalar(lagtime):
+            ddmmat, radav_ddmmat = ddm.temporalVarianceDDMMatrix(self.im, lagtime)
             
-        #Put ddm_matrix and radial averages in a dataset:
-        ddm_dataset=xr.Dataset({'ddm_matrix_full':(['time', 'q_y','q_x'], ddmmat), 
-                                'ddm_matrix':(['time', 'q'], radav_ddmmat), 
-                                'alignment_factor':(['time','q'], AF),
-                                'lagtime_frames':(lagtime),
-                                'lagtime':(lagtime/self.frame_rate)},
-                               coords={'time': times,
-                                       'q_y':self.q_y, 'q_x':self.q_x, 'q':self.q})
-        
-        ddm_dataset.attrs['AlignmentFactorAxis'] = af_axis
+            number_of_times = ddmmat.shape[0]
+            times = np.arange(number_of_times) / self.frame_rate
+            
+            AF,af_axis = self.find_alignment_factor(ddmmat, orientation_axis=orientation_axis)
+                
+            #Put ddm_matrix and radial averages in a dataset:
+            ddm_dataset=xr.Dataset({'ddm_matrix_full':(['time', 'q_y','q_x'], ddmmat), 
+                                    'ddm_matrix':(['time', 'q'], radav_ddmmat), 
+                                    'alignment_factor':(['time','q'], AF),
+                                    'lagtime_frames':(lagtime),
+                                    'lagtime':(lagtime/self.frame_rate)},
+                                   coords={'time': times,
+                                           'q_y':self.q_y, 'q_x':self.q_x, 'q':self.q})
+            
+            ddm_dataset.attrs['AlignmentFactorAxis'] = af_axis
+            
+        else:
+            number_of_lag_times = len(lagtime)
+            number_of_frames = self.im.shape[0]
+            times = np.arange(number_of_frames-1) / self.frame_rate
+            ddmmat = np.empty((number_of_lag_times, number_of_frames-1, len(self.q_x), len(self.q_y)))
+            ddmmat.fill(np.nan)
+            radav_ddmmat = np.empty((number_of_lag_times, number_of_frames-1, len(self.q)))
+            radav_ddmmat.fill(np.nan)
+            AF = np.empty_like(radav_ddmmat)
+            AF.fill(np.nan)
+            
+            for i,lag in enumerate(lagtime):
+                ddmmat_temp, radav_ddmmat_temp = ddm.temporalVarianceDDMMatrix(self.im, lag)
+                AF_temp,af_axis = self.find_alignment_factor(ddmmat_temp, orientation_axis=orientation_axis)
+                
+                ddmmat[i,:ddmmat_temp.shape[0],:,:] = ddmmat_temp
+                radav_ddmmat[i,:radav_ddmmat_temp.shape[0],:] = radav_ddmmat_temp
+                AF[i,:AF_temp.shape[0],:] = AF_temp
+                
+            #Put ddm_matrix and radial averages in a dataset:
+            ddm_dataset=xr.Dataset({'ddm_matrix_full':(['lagtime','time', 'q_y','q_x'], ddmmat), 
+                                    'ddm_matrix':(['lagtime','time', 'q'], radav_ddmmat), 
+                                    'alignment_factor':(['lagtime','time','q'], AF)},
+                                   coords={'time': times,
+                                           'lagtime': lagtime,
+                                           'q_y':self.q_y, 'q_x':self.q_x, 'q':self.q})
+            
+            ddm_dataset.attrs['AlignmentFactorAxis'] = af_axis
         
         return ddm_dataset
         
