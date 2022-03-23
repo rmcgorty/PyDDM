@@ -359,6 +359,7 @@ def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=Fals
     for i in range(0,all_diffs.shape[0]):
         temp = np.fft.fft2(all_diffs[i]) # - all_diffs_new[i].mean())
         ddm_mat[i] = abs(temp*np.conj(temp))/(ndx*ndy)
+        ddm_mat[i] = np.fft.fftshift(ddm_mat[i])
 
     radial_avg_ddm = radial_avg_ddm_matrix(ddm_mat)
 
