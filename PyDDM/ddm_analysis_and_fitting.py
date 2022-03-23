@@ -771,7 +771,8 @@ class DDM_Analysis:
 
         return ddm_dataset
     
-    def variationInDDMMatrix(self, lagtime, orientation_axis=0):
+    def variationInDDMMatrix(self, lagtime, orientation_axis=0,
+                             save_full_ddmmat=True):
         #Calculate q_x and q_y and q which will function as coordinates
         if type(self.im)==list:
             '''
@@ -808,8 +809,9 @@ class DDM_Analysis:
             number_of_lag_times = len(lagtime)
             number_of_frames = self.im.shape[0]
             times = np.arange(number_of_frames-1) / self.frame_rate
-            ddmmat = np.empty((number_of_lag_times, number_of_frames-1, len(self.q_x), len(self.q_y)))
-            ddmmat.fill(np.nan)
+            if save_full_ddmmat:
+                ddmmat = np.empty((number_of_lag_times, number_of_frames-1, len(self.q_x), len(self.q_y)))
+                ddmmat.fill(np.nan)
             radav_ddmmat = np.empty((number_of_lag_times, number_of_frames-1, len(self.q)))
             radav_ddmmat.fill(np.nan)
             AF = np.empty_like(radav_ddmmat)
@@ -819,17 +821,26 @@ class DDM_Analysis:
                 ddmmat_temp, radav_ddmmat_temp = ddm.temporalVarianceDDMMatrix(self.im, lag)
                 AF_temp,af_axis = self.find_alignment_factor(ddmmat_temp, orientation_axis=orientation_axis)
                 
-                ddmmat[i,:ddmmat_temp.shape[0],:,:] = ddmmat_temp
+                if save_full_ddmmat:
+                    ddmmat[i,:ddmmat_temp.shape[0],:,:] = ddmmat_temp
+                    
                 radav_ddmmat[i,:radav_ddmmat_temp.shape[0],:] = radav_ddmmat_temp
                 AF[i,:AF_temp.shape[0],:] = AF_temp
                 
             #Put ddm_matrix and radial averages in a dataset:
-            ddm_dataset=xr.Dataset({'ddm_matrix_full':(['lagtime','time', 'q_y','q_x'], ddmmat), 
-                                    'ddm_matrix':(['lagtime','time', 'q'], radav_ddmmat), 
-                                    'alignment_factor':(['lagtime','time','q'], AF)},
-                                   coords={'time': times,
-                                           'lagtime': lagtime,
-                                           'q_y':self.q_y, 'q_x':self.q_x, 'q':self.q})
+            if save_full_ddmmat:
+                ddm_dataset=xr.Dataset({'ddm_matrix_full':(['lagtime','time', 'q_y','q_x'], ddmmat), 
+                                        'ddm_matrix':(['lagtime','time', 'q'], radav_ddmmat), 
+                                        'alignment_factor':(['lagtime','time','q'], AF)},
+                                       coords={'time': times,
+                                               'lagtime': lagtime,
+                                               'q_y':self.q_y, 'q_x':self.q_x, 'q':self.q})
+            else:
+                ddm_dataset=xr.Dataset({'ddm_matrix':(['lagtime','time', 'q'], radav_ddmmat), 
+                                        'alignment_factor':(['lagtime','time','q'], AF)},
+                                       coords={'time': times,
+                                               'lagtime': lagtime,
+                                               'q':self.q})
             
             ddm_dataset.attrs['AlignmentFactorAxis'] = af_axis
         
