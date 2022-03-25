@@ -22,6 +22,7 @@ Welcome to PyDDM's documentation!
    Basic walkthrough <Walkthrough - simple>
    Advanced walkthrough <Walkthrough - details>
    Adding a new DDM model <Walkthrough - creating a new DDM fitting function>
+   Probing intermittent dynamics <Walkthrough - intermittent dynamics>
 
 .. autosummary::
    :toctree: _autosummary

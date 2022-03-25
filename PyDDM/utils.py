@@ -33,6 +33,22 @@ font_plt_ax = {'family': 'serif',
 cmap = plt.get_cmap("viridis") #Others: "plasma", "cividis", "gnuplot", "jet", "rainbow", "turbo"
 
 def view_colormap(cmap, axes=None, qminmax=None):
+    r"""Colormap showing wavenumber range
+    
+    For plots of parameter (like decay time) versus q, will generate 
+    the colormap showing color of q. 
+    
+    Parameters
+    ----------
+    cmap : matplotlib colormap
+        For example, plt.get_cmap("viridis")
+    axes : optional
+        Default is None
+    qminmax : optional
+        Default is None
+    
+    
+    """
     colors = cmap(np.arange(cmap.N))
     if axes is None:
         fig = plt.figure(); axes = fig.gca();
@@ -64,6 +80,22 @@ def generate_pandas_table_fit_results(fit_results):
 
 
 def generate_pandas_data(fit_results):
+    r"""Generate pandas dataframe
+    
+    Convert the fit parameters found to a Pandas Dataframe
+    (For more on Pandas, see: https://pandas.pydata.org/docs/index.html)    
+
+    Parameters
+    ----------
+    fit_results : xarray Dataset
+        DESCRIPTION.
+
+    Returns
+    -------
+    pd_data_frame : pandas DataFrame
+        DESCRIPTION.
+
+    """
     data = {}
     data["q"] = fit_results.q
     for par in fit_results.parameter:
@@ -187,7 +219,33 @@ def plot_stretching_exponent(fit, plot_color, x_position_of_text,
                              axis_to_use=None,
                              low_good_q=None, hi_good_q=None, ylim=None,
                              use_s2=False):
+    r""" Plot stretching exponent
     
+    Creates plot of the stretching exponent parameter vs wavenumber. 
+    
+    Parameters
+    ----------
+    fit : xarray Dataset
+        result of fit
+    plot_color : matplotlib color
+        Color to plot with
+    x_position_of_text : float
+        Where to place text
+    axis_to_use : matplotlib axes, optional
+        Defaul is None.
+        If already created figure, can pass the axes so that 
+        the stretching exponent is plotted on this figure
+    low_good_q : optional
+        Default is None
+    hi_good_q : optional
+        Default is None
+    ylim : optional
+        Default in None
+    use_s2 : bool, optional
+        Default is False
+    
+    
+    """
     if axis_to_use is None:
         fig, ax = plt.subplots(nrows=1, figsize=(10,10/1.618))
     else:
@@ -264,7 +322,24 @@ def plot_schulz(fit, color='m', use2=False):
     return fig
 
 def plot_background(fit, color='m', color2='k'):
-
+    r""" Plot B(q)
+    
+    Creates plot of the background parameter vs wavenumber. If the 
+    background is a fitting parameter, that will be plotted (by default,
+    that will be 'm' - magenta). If background is found without fitting, 
+    that will be plotted as well (in black by default). 
+    
+    Parameters
+    ----------
+    fit : xarray Dataset
+        result of fit
+    color1 : optional
+        Default is 'c' (cyan)
+    color2 : optional
+        Default is 'k' (black)
+    
+    
+    """
     figB = plt.figure(figsize=(8,8./1.618))
     if ('Background' in fit.parameters.parameter):
         plt.semilogx(fit.q[1:], fit.parameters.loc['Background',:][1:], color+'o', label="Background from fitting DDM data")  
@@ -276,6 +351,24 @@ def plot_background(fit, color='m', color2='k'):
     return figB
 
 def plot_amplitude(fit, color1='c', color2='k'):
+    r""" Plot A(q)
+    
+    Creates plot of the amplitude parameter vs wavenumber. If the 
+    amplitude is a fitting parameter, that will be plotted (by default,
+    that will be 'c' - cyan). If amplitude is found without fitting, 
+    that will be plotted as well (in black by default). 
+    
+    Parameters
+    ----------
+    fit : xarray Dataset
+        result of fit
+    color1 : optional
+        Default is 'c' (cyan)
+    color2 : optional
+        Default is 'k' (black)
+    
+    
+    """
     figA = plt.figure(figsize=(8,8./1.618))
     if ('Amplitude' in fit.parameters.parameter):
         plt.loglog(fit.q[1:], fit.parameters.loc['Amplitude',:][1:],color1+'o', label='Amplitude from fits to DDM matrix')
@@ -289,6 +382,19 @@ def plot_amplitude(fit, color1='c', color2='k'):
     return figA
 
 def plot_nonerg(fit, plt_color='darkblue'):
+    r""" Plot non-erg
+    
+    Creates plot of the non-ergodicity parameter vs wavenumber
+    
+    Parameters
+    ----------
+    fit : xarray Dataset
+        result of fit
+    plt_color : optional
+        Default is 'darkblue'
+    
+    
+    """
     fig,axs = plt.subplots(2,1,figsize=(8,8./1.618))
     if 'NonErgodic' in fit.parameters.parameter:
         axs[0].semilogy(fit.q[1:], fit.parameters.loc['NonErgodic'][1:],'o',color=plt_color)
@@ -304,6 +410,19 @@ def plot_nonerg(fit, plt_color='darkblue'):
 
 
 def plot_amplitude_over_background(fit, plt_color = 'g'):
+    r""" Plot A/B
+    
+    Creates plot of the amplitude divided by the background.
+    
+    Parameters
+    ----------
+    fit : xarray Dataset
+        result of fit
+    plt_color : optional
+        Default is 'g' (green)
+    
+    
+    """
     fig = plt.figure(figsize=(8,8./1.618))
     
     if ('Amplitude' in fit.parameter.values):
@@ -326,6 +445,41 @@ def plot_amplitude_over_background(fit, plt_color = 'g'):
 def plot_to_inspect_fit(q_index_to_plot, fit, axis_to_use = None, ylim=None, 
                         oneplotcolor='r', show_legend=True, scale_by_q_to_power=0,
                         show_colorbar=False, print_params=True):
+    r"""Create plot of data and fit
+    
+    For inspecting fits to the data (either DDM matrix or the 
+    ISF), this will generate 1 plot. 
+    
+
+    Parameters
+    ----------
+    q_index_to_plot : array-like
+        Array of 4 integers corresponding to the indices of the 
+        array of wavenumbers
+    fit : xarray Dataset
+        Result of fit
+    axis_to_use : optional
+        If matplotlib figure already created, can pass 
+        the axis to have plot appear on that figure
+    ylim : optional
+        Specify limits of y-axis
+    oneplotcolor : optional
+        Default is 'r' (red). 
+    show_legend : bool, optional
+        Default is True
+    scale_by_q_to_power : float, optional
+        Default is zero.
+    show_colorbar : bool, optional
+        Default is False
+    print_params : bool, optional
+        Default is True
+
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created
+
+    """
     if axis_to_use is None:
         fig, ax = plt.subplots(nrows=1, figsize=(10,10/1.618))
     else:
@@ -413,8 +567,32 @@ def plot_to_inspect_fit(q_index_to_plot, fit, axis_to_use = None, ylim=None,
 
 
 def plot_to_inspect_fit_2x2subplot(q_index_to_plot, fit, ylim=None,
-                                   oneplotcolor='r', print_params=True):
+                                   oneplotcolor='r'):
+    r"""Create 2-by-2 suplot of fits
+    
+    For inspecting fits to the data (either DDM matrix or the 
+    ISF), this will generate 4 plots. It will do so at 4 q values.
+    Specify these in the "q_index_to_plot". 
+    
 
+    Parameters
+    ----------
+    q_index_to_plot : array-like
+        Array of 4 integers corresponding to the indices of the 
+        array of wavenumbers
+    fit : xarray Dataset
+        Result of fit
+    ylim : optional
+        Specify limits of y-axis
+    oneplotcolor : optional
+        Default is 'r' (red). 
+
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created
+
+    """
     if type(fit) is not xr.core.dataset.Dataset:
         print("Must pass the fitting results as an xarray Dataset.")
         return 0
@@ -447,7 +625,7 @@ def plot_to_inspect_fit_2x2subplot(q_index_to_plot, fit, ylim=None,
         if n>3:
             break
         ax= fig.add_subplot(2,2,n+1)
-        ax.semilogx(times, data[:,q_at],'ro')
+        ax.semilogx(times, data[:,q_at],'o', color=oneplotcolor)
         ax.semilogx(times, fit.theory[:,q_at],'-k', lw=3)
         ax.set_xlabel(xlabel_str)
         ax.set_ylabel(ylabel_str)
@@ -476,3 +654,49 @@ def get_schulz_dist(mean_velocity, schulz_num):
     Z = schulz_num
     f = lambda v: (v**Z / scipy.special.factorial(Z)) * (((Z+1)/mean_velocity)**(Z+1)) * np.exp(-1*(v/mean_velocity)*(Z+1))
     return f
+
+
+def create_two_time_correlation_matrix(ddm_variability, number_of_frames, q_index):
+    r"""Create two-time correlation matrix
+    
+    After generating the DDM matrix as a function of time lag as well as 
+    of time, can use this function to generate a 2D two-time correlation
+    function for a particular wavenumber. 
+    
+
+    Parameters
+    ----------
+    ddm_variability : xarray dataset
+        Results of function 'variationInDDMMatrix' in 'ddm_analysis_and_fitting' code
+    number_of_frames : int
+        Number of frames of movie analyzed
+    q_index : int
+        Index of the wavenumber array
+
+    Returns
+    -------
+    twotimecorrelation : array
+        Two time correlation function
+
+    """
+    twotimecorr = np.empty((number_of_frames,number_of_frames)); twotimecorr.fill(np.nan)
+    for t1 in range(number_of_frames):
+        for i,lt in enumerate(ddm_variability.lagtime):
+            t2 = t1 + lt
+            if t2 < number_of_frames:
+                twotimecorr[t1,t2] = ddm_variability.ddm_matrix[i,t1,q_index]
+                
+    twotimecorr2 = np.fliplr(twotimecorr)
+    twotimecorr2 = np.rot90(twotimecorr2)
+    
+    twotimecorr_tot = np.empty((2,twotimecorr.shape[0],twotimecorr.shape[1]))
+    twotimecorr_tot[0] = twotimecorr
+    twotimecorr_tot[1] = twotimecorr2
+    
+    twotimecorr_total = np.nansum(twotimecorr_tot, axis=0)
+    
+    for i in range(twotimecorr_total.shape[0]):
+        twotimecorr_total[i,i] = np.nan
+        
+    return twotimecorr_total
+

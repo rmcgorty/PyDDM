@@ -873,6 +873,36 @@ class DDM_Analysis:
             ddm_dataset.attrs['AlignmentFactorAxis'] = af_axis
         
         return ddm_dataset
+    
+    def createTwoTimeCorr(self, ddm_var_dataset, qindex):
+        r"""Create two-time correlation matrix
+    
+        After generating the DDM matrix as a function of time lag as well as 
+        of time, can use this function to generate a 2D two-time correlation
+        function for a particular wavenumber. 
+        
+    
+        Parameters
+        ----------
+        ddm_variability : xarray dataset
+            Results of function 'variationInDDMMatrix' in 'ddm_analysis_and_fitting' code
+        q_index : int
+            Index of the wavenumber array
+    
+        Returns
+        -------
+        twotimecorrelation : array
+            Two time correlation function
+    
+        """
+        number_of_frames = self.im.shape[0]
+        if qindex >= len(self.q):
+            print("qindex must be less than %i." % len(self.q))
+            return None
+        twotimecorr = hf.create_two_time_correlation_matrix(ddm_var_dataset,
+                                                            number_of_frames,
+                                                            qindex)
+        return twotimecorr
         
     
     def find_alignment_factor_one_lagtime(self, ddmmatrix2d, orientation_axis=0, 
