@@ -773,7 +773,35 @@ class DDM_Analysis:
     
     def variationInDDMMatrix(self, lagtime, orientation_axis=0,
                              save_full_ddmmat=True):
-        #Calculate q_x and q_y and q which will function as coordinates
+        r"""
+        Creates the xarray Dataset and PDF report.
+
+        Parameters
+        ----------
+        lagtime : int or list-like
+            If an integer, will compute the DDM matrix for this
+            lag time over all times. If an arrary or list, then 
+            all lag times in that array/list will be used.
+        orientation_axis : float, optional
+            Axis for computing the alignment factor of the 2D
+            DDM matrix for a given lag time and time
+        save_full_ddmmat : bool, optional
+            If True, then will save the DDM matrix as a function 
+            of q_x and q_y for each lag time and time. If False, 
+            then it will radially average that matrix so that the 
+            DDM matrix is just a function of the magnitude of the 
+            wavevector, the lagtime, and the time. If True, then 
+            it may potentially use up a lot of memory. 
+
+        Returns
+        -------
+        ddm_dataset : xarray Dataset
+            Dataset containing the DDM matrix and associated data
+            and metadata.
+
+        """
+        
+
         if type(self.im)==list:
             '''
             self.q_y=np.sort(np.fft.fftfreq(self.im[0].shape[1], d=self.pixel_size))*2*np.pi

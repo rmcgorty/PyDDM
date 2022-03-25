@@ -116,3 +116,15 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+Examples/DDM - OT-DDM - Getting Alignment Factor.ipynb
+Examples/active_network_data.yml
+Examples/ddm - active network - for workflow figure.ipynb
+Examples/DDM - Walkthrough - Active network.ipynb
+Examples/DDM - Walkthrough - DIC images of beads.ipynb
+Examples/DDMMat_hist_q18_lag10.png
+Examples/ddmmatrix_10.svg
+Examples/pnipam_roomtemp.yml
+docs/source/fit_of_ddmmatrix.nc
+docs/source/ddm_fit_report.pdf
+docs/source/ddm_fit_report.pdf
+docs/source/ddm_fit_report.pdf
