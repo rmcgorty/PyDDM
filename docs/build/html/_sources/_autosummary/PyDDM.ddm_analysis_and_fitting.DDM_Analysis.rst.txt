@@ -17,6 +17,7 @@
       :nosignatures:
    
       ~DDM_Analysis.calculate_DDM_matrix
+      ~DDM_Analysis.createTwoTimeCorr
       ~DDM_Analysis.find_alignment_factor
       ~DDM_Analysis.find_alignment_factor_one_lagtime
       ~DDM_Analysis.generate_plots

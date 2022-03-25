@@ -109,6 +109,11 @@
    Adding a new DDM model
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Walkthrough%20-%20intermittent%20dynamics.html">
+   Probing intermittent dynamics
+  </a>
+ </li>
 </ul>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active has-children">
@@ -440,6 +445,11 @@
     </label>
     <ul>
      <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.create_two_time_correlation_matrix.html">
+       PyDDM.utils.create_two_time_correlation_matrix
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.utils.generate_pandas_data.html">
        PyDDM.utils.generate_pandas_data
       </a>
@@ -626,7 +636,10 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 <tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_DDM_matrix</span></code></a></p></td>
 <td><p>Calculates the DDM matrix This function computes the DDM matrix.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_alignment_factor</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">createTwoTimeCorr</span></code></a></p></td>
+<td><p>Create two-time correlation matrix</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_alignment_factor</span></code></a></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param orientation_axis</dt>
 <dd class="field-odd"><p>DESCRIPTION. The default is np.pi/4.</p>
@@ -634,7 +647,7 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 </dl>
 </p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_alignment_factor_one_lagtime</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_alignment_factor_one_lagtime</span></code></a></p></td>
 <td><p><dl class="field-list simple">
 <dt class="field-odd">param orientation_axis</dt>
 <dd class="field-odd"><p>DESCRIPTION. The default is np.pi/4.</p>
@@ -642,23 +655,23 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 </dl>
 </p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_plots</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_plots</span></code></a></p></td>
 <td><p>Generates plot, which can be saved as PDF, to summarize the DDM matrix calulations.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loadYAML</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loadYAML</span></code></a></p></td>
 <td><p>Opens yaml file and extracts parameter values.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resave_ddm_dataset</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resave_ddm_dataset</span></code></a></p></td>
 <td><p>Resave the DDM dataset.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_filename_for_saving</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_filename_for_saving</span></code></a></p></td>
 <td><p>Change file name to save the data to disk.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a></p></td>
 <td><p>Based off user-provided parameters, prepares images for the DDM analysis.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">variationInDDMMatrix</span></code></p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variationInDDMMatrix</span></code></a></p></td>
+<td><p>Creates the xarray Dataset and PDF report.</p></td>
 </tr>
 </tbody>
 </table>
@@ -704,6 +717,29 @@ of these variables will be the wavevector (either as q_x, q_y or the magnitude q
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>xarray Dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr">
+<code class="sig-name descname">createTwoTimeCorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddm_var_dataset</span></em>, <em class="sig-param"><span class="n">qindex</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create two-time correlation matrix</p>
+<p>After generating the DDM matrix as a function of time lag as well as
+of time, can use this function to generate a 2D two-time correlation
+function for a particular wavenumber.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ddm_variability</strong> (<em>xarray dataset</em>) – Results of function ‘variationInDDMMatrix’ in ‘ddm_analysis_and_fitting’ code</p></li>
+<li><p><strong>q_index</strong> (<em>int</em>) – Index of the wavenumber array</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>twotimecorrelation</strong> – Two time correlation function</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
 </dd>
 </dl>
 </dd></dl>
@@ -806,6 +842,36 @@ store the <cite>ddm_dataset</cite> as a netCDF file (with extension .nc).</p>
 YAML file, this will get the image stack ready for DDM analysis. Possible
 things to do done include cropping the image to focus on a particular
 region of interest (ROI), binnning the image, applying a windowing function.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix">
+<code class="sig-name descname">variationInDDMMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lagtime</span></em>, <em class="sig-param"><span class="n">orientation_axis</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">save_full_ddmmat</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates the xarray Dataset and PDF report.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lagtime</strong> (<em>int</em><em> or </em><em>list-like</em>) – If an integer, will compute the DDM matrix for this
+lag time over all times. If an arrary or list, then
+all lag times in that array/list will be used.</p></li>
+<li><p><strong>orientation_axis</strong> (<em>float</em><em>, </em><em>optional</em>) – Axis for computing the alignment factor of the 2D
+DDM matrix for a given lag time and time</p></li>
+<li><p><strong>save_full_ddmmat</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, then will save the DDM matrix as a function
+of q_x and q_y for each lag time and time. If False,
+then it will radially average that matrix so that the
+DDM matrix is just a function of the magnitude of the
+wavevector, the lagtime, and the time. If True, then
+it may potentially use up a lot of memory.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>ddm_dataset</strong> – Dataset containing the DDM matrix and associated data
+and metadata.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>xarray Dataset</p>
+</dd>
+</dl>
 </dd></dl>
 
 </dd></dl>

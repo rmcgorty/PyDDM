@@ -15,6 +15,7 @@
       :toctree:
       :nosignatures:
    
+      create_two_time_correlation_matrix
       generate_pandas_data
       generate_pandas_table_fit_results
       get_schulz_dist

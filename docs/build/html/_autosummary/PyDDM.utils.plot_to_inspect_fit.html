@@ -109,6 +109,11 @@
    Adding a new DDM model
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Walkthrough%20-%20intermittent%20dynamics.html">
+   Probing intermittent dynamics
+  </a>
+ </li>
 </ul>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active has-children">
@@ -440,6 +445,11 @@
     </label>
     <ul class="current">
      <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.create_two_time_correlation_matrix.html">
+       PyDDM.utils.create_two_time_correlation_matrix
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.utils.generate_pandas_data.html">
        PyDDM.utils.generate_pandas_data
       </a>
@@ -612,7 +622,33 @@
 <dl class="py function">
 <dt id="PyDDM.utils.plot_to_inspect_fit">
 <code class="sig-name descname">plot_to_inspect_fit</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">q_index_to_plot</span></em>, <em class="sig-param"><span class="n">fit</span></em>, <em class="sig-param"><span class="n">axis_to_use</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylim</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">oneplotcolor</span><span class="o">=</span><span class="default_value">'r'</span></em>, <em class="sig-param"><span class="n">show_legend</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">scale_by_q_to_power</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">show_colorbar</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">print_params</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.utils.plot_to_inspect_fit" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Create plot of data and fit</p>
+<p>For inspecting fits to the data (either DDM matrix or the
+ISF), this will generate 1 plot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>q_index_to_plot</strong> (<em>array-like</em>) – Array of 4 integers corresponding to the indices of the
+array of wavenumbers</p></li>
+<li><p><strong>fit</strong> (<em>xarray Dataset</em>) – Result of fit</p></li>
+<li><p><strong>axis_to_use</strong> (<em>optional</em>) – If matplotlib figure already created, can pass
+the axis to have plot appear on that figure</p></li>
+<li><p><strong>ylim</strong> (<em>optional</em>) – Specify limits of y-axis</p></li>
+<li><p><strong>oneplotcolor</strong> (<em>optional</em>) – Default is ‘r’ (red).</p></li>
+<li><p><strong>show_legend</strong> (<em>bool</em><em>, </em><em>optional</em>) – Default is True</p></li>
+<li><p><strong>scale_by_q_to_power</strong> (<em>float</em><em>, </em><em>optional</em>) – Default is zero.</p></li>
+<li><p><strong>show_colorbar</strong> (<em>bool</em><em>, </em><em>optional</em>) – Default is False</p></li>
+<li><p><strong>print_params</strong> (<em>bool</em><em>, </em><em>optional</em>) – Default is True</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>fig</strong> – Figure created</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>matplotlib figure</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 

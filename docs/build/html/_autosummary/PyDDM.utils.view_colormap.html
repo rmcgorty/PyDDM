@@ -108,6 +108,11 @@
    Adding a new DDM model
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Walkthrough%20-%20intermittent%20dynamics.html">
+   Probing intermittent dynamics
+  </a>
+ </li>
 </ul>
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1 current active has-children">
@@ -439,6 +444,11 @@
     </label>
     <ul class="current">
      <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.create_two_time_correlation_matrix.html">
+       PyDDM.utils.create_two_time_correlation_matrix
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.utils.generate_pandas_data.html">
        PyDDM.utils.generate_pandas_data
       </a>
@@ -611,7 +621,19 @@
 <dl class="py function">
 <dt id="PyDDM.utils.view_colormap">
 <code class="sig-name descname">view_colormap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">cmap</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">qminmax</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.utils.view_colormap" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Colormap showing wavenumber range</p>
+<p>For plots of parameter (like decay time) versus q, will generate
+the colormap showing color of q.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cmap</strong> (<em>matplotlib colormap</em>) – For example, plt.get_cmap(“viridis”)</p></li>
+<li><p><strong>axes</strong> (<em>optional</em>) – Default is None</p></li>
+<li><p><strong>qminmax</strong> (<em>optional</em>) – Default is None</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 

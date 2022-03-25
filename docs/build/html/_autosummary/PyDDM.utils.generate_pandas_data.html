@@ -39,7 +39,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="PyDDM.utils.generate_pandas_table_fit_results" href="PyDDM.utils.generate_pandas_table_fit_results.html" />
-    <link rel="prev" title="PyDDM.utils" href="PyDDM.utils.html" />
+    <link rel="prev" title="PyDDM.utils.create_two_time_correlation_matrix" href="PyDDM.utils.create_two_time_correlation_matrix.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -107,6 +107,11 @@
  <li class="toctree-l1">
   <a class="reference internal" href="../Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html">
    Adding a new DDM model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../Walkthrough%20-%20intermittent%20dynamics.html">
+   Probing intermittent dynamics
   </a>
  </li>
 </ul>
@@ -439,6 +444,11 @@
      </i>
     </label>
     <ul class="current">
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.create_two_time_correlation_matrix.html">
+       PyDDM.utils.create_two_time_correlation_matrix
+      </a>
+     </li>
      <li class="toctree-l3 current active">
       <a class="current reference internal" href="#">
        PyDDM.utils.generate_pandas_data
@@ -612,7 +622,21 @@
 <dl class="py function">
 <dt id="PyDDM.utils.generate_pandas_data">
 <code class="sig-name descname">generate_pandas_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fit_results</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.utils.generate_pandas_data" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Generate pandas dataframe</p>
+<p>Convert the fit parameters found to a Pandas Dataframe
+(For more on Pandas, see: <a class="reference external" href="https://pandas.pydata.org/docs/index.html">https://pandas.pydata.org/docs/index.html</a>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fit_results</strong> (<em>xarray Dataset</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>pd_data_frame</strong> – DESCRIPTION.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>pandas DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 
@@ -622,11 +646,11 @@
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="PyDDM.utils.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="PyDDM.utils.create_two_time_correlation_matrix.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">PyDDM.utils</p>
+            <p class="prev-next-title">PyDDM.utils.create_two_time_correlation_matrix</p>
         </div>
     </a>
     <a class='right-next' id="next-link" href="PyDDM.utils.generate_pandas_table_fit_results.html" title="next page">
