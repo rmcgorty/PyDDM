@@ -341,6 +341,11 @@
       </a>
      </li>
      <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.ddm_calc.temporalVarianceDDMMatrix.html">
+       PyDDM.ddm_calc.temporalVarianceDDMMatrix
+      </a>
+     </li>
+     <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.ddm_calc.window_function.html">
        PyDDM.ddm_calc.window_function
       </a>
@@ -606,7 +611,7 @@
 <h1>PyDDM.ddm_analysis_and_fitting.DDM_Analysis<a class="headerlink" href="#pyddm-ddm-analysis-and-fitting-ddm-analysis" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
 <dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis">
-<em class="property">class </em><code class="sig-name descname">DDM_Analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_yaml</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-name descname">DDM_Analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_yaml</span></em>, <em class="sig-param"><span class="n">load_images</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Performs preprossing of data, such as cropping, windowing etc. DDM calculations are performed on the processed time series
 to produce a xarray DataSet with DDM matrix, radial averages and ISF. The analysis parameters are provided by the user in
@@ -620,6 +625,22 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_DDM_matrix</span></code></a></p></td>
 <td><p>Calculates the DDM matrix This function computes the DDM matrix.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_alignment_factor</span></code></a></p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param orientation_axis</dt>
+<dd class="field-odd"><p>DESCRIPTION. The default is np.pi/4.</p>
+</dd>
+</dl>
+</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_alignment_factor_one_lagtime</span></code></a></p></td>
+<td><p><dl class="field-list simple">
+<dt class="field-odd">param orientation_axis</dt>
+<dd class="field-odd"><p>DESCRIPTION. The default is np.pi/4.</p>
+</dd>
+</dl>
+</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_plots</span></code></a></p></td>
 <td><p>Generates plot, which can be saved as PDF, to summarize the DDM matrix calulations.</p></td>
@@ -635,6 +656,9 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a></p></td>
 <td><p>Based off user-provided parameters, prepares images for the DDM analysis.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">variationInDDMMatrix</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -660,7 +684,8 @@ overlapping pairs). One could only look at non-overlapping pairs, like frame 1 a
 (overlap_method=0, non-overlapping). Or one could do something in between. For overlap_method=2 (the DEFAULT), there will be
 about 3 or 4 pairs (at most) between two frames. That is, if we have a lag time of 10 frames, we will
 use the pairs of frame 1 and 11, 5 and 15, 9 and 19, etc. For overlap_method=1, we do something similar to
-overlap_method=2, but we compute <em>at most</em> 50 image differences per lag time. So for example, with a lag time of 1 frame and
+overlap_method=2, but we compute <em>at most</em> <cite>number_differences_max</cite> (default:300) image differences per lag time.
+So for example, with a lag time of 1 frame and
 a movie that has 1000 frames, we could theoretically use 999 differences of images (and we would for the other methods). But
 for overlap_method=2, we would only use 50 of those. This is for quickening up the computation.</p></li>
 <li><p><strong>**background_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3}</em><em>, </em><em>optional</em>) – Optional keyword argument. Will be set to 0 if not specified here nor in the YAML file.
@@ -679,6 +704,38 @@ of these variables will be the wavevector (either as q_x, q_y or the magnitude q
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>xarray Dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor">
+<code class="sig-name descname">find_alignment_factor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddmmatrix3d</span></em>, <em class="sig-param"><span class="n">orientation_axis</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">remove_vert_line</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_hor_line</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>orientation_axis</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is np.pi/4.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime">
+<code class="sig-name descname">find_alignment_factor_one_lagtime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddmmatrix2d</span></em>, <em class="sig-param"><span class="n">orientation_axis</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">remove_vert_line</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_hor_line</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>orientation_axis</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is np.pi/4.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p></p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -743,7 +800,7 @@ store the <cite>ddm_dataset</cite> as a netCDF file (with extension .nc).</p>
 
 <dl class="py method">
 <dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup">
-<code class="sig-name descname">setup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">load_images</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="Permalink to this definition">¶</a></dt>
 <dd><p>Based off user-provided parameters, prepares images for the DDM analysis.</p>
 <p>Using the parameters under the ‘Analysis_parameters’ section of the
 YAML file, this will get the image stack ready for DDM analysis. Possible

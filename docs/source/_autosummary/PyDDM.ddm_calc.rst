@@ -28,6 +28,7 @@
       get_MSD_from_DDM_data
       newt
       radial_avg_ddm_matrix
+      temporalVarianceDDMMatrix
       window_function
    
    

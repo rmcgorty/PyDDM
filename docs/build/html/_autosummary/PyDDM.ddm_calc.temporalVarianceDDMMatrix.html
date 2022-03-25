@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PyDDM.utils.get_schulz_dist &#8212; PyDDM v0.1.0 documentation</title>
+    <title>PyDDM.ddm_calc.temporalVarianceDDMMatrix &#8212; PyDDM v0.1.0 documentation</title>
     
   <link href="../_static/css/theme.css" rel="stylesheet">
   <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
@@ -38,8 +38,8 @@
     <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="PyDDM.utils.get_velocity_variance" href="PyDDM.utils.get_velocity_variance.html" />
-    <link rel="prev" title="PyDDM.utils.generate_pandas_table_fit_results" href="PyDDM.utils.generate_pandas_table_fit_results.html" />
+    <link rel="next" title="PyDDM.ddm_calc.window_function" href="PyDDM.ddm_calc.window_function.html" />
+    <link rel="prev" title="PyDDM.ddm_calc.radial_avg_ddm_matrix" href="PyDDM.ddm_calc.radial_avg_ddm_matrix.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="en">
     
@@ -265,16 +265,16 @@
      </li>
     </ul>
    </li>
-   <li class="toctree-l2 has-children">
+   <li class="toctree-l2 current active has-children">
     <a class="reference internal" href="PyDDM.ddm_calc.html">
      PyDDM.ddm_calc
     </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
+    <input checked="" class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
     <label for="toctree-checkbox-5">
      <i class="fas fa-chevron-down">
      </i>
     </label>
-    <ul>
+    <ul class="current">
      <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.ddm_calc.computeDDMMatrix.html">
        PyDDM.ddm_calc.computeDDMMatrix
@@ -340,8 +340,8 @@
        PyDDM.ddm_calc.radial_avg_ddm_matrix
       </a>
      </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.temporalVarianceDDMMatrix.html">
+     <li class="toctree-l3 current active">
+      <a class="current reference internal" href="#">
        PyDDM.ddm_calc.temporalVarianceDDMMatrix
       </a>
      </li>
@@ -429,16 +429,16 @@
      </li>
     </ul>
    </li>
-   <li class="toctree-l2 current active has-children">
+   <li class="toctree-l2 has-children">
     <a class="reference internal" href="PyDDM.utils.html">
      PyDDM.utils
     </a>
-    <input checked="" class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
+    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
     <label for="toctree-checkbox-7">
      <i class="fas fa-chevron-down">
      </i>
     </label>
-    <ul class="current">
+    <ul>
      <li class="toctree-l3">
       <a class="reference internal" href="PyDDM.utils.generate_pandas_data.html">
        PyDDM.utils.generate_pandas_data
@@ -449,8 +449,8 @@
        PyDDM.utils.generate_pandas_table_fit_results
       </a>
      </li>
-     <li class="toctree-l3 current active">
-      <a class="current reference internal" href="#">
+     <li class="toctree-l3">
+      <a class="reference internal" href="PyDDM.utils.get_schulz_dist.html">
        PyDDM.utils.get_schulz_dist
       </a>
      </li>
@@ -564,7 +564,7 @@
         <!-- ipynb file if we had a myst markdown file -->
         
         <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/_autosummary/PyDDM.utils.get_schulz_dist.rst.txt"><button type="button"
+        <a class="dropdown-buttons" href="../_sources/_autosummary/PyDDM.ddm_calc.temporalVarianceDDMMatrix.rst.txt"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
                 data-placement="left">.rst</button></a>
         <!-- Download PDF via print -->
@@ -596,7 +596,7 @@
         <div class="col-12 col-md-9 pl-md-3 pr-md-0">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>PyDDM.utils.get_schulz_dist</h1>
+                <h1>PyDDM.ddm_calc.temporalVarianceDDMMatrix</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -607,12 +607,40 @@
             
               <div>
                 
-  <div class="section" id="pyddm-utils-get-schulz-dist">
-<h1>PyDDM.utils.get_schulz_dist<a class="headerlink" href="#pyddm-utils-get-schulz-dist" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="pyddm-ddm-calc-temporalvarianceddmmatrix">
+<h1>PyDDM.ddm_calc.temporalVarianceDDMMatrix<a class="headerlink" href="#pyddm-ddm-calc-temporalvarianceddmmatrix" title="Permalink to this headline">¶</a></h1>
 <dl class="py function">
-<dt id="PyDDM.utils.get_schulz_dist">
-<code class="sig-name descname">get_schulz_dist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">mean_velocity</span></em>, <em class="sig-param"><span class="n">schulz_num</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.utils.get_schulz_dist" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="PyDDM.ddm_calc.temporalVarianceDDMMatrix">
+<code class="sig-name descname">temporalVarianceDDMMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">imageArray</span></em>, <em class="sig-param"><span class="n">dt</span></em>, <em class="sig-param"><span class="n">use_BH_windowing</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">overlap_method</span><span class="o">=</span><span class="default_value">2</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_calc.temporalVarianceDDMMatrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates DDM matrix as a function of time at given lag time</p>
+<p>This function calculates the DDM matrix at a given lag time. Does <em>not</em>
+average over time. This allows you to see the spread in the DDM matrix.
+Inspired by the analysis done in: Gao, Y., Kim, J. &amp; Helgeson, M. E.
+Microdynamics and arrest of coarsening during spinodal decomposition in
+thermoreversible colloidal gels. Soft Matter 11, 6360–6370 (2015)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>imageArray</strong> (<em>array</em>) – 3D array of images. First dimension should be time.</p></li>
+<li><p><strong>dt</strong> (<em>int</em>) – lag time for which to calculate the DDM matrix (in unit of frames)</p></li>
+<li><p><strong>use_BH_windowing</strong> (<em>{True</em><em>, </em><em>False}</em><em>, </em><em>optional</em>) – Apply Blackman-Harris windowing to the images if True. Default is False.</p></li>
+<li><p><strong>overlap_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2}</em><em>, </em><em>optional</em>) – Default is 1.</p></li>
+<li><p><strong>quiet</strong> (<em>{True</em><em>, </em><em>False}</em><em>, </em><em>optional</em>) – If True, prints updates as the computation proceeds</p></li>
+<li><p><strong>**number_differences_max</strong> (<em>optional keyword argument</em>) – For <cite>overlap_method</cite> of 1, sets the maximum number of differences
+to find for a given lag time. If <a href="#id1"><span class="problematic" id="id2">`</span></a>overlap_method`=1 and this
+keyword argument is not given, defaults to 300</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>ddm_mat</strong> (<em>array</em>) – The DDM matrix for given lag time. First dimension is time.
+Other two are the x and y wavevectors.</p></li>
+<li><p><strong>radial_avg_ddm</strong> (<em>array</em>) – Radial average of ddm_mat</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 
@@ -622,17 +650,17 @@
             
                 <!-- Previous / next buttons -->
 <div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="PyDDM.utils.generate_pandas_table_fit_results.html" title="previous page">
+    <a class='left-prev' id="prev-link" href="PyDDM.ddm_calc.radial_avg_ddm_matrix.html" title="previous page">
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">PyDDM.utils.generate_pandas_table_fit_results</p>
+            <p class="prev-next-title">PyDDM.ddm_calc.radial_avg_ddm_matrix</p>
         </div>
     </a>
-    <a class='right-next' id="next-link" href="PyDDM.utils.get_velocity_variance.html" title="next page">
+    <a class='right-next' id="next-link" href="PyDDM.ddm_calc.window_function.html" title="next page">
     <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">PyDDM.utils.get_velocity_variance</p>
+        <p class="prev-next-title">PyDDM.ddm_calc.window_function</p>
     </div>
     <i class="fas fa-angle-right"></i>
     </a>
