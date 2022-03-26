@@ -109,6 +109,40 @@ def plot_one_tau_vs_q(fit, plot_color,
                       use_new_tau=True, fig_to_use=None, 
                       low_good_q=None, hi_good_q=None, ylim=None,
                       use_tau2=False, show_table=True):
+    r"""
+    
+
+    Parameters
+    ----------
+    fit : xarray Dataset
+        Result of fit.
+    plot_color : matplotlib color
+        Color for plot
+    tau_v_q_slope : TYPE, optional
+        DESCRIPTION. The default is None.
+    diffcoeff : TYPE, optional
+        DESCRIPTION. The default is None.
+    use_new_tau : TYPE, optional
+        DESCRIPTION. The default is True.
+    fig_to_use : TYPE, optional
+        DESCRIPTION. The default is None.
+    low_good_q : TYPE, optional
+        DESCRIPTION. The default is None.
+    hi_good_q : TYPE, optional
+        DESCRIPTION. The default is None.
+    ylim : TYPE, optional
+        DESCRIPTION. The default is None.
+    use_tau2 : TYPE, optional
+        DESCRIPTION. The default is False.
+    show_table : TYPE, optional
+        DESCRIPTION. The default is True.
+
+    Returns
+    -------
+    fig : matplotlib figure
+        DESCRIPTION.
+
+    """
     if fig_to_use is None:
         fig, ax = plt.subplots(nrows=1, figsize=(10,9))
     else:
@@ -244,7 +278,10 @@ def plot_stretching_exponent(fit, plot_color, x_position_of_text,
     use_s2 : bool, optional
         Default is False
     
-    
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created    
     """
     if axis_to_use is None:
         fig, ax = plt.subplots(nrows=1, figsize=(10,10/1.618))
@@ -292,6 +329,24 @@ def plot_stretching_exponent(fit, plot_color, x_position_of_text,
     return fig
 
 def plot_fraction(fit, color='m'):
+    r""" Plot fraction of dynamics described by ballistic term
+    
+    In fit models containing the parameter 'FractionBallistic', that
+    parameter will be plotted versus the wavenumber.
+    
+    Parameters
+    ----------
+    fit : xarray Dataset
+        result of fit
+    color : matplotlib color
+        Color to plot with
+        Default is 'm' (magenta)
+
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created
+    """
     if ('FractionBallistic' in fit.parameter.values):
         frac = fit.parameters.loc['FractionBallistic']
         ylabel_str = "Fraction moving ballistically"
@@ -309,6 +364,28 @@ def plot_fraction(fit, color='m'):
     return fig
 
 def plot_schulz(fit, color='m', use2=False):
+    r""" Plot Schulz number
+    
+    In fit models containing the parameter 'SchulzNum', that
+    parameter will be plotted versus the wavenumber.
+    
+    Parameters
+    ----------
+    fit : xarray Dataset
+        result of fit
+    color : matplotlib color
+        Color to plot with
+        Default is 'm' (magenta)
+    use2 : bool, optional
+        Default is False. If True, will plot the parameter
+        'SchulzNum2' (used if the model contains two terms both 
+        having a Schulz Number)
+        
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created
+    """
     fig = plt.figure(figsize=(8,8./1.618))
     if not use2:
         plt.loglog(fit.q[1:], fit.parameters.loc['SchulzNum',:][1:], color=color, marker='o', linestyle='')
@@ -338,7 +415,10 @@ def plot_background(fit, color='m', color2='k'):
     color2 : optional
         Default is 'k' (black)
     
-    
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created
     """
     figB = plt.figure(figsize=(8,8./1.618))
     if ('Background' in fit.parameters.parameter):
@@ -367,7 +447,10 @@ def plot_amplitude(fit, color1='c', color2='k'):
     color2 : optional
         Default is 'k' (black)
     
-    
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created
     """
     figA = plt.figure(figsize=(8,8./1.618))
     if ('Amplitude' in fit.parameters.parameter):
@@ -393,7 +476,10 @@ def plot_nonerg(fit, plt_color='darkblue'):
     plt_color : optional
         Default is 'darkblue'
     
-    
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created
     """
     fig,axs = plt.subplots(2,1,figsize=(8,8./1.618))
     if 'NonErgodic' in fit.parameters.parameter:
@@ -421,7 +507,10 @@ def plot_amplitude_over_background(fit, plt_color = 'g'):
     plt_color : optional
         Default is 'g' (green)
     
-    
+    Returns
+    -------
+    fig : matplotlib figure
+        Figure created
     """
     fig = plt.figure(figsize=(8,8./1.618))
     
@@ -697,6 +786,10 @@ def create_two_time_correlation_matrix(ddm_variability, number_of_frames, q_inde
     
     for i in range(twotimecorr_total.shape[0]):
         twotimecorr_total[i,i] = np.nan
+        
+    w = np.argwhere(twotimecorr_total==0.0)
+    for i in range(w.shape[0]):
+        twotimecorr_total[w[i][0],w[i][1]] = np.nan
         
     return twotimecorr_total
 
