@@ -836,6 +836,9 @@ class DDM_Analysis:
         else:
             number_of_lag_times = len(lagtime)
             number_of_frames = self.im.shape[0]
+            if number_of_lag_times >= number_of_frames:
+                lagtime = np.arange(1,number_of_frames-1)
+                number_of_lag_times = len(lagtime)
             times = np.arange(number_of_frames-1) / self.frame_rate
             if save_full_ddmmat:
                 ddmmat = np.empty((number_of_lag_times, number_of_frames-1, len(self.q_x), len(self.q_y)))
