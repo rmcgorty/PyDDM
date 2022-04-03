@@ -877,6 +877,73 @@ class DDM_Analysis:
         
         return ddm_dataset
     
+    
+    def phiDM(self, lagt, halfsize, use_gf=True, gfsize=3, err_limit = 2e-5):
+        r'''
+        
+
+        Parameters
+        ----------
+        lagt : TYPE
+            DESCRIPTION.
+        halfsize : TYPE
+            DESCRIPTION.
+        use_gf : TYPE, optional
+            DESCRIPTION. The default is True.
+        gfsize : TYPE, optional
+            DESCRIPTION. The default is 3.
+
+        Returns
+        -------
+        None.
+
+        '''
+        if type(self.im)==list:
+            '''
+            self.q_y=np.sort(np.fft.fftfreq(self.im[0].shape[1], d=self.pixel_size))*2*np.pi
+            self.q_x=self.q_y
+            self.q=np.arange(0,self.im[0].shape[1]/2)*2*np.pi*(1./(self.im[0].shape[1]*self.pixel_size))
+            '''
+            print("Not yet implemented for series of movies. Just use a single movie.")
+            return None
+        else:
+            self.q_y=np.sort(np.fft.fftfreq(self.im.shape[1], d=self.pixel_size))*2*np.pi
+            self.q_x=self.q_y
+            self.q=np.arange(0,self.im.shape[1]/2)*2*np.pi*(1./(self.im.shape[1]*self.pixel_size))
+            
+        times = np.arange(self.im.shape[0]) / self.frame_rate
+        
+        phase = ddm.getPhase_phiDM(self.im, use_gf=use_gf, gfsize=gfsize)
+        vx,vy,er = ddm.getVel_phiDM(phase, lagt, self.pixel_size, 
+                                    self.frame_rate, halfsize=halfsize)
+        vtimes = np.arange(len(vx)) / self.frame_rate
+        w = np.where(er < err_limit)
+        vx_mean = np.mean(vx[w])
+        vy_mean = np.mean(vy[w])
+        vx_std = np.std(vx[w])
+        vy_std = np.std(vy[w])
+        
+        phiDM_dataset = xr.Dataset({'phase':(['time', 'q_y','q_x'], phase),
+                                    'vx': (['vtime'], vx),
+                                    'vy': (['vtime'], vy),
+                                    'error': (['vtime'], er)},
+                               coords={'time': times,
+                                       'vtime': vtimes,
+                                       'q_y':self.q_y, 'q_x':self.q_x})
+        phiDM_dataset.attrs['lagtime'] = lagt
+        phiDM_dataset.attrs['halfsize'] = halfsize
+        phiDM_dataset.attrs['err_limit'] = err_limit
+        phiDM_dataset.attrs['use_gf'] = use_gf
+        phiDM_dataset.attrs['gfsize'] = gfsize
+        phiDM_dataset.attrs['vx_mean'] = vx_mean
+        phiDM_dataset.attrs['vy_mean'] = vy_mean
+        phiDM_dataset.attrs['vx_std'] = vx_std
+        phiDM_dataset.attrs['vy_std'] = vy_std
+        
+        return phiDM_dataset
+    
+    
+    
     def createTwoTimeCorr(self, ddm_var_dataset, qindex):
         r"""Create two-time correlation matrix
     

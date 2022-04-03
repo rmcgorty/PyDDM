@@ -18,6 +18,7 @@ import numpy as np
 from scipy.optimize import least_squares, curve_fit
 from scipy.special import gamma
 from scipy.signal import blackmanharris #for Blackman-Harris windowing
+from scipy.ndimage import gaussian_filter as gf
 import socket
 import skimage
 import fit_parameters_dictionaries as fpd
@@ -1033,5 +1034,91 @@ def get_MSD_from_DDM_data(q, A, D, B, qrange_to_avg):
     msd_stddev = msd[qrange_to_avg[0]:qrange_to_avg[1],:].std(axis=0)
     return msd_mean, msd_stddev
 
+def getPhase_phiDM(im, use_gf=True, gfsize=3):
+    r'''
+    
 
+    Parameters
+    ----------
+    im : TYPE
+        DESCRIPTION.
+
+
+    Returns
+    -------
+    None.
+
+    '''
+    nFrames,ndx,ndy = im.shape
+    fft_images = np.zeros((nFrames, ndx, ndy),dtype=np.complex128)
+    phase = np.zeros((nFrames, ndx, ndy), dtype=np.float64)
+    for i in range(nFrames):
+        if use_gf:
+            frame = gf(im[i],gfsize)
+        else:
+            frame = im[i]
+        fft_images[i] = np.fft.fftshift(np.fft.fft2(frame-frame.mean()))/(ndx*ndy)
+        phase[i] = np.angle(fft_images[i])
+        
+    return phase
+
+
+def getVel_phiDM(phase, dt, pixel_size, framerate, halfsize=5):
+    r'''
+    
+
+    Parameters
+    ----------
+    phase : TYPE
+        DESCRIPTION.
+    dt : TYPE
+        DESCRIPTION.
+    pixel_size : float
+        Pixel size
+    framerate : float
+        Number of frames per second
+
+    Returns
+    -------
+    None.
+
+    '''
+    nFrames,ndx,ndy = phase.shape
+            
+    q_y=np.sort(np.fft.fftfreq(ndy, d=pixel_size))*2*np.pi
+    q_x=np.sort(np.fft.fftfreq(ndx, d=pixel_size))*2*np.pi
+    
+    x1,y1 = np.meshgrid(q_x, q_y)
+        
+        
+    middle = int(phase.shape[1]/2)
+    
+    times = np.arange(0,nFrames-dt,1)
+    vys = np.zeros_like(times,dtype=np.float64)
+    vxs = np.zeros_like(times,dtype=np.float64)
+    errs = np.zeros_like(vxs)
+    
+    for i,time in enumerate(times):
+        dph = phase[time,middle-halfsize:middle+halfsize,middle-halfsize:middle+halfsize] - phase[time+dt,middle-halfsize:middle+halfsize,middle-halfsize:middle+halfsize]
+    
+        m = 2*halfsize
+        X = np.hstack(   ( np.reshape(x1[middle-halfsize:middle+halfsize, middle-halfsize:middle+halfsize], (m*m, 1)) , 
+                          np.reshape(y1[middle-halfsize:middle+halfsize, middle-halfsize:middle+halfsize], (m*m, 1)) ) )
+        X = np.hstack(   ( np.ones((m*m, 1)) , X ))
+        YY = np.reshape(dph, (m*m, 1))
+    
+        theta = np.dot(np.dot( np.linalg.pinv(np.dot(X.transpose(), X)), X.transpose()), YY)
+    
+        plane = np.reshape(np.dot(X, theta), (m, m));
+        
+        error_per_pix = (plane - dph) / (m**2)
+        errs[i] = np.mean(error_per_pix**2)
+    
+        pfity = np.polyfit(x1[middle, middle-halfsize:middle+halfsize], plane[:,halfsize], 1)
+        pfitx = np.polyfit(x1[middle, middle-halfsize:middle+halfsize], plane[halfsize,:], 1)
+    
+        vys[i] = pfity[0]/(dt/framerate)
+        vxs[i] = pfitx[0]/(dt/framerate)
+        
+    return vxs, vys, errs
 
