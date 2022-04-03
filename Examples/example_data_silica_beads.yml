@@ -5,14 +5,14 @@ Metadata:
   frame_rate: 41.7 #frames per second
 Analysis_parameters:
   starting_frame_number: 0
-  ending_frame_number: null
+  ending_frame_number: 999
   number_lagtimes: 40
   first_lag_time: 1
   last_lag_time: 600
   crop_to_roi: null # set to 'null' (no quotes) for no cropping [topleft,bottomleft,topright,bottomright] 
   split_into_4_rois: no
   use_windowing_function: no #Use Blackmann-Harris windowing or not?
-  binning: no
+  binning: yes
   bin_size: 2 
   central_angle: null
   angle_range: null
