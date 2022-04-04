@@ -940,7 +940,7 @@ class DDM_Analysis:
         phiDM_dataset.attrs['lagtime'] = lagt
         phiDM_dataset.attrs['halfsize'] = halfsize
         phiDM_dataset.attrs['err_limit'] = err_limit
-        phiDM_dataset.attrs['use_gf'] = use_gf
+        phiDM_dataset.attrs['use_gf'] = int(use_gf)
         phiDM_dataset.attrs['gfsize'] = gfsize
         phiDM_dataset.attrs['vx_mean'] = vx_mean
         phiDM_dataset.attrs['vy_mean'] = vy_mean
@@ -952,6 +952,14 @@ class DDM_Analysis:
         phiDM_dataset.attrs['vy_stderr'] = vy_stderr
         phiDM_dataset.attrs['vx_skew'] = skew_vx
         phiDM_dataset.attrs['vy_skew'] = skew_vy
+        
+        phiDM_dataset.attrs['binning'] = int(self.analysis_parameters['binning'])
+        phiDM_dataset.attrs['bin_size'] = self.binsize
+        phiDM_dataset.attrs['filename'] = self.filename
+        phiDM_dataset.attrs['data_dir'] = self.data_dir
+        phiDM_dataset.attrs['channel'] = self.channel
+        phiDM_dataset.attrs['pixel_size'] = self.pixel_size
+        phiDM_dataset.attrs['frame_rate'] = self.frame_rate
         
         return phiDM_dataset
     
