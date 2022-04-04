@@ -920,8 +920,15 @@ class DDM_Analysis:
         w = np.where(er < err_limit)
         vx_mean = np.mean(vx[w])
         vy_mean = np.mean(vy[w])
+        vx_median = np.median(vx[w])
+        vy_median = np.median(vy[w])
         vx_std = np.std(vx[w])
         vy_std = np.std(vy[w])
+        vx_stderr = vx_std / np.sqrt(len(w[0]))
+        vy_stderr = vy_std / np.sqrt(len(w[0]))
+        
+        skew_vx = np.mean(((vx[w] - vx_mean)**3)/ vx_std**3)
+        skew_vy = np.mean(((vy[w] - vy_mean)**3)/ vy_std**3)
         
         phiDM_dataset = xr.Dataset({'phase':(['time', 'q_y','q_x'], phase),
                                     'vx': (['vtime'], vx),
@@ -937,8 +944,14 @@ class DDM_Analysis:
         phiDM_dataset.attrs['gfsize'] = gfsize
         phiDM_dataset.attrs['vx_mean'] = vx_mean
         phiDM_dataset.attrs['vy_mean'] = vy_mean
+        phiDM_dataset.attrs['vx_median'] = vx_median
+        phiDM_dataset.attrs['vy_median'] = vy_median
         phiDM_dataset.attrs['vx_std'] = vx_std
         phiDM_dataset.attrs['vy_std'] = vy_std
+        phiDM_dataset.attrs['vx_stderr'] = vx_stderr
+        phiDM_dataset.attrs['vy_stderr'] = vy_stderr
+        phiDM_dataset.attrs['vx_skew'] = skew_vx
+        phiDM_dataset.attrs['vy_skew'] = skew_vy
         
         return phiDM_dataset
     
