@@ -881,6 +881,12 @@ class DDM_Analysis:
     def phiDM(self, lagt, halfsize, use_gf=True, gfsize=3, err_limit = 2e-5):
         r'''
         
+        For more info, see Colin, R., Zhang, R. & Wilson, L. G. 
+        Fast, high-throughput measurement of 
+        collective behaviour in a bacterial population. 
+        Journal of The Royal Society Interface 
+        11, 20140486 (2014).
+        https://royalsocietypublishing.org/doi/10.1098/rsif.2014.0486
 
         Parameters
         ----------
