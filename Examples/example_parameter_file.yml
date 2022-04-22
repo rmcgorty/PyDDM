@@ -1,16 +1,16 @@
 DataDirectory: 'C:/Users/Ryan/Documents/GitHub/PyDDM/Examples/'
 FileName: 'images_nobin_40x_128x128_8bit.tif'
 Metadata:
-  pixel_size: 0.242 # size of pixel in um
+  pixel_size: 0.242 #size of pixel in um
   frame_rate: 41.7 #frames per second
 Analysis_parameters:
   number_lag_times: 40
   last_lag_time: 600
-  use_windowing_function: no #Use Blackmann-Harris windowing or not?
+  use_windowing_function: no 
   binning: yes
   bin_size: 2 
 Fitting_parameters:
-  model: 'DDM Matrix - Single Exponential' #Options are 'ISF - Single Exponential' and ...
+  model: 'DDM Matrix - Single Exponential' 
   Tau: [1.0, 0.001, 10]
   StretchingExp: [1.0, 0.5, 1.1]
   Amplitude: [1e2, 1, 1e6]
