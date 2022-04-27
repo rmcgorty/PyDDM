@@ -890,18 +890,24 @@ class DDM_Analysis:
 
         Parameters
         ----------
-        lagt : TYPE
-            DESCRIPTION.
-        halfsize : TYPE
-            DESCRIPTION.
-        use_gf : TYPE, optional
-            DESCRIPTION. The default is True.
-        gfsize : TYPE, optional
-            DESCRIPTION. The default is 3.
+        lagt : int
+            Lag time (in units of frames).
+        halfsize : int
+            Centered above zero frequency, size of region to fit to plane.
+        use_gf : boolean, optional
+            Use Gaussian filter or not. The default is True.
+        gfsize : int, optional
+            Size of Gaussian filter to apply. The default is 3.
+        err_limit : float, optional
+            If error between data and plane that is fit is greater than this value 
+            per pixel, then won't be used to get avg velocity
 
         Returns
         -------
-        None.
+        phiDM_dataset : xarray Dataset
+            Dataset contains the phase of the Fourier tranform of each image,
+            the velocity (v_x and v_y), and error between the fit of plane and 
+            the difference in phase.
 
         '''
         if type(self.im)==list:

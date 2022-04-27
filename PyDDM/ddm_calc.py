@@ -1040,47 +1040,72 @@ def getPhase_phiDM(im, use_gf=True, gfsize=3):
 
     Parameters
     ----------
-    im : TYPE
-        DESCRIPTION.
+    im : ndarray
+        Images as a 3D array (dimensions: frames, x, y)
+    use_gf : boolean, optional
+        To use Gaussian filter on images or not. Default is True
+    gfsize : int, optional
+        Size of Gaussian filter. Default is 3. 
 
 
     Returns
     -------
-    None.
+    phase : ndarray
+        Array of same size as 'im' of the phase (found using function np.angle)
+        of the Fourier transform of each image.
 
     '''
+    
+    #get dimension of images
     nFrames,ndx,ndy = im.shape
+    
+    #make empty array
     fft_images = np.zeros((nFrames, ndx, ndy),dtype=np.complex128)
+    
+    #make empty array for phase information
     phase = np.zeros((nFrames, ndx, ndy), dtype=np.float64)
+    
+    #loop over all frames in the stack of images
     for i in range(nFrames):
         if use_gf:
-            frame = gf(im[i],gfsize)
+            frame = gf(im[i],gfsize) #do Gaussian filtering
         else:
             frame = im[i]
         fft_images[i] = np.fft.fftshift(np.fft.fft2(frame-frame.mean()))/(ndx*ndy)
-        phase[i] = np.angle(fft_images[i])
+        phase[i] = np.angle(fft_images[i]) #find phase of Fourier transformed image
         
     return phase
 
 
 def getVel_phiDM(phase, dt, pixel_size, framerate, halfsize=5):
     r'''
+    With phiDM, get the velocity by fitting the difference in phase of 
+    Fourier tranformed images separated by some lag time (dt) to a plane. 
     
 
     Parameters
     ----------
-    phase : TYPE
-        DESCRIPTION.
-    dt : TYPE
-        DESCRIPTION.
+    phase : ndarray
+        Phase of the Fourier transform of each image in image stack
+    dt : int
+        Lag time in frame for which the displacement will be found.
     pixel_size : float
         Pixel size
     framerate : float
         Number of frames per second
+    haflfsize : int, optional
+        Deafult is 5. The phase difference is fit to a plane centered on the
+        zero frequency.
 
     Returns
     -------
-    None.
+    vxs : ndarray
+        Array of velocities in x
+    vys : ndarray
+        Array of velocities in y
+    errs : ndarray
+        Mean error per pixel from the plane fit
+    
 
     '''
     nFrames,ndx,ndy = phase.shape
