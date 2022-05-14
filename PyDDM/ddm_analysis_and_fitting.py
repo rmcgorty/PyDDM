@@ -975,7 +975,13 @@ class DDM_Analysis:
             phiDM_dataset.attrs['bin_size'] = 1
         phiDM_dataset.attrs['filename'] = self.filename
         phiDM_dataset.attrs['data_dir'] = self.data_dir
-        phiDM_dataset.attrs['channel'] = self.channel
+        try:
+            self.channel
+        except NameError:
+            pass
+        else:
+            if self.channel is not None:
+                phiDM_dataset.attrs['channel'] = self.channel
         phiDM_dataset.attrs['pixel_size'] = self.pixel_size
         phiDM_dataset.attrs['frame_rate'] = self.frame_rate
         
