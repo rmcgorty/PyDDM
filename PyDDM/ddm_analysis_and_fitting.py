@@ -965,8 +965,14 @@ class DDM_Analysis:
         phiDM_dataset.attrs['vx_skew'] = skew_vx
         phiDM_dataset.attrs['vy_skew'] = skew_vy
         
-        phiDM_dataset.attrs['binning'] = int(self.analysis_parameters['binning'])
-        phiDM_dataset.attrs['bin_size'] = self.binsize
+        if 'binning' in self.analysis_parameters:
+            phiDM_dataset.attrs['binning'] = int(self.analysis_parameters['binning'])
+        else:
+            phiDM_dataset.attrs['binning'] = 0
+        if phiDM_dataset.attrs['binning']:
+            phiDM_dataset.attrs['bin_size'] = self.binsize
+        else:
+            phiDM_dataset.attrs['bin_size'] = 1
         phiDM_dataset.attrs['filename'] = self.filename
         phiDM_dataset.attrs['data_dir'] = self.data_dir
         phiDM_dataset.attrs['channel'] = self.channel
