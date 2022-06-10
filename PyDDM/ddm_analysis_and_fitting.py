@@ -465,7 +465,7 @@ class DDM_Analysis:
 
 
 
-    def calculate_DDM_matrix(self, quiet=False, **kwargs):
+    def calculate_DDM_matrix(self, quiet=False, velocity=[0,0], **kwargs):
         r"""Calculates the DDM matrix
         This function computes the DDM matrix. The radially averaged DDM matrix will
         then also be found, along with estimates of the background and amplitude. From 
@@ -478,6 +478,8 @@ class DDM_Analysis:
         quiet : boolean (optional)
             If set to `False`, then when calculating the DDM matrix, a message will print out at 
             about every fourth time lag calculated (with a timestamp)
+        velocity : array-like (optional)
+            Velocity in x and y direction. 
         **overlap_method : {0,1,2,3}, optional
             Optional keyword argument. Will be set to 2 if not specified here nor in the YAML file. 
             Determines how overlapped the different image pairs are. Let's say you are finding all pairs 
@@ -547,13 +549,13 @@ class DDM_Analysis:
         self.lag_times = self.lag_times_frames / self.frame_rate
 
         #print(f"Calculating the DDM matrix for {self.filename}...")
-        self._computeDDMMatrix(quiet=quiet)
+        self._computeDDMMatrix(quiet=quiet, velocity=velocity)
 
         return self.ddm_dataset
     
 
     #Do not call this function, instead call analysis_flow
-    def _computeDDMMatrix(self, quiet=False):
+    def _computeDDMMatrix(self, quiet=False, velocity=[0,0]):
         '''
         Calculates the DDM matrix and radial averages then estimates
         amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -579,25 +581,36 @@ class DDM_Analysis:
         
         start_time = time.time()
         self.ddm_matrix = []
-        try:
-            if type(self.im)==list:
-                for i,im in enumerate(self.im):
-                    print(f"Getting DDM matrix for {i+1} of {len(self.im)}...")
-                    d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, quiet=quiet,
-                                                               overlap_method=self.overlap_method,
-                                                               number_differences_max=self.num_dif_max)
-                    self.ddm_matrix.append(d_matrix)
-                self.num_pairs_per_dt = num_pairs
-            else:
-                self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, 
-                                                                              quiet=quiet,
-                                                                              overlap_method=self.overlap_method,
-                                                                              number_differences_max=self.num_dif_max)
-
+        if (abs(velocity[0]) > 0) or (abs(velocity[1]) > 0):
+            print("Will run DDM computation to correct for velocity...")
+            print(velocity)
+            vx = velocity[0] / self.frame_rate
+            vy = velocity[1] / self.frame_rate
+            self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix_correctVelocityPhase(self.im, self.lag_times_frames, 
+                                                                            [vx,vy], self.pixel_size, quiet=quiet,
+                                                                            overlap_method=self.overlap_method, 
+                                                                            number_differences_max=self.num_dif_max)
             end_time = time.time()
-        except:
-            print("Unable to get DDM matrix.")
-            return False
+        else:
+            try:
+                if type(self.im)==list:
+                    for i,im in enumerate(self.im):
+                        print(f"Getting DDM matrix for {i+1} of {len(self.im)}...")
+                        d_matrix, num_pairs = ddm.computeDDMMatrix(im, self.lag_times_frames, quiet=quiet,
+                                                                   overlap_method=self.overlap_method,
+                                                                   number_differences_max=self.num_dif_max)
+                        self.ddm_matrix.append(d_matrix)
+                    self.num_pairs_per_dt = num_pairs
+                else:
+                    self.ddm_matrix, self.num_pairs_per_dt = ddm.computeDDMMatrix(self.im, self.lag_times_frames, 
+                                                                                  quiet=quiet,
+                                                                                  overlap_method=self.overlap_method,
+                                                                                  number_differences_max=self.num_dif_max)
+    
+                end_time = time.time()
+            except:
+                print("Unable to get DDM matrix.")
+                return False
 
         print("DDM matrix took %s seconds to compute." % (end_time - start_time))
 

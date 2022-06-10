@@ -200,8 +200,8 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
         1D array of the lag times for which to calculate the DDM matrix
     use_BH_windowing : {True, False}, optional
         Apply Blackman-Harris windowing to the images if True. Default is False. 
-    overlap_method : {0,1,2}, optional
-        Default is 1.
+    overlap_method : {0,1,2,3}, optional
+        Default is 2.
     quiet : {True, False}, optional
         If True, prints updates as the computation proceeds
     **number_differences_max : optional keyword argument
@@ -289,6 +289,128 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
     num_pairs_per_dt = np.array(num_pairs_per_dt)
 
     return ddm_mat, num_pairs_per_dt
+
+
+def computeDDMMatrix_correctVelocityPhase(imageArray, dts, velocity, pixel_size, 
+                                          use_BH_windowing=False, 
+                                          quiet=False, overlap_method=2, **kwargs):
+    r'''Calculates DDM matrix
+    
+    This function calculates the DDM matrix at the lag times provided by `dts`.  Using the 
+    velocity parameter, we adjust phase of Fourier transform to remove the velocity
+    
+    Parameters
+    ----------
+    imageArray : array
+        3D array of images. First dimension should be time. 
+    dts : array
+        1D array of the lag times for which to calculate the DDM matrix
+    velocity : array
+        Two-element array-like object. Velocity of x and y. Microns per frame.
+    pixel_size : float
+        Size of pixel (presumably in microns)
+    use_BH_windowing : {True, False}, optional
+        Apply Blackman-Harris windowing to the images if True. Default is False. 
+    overlap_method : {0,1,2,3}, optional
+        Default is 2.
+    quiet : {True, False}, optional
+        If True, prints updates as the computation proceeds
+    **number_differences_max : optional keyword argument
+        For `overlap_method` of 1, sets the maximum number of differences 
+        to find for a given lag time. If `overlap_method`=1 and this 
+        keyword argument is not given, defaults to 300
+        
+    Returns
+    -------
+    ddm_mat : array
+        The DDM matrix. First dimension is time lag. Other two are the x and y
+        wavevectors.
+    num_pairs_per_dt : array
+        1D array. Contains the number of image pairs that went into calculating the 
+        DDM matrix for each lag time. Used for weighting fits to the DDM matrix.
+    
+    '''
+    
+    if 'number_differences_max' in kwargs:
+        num_dif_max = kwargs['number_differences_max']
+        if num_dif_max is None:
+            num_dif_max = 300
+    else:
+        num_dif_max = 300
+
+    if imageArray.ndim != 3:
+        print("Images passed to `computeDDMMatrix` must be 3D array.")
+        return
+
+    #Applies the Blackman-Harris window if desired
+    if use_BH_windowing:
+        filterfunction = window_function(imageArray)
+    else:
+        filterfunction = np.ones_like(imageArray[0])
+
+    #Determines the dimensions of the data set (number of frames, x- and y-resolution in pixels
+    ntimes, ndx, ndy = imageArray.shape
+    
+    q_y=np.sort(np.fft.fftfreq(ndy, d=pixel_size))*2*np.pi
+    q_x=np.sort(np.fft.fftfreq(ndx, d=pixel_size))*2*np.pi
+    x1,y1 = np.meshgrid(q_x, q_y)
+
+    #Initializes array for Fourier transforms of differences
+    ddm_mat = np.zeros((len(dts), ndx, ndy),dtype=np.float)
+    
+    indices_ims = np.arange(ntimes)
+
+    #We *don't* necessarily want to take the Fourier transform of *every* possible difference
+    #of images separated by a given lag time. 
+    if overlap_method == 0:
+        steps_in_diffs = dts
+    elif overlap_method == 1:
+        num_possible_diffs = ntimes - dts
+        steps_in_diffs = np.ceil(num_possible_diffs / num_dif_max).astype(np.int)
+    elif overlap_method == 2:
+        steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
+    elif overlap_method == 3:
+        steps_in_diffs = np.ones_like(dts)
+
+    #To record the number of pairs of images for each lag time
+    num_pairs_per_dt = []
+
+    #Loops over each delay time
+    j=0
+    for k,dt in enumerate(dts):
+
+        if not quiet:
+            if k%4 == 0:
+                #print("Running dt=%i...\n" % dt)
+                logger.info("Running dt = %i..." % dt)
+       
+        indices_im1 = indices_ims[dt:]
+        indices_im2 = indices_ims[0:(-1*dt)]
+        indices_im1 = indices_im1[0::steps_in_diffs[k]]
+        indices_im2 = indices_im2[0::steps_in_diffs[k]]
+        
+        phase = x1*velocity[0]*dt + y1*velocity[1]*dt
+
+        #Loop through each image difference and take the fourier transform
+        for i in range(0,len(indices_im1)):
+            temp1 = np.fft.fftshift(np.fft.fft2(imageArray[indices_im1[i]])) * np.exp(-1j * phase)
+            temp2 = np.fft.fftshift(np.fft.fft2(imageArray[indices_im2[i]]))
+            temp = temp1 - temp2
+            ddm_mat[j] = ddm_mat[j] + abs(temp*np.conj(temp))/(ndx*ndy)
+
+        num_pairs_per_dt.append(len(indices_im1))
+
+        #Divide the running sum of FTs to get the average FT of the image differences of that lag time
+        ddm_mat[j] = ddm_mat[j] / len(indices_im1)
+        #ddm_mat[j] = np.fft.fftshift(ddm_mat[j])
+
+        j = j+1
+        
+    num_pairs_per_dt = np.array(num_pairs_per_dt)
+
+    return ddm_mat, num_pairs_per_dt
+
+
 
 def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=False,
                               overlap_method=2, **kwargs):
