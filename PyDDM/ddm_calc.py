@@ -413,7 +413,7 @@ def computeDDMMatrix_correctVelocityPhase(imageArray, dts, velocity, pixel_size,
 
 
 def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=False,
-                              overlap_method=2, **kwargs):
+                              overlap_method=2, vel_corr=None, **kwargs):
     r'''Calculates DDM matrix as a function of time at given lag time
     
     This function calculates the DDM matrix at a given lag time. Does *not* 
@@ -434,6 +434,8 @@ def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=Fals
         Default is 1.
     quiet : {True, False}, optional
         If True, prints updates as the computation proceeds
+    vel_cor : {None}, optional
+        Can correct for drift or ballistic motion using phiDM
     **number_differences_max : optional keyword argument
         For `overlap_method` of 1, sets the maximum number of differences 
         to find for a given lag time. If `overlap_method`=1 and this 
@@ -471,18 +473,48 @@ def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=Fals
     
     #Number of image differences:
     num_possible_diffs = ntimes - dt
+    
+    do_vel_correction_with_phiDM = False
+    if vel_corr is None:
+        phase = 0
+    elif len(vel_corr)==3:
+        pixel_size = vel_corr[-1]
+        q_y=np.sort(np.fft.fftfreq(ndy, d=pixel_size))*2*np.pi
+        q_x=np.sort(np.fft.fftfreq(ndx, d=pixel_size))*2*np.pi
+        x1,y1 = np.meshgrid(q_x, q_y)
+        vx = vel_corr[0]
+        vy = vel_corr[1]
+        phase = x1*vx*dt + y1*vy*dt
+        do_vel_correction_with_phiDM = True
+    else:
+        phase = 0
 
     #Initializes array for Fourier transforms of differences
     ddm_mat = np.zeros((num_possible_diffs, ndx, ndy),dtype=np.float)
 
-    #Calculates all differences of images with a delay time dt
-    all_diffs = filterfunction*(imageArray[dt:].astype(np.float) - imageArray[0:(-1*dt)].astype(np.float))
-
-    #Loop through each image difference and take the fourier transform
-    for i in range(0,all_diffs.shape[0]):
-        temp = np.fft.fft2(all_diffs[i]) # - all_diffs_new[i].mean())
-        ddm_mat[i] = abs(temp*np.conj(temp))/(ndx*ndy)
-        ddm_mat[i] = np.fft.fftshift(ddm_mat[i])
+    #If we DO correct for phase with phDM
+    if do_vel_correction_with_phiDM:
+        indices_ims = np.arange(ntimes)
+        indices_im1 = indices_ims[dt:]
+        indices_im2 = indices_ims[0:(-1*dt)]
+        
+        for i in range(0,len(indices_im1)):
+            temp1 = np.fft.fftshift(np.fft.fft2(imageArray[indices_im1[i]])) * np.exp(-1j * phase)
+            temp2 = np.fft.fftshift(np.fft.fft2(imageArray[indices_im2[i]]))
+            temp = temp1 - temp2
+            ddm_mat[i] = ddm_mat[i] + abs(temp*np.conj(temp))/(ndx*ndy)
+        
+    
+    #If we don't correct for phase with phDM
+    else:
+        #Calculates all differences of images with a delay time dt
+        all_diffs = filterfunction*(imageArray[dt:].astype(np.float) - imageArray[0:(-1*dt)].astype(np.float))
+    
+        #Loop through each image difference and take the fourier transform
+        for i in range(0,all_diffs.shape[0]):
+            temp = np.fft.fft2(all_diffs[i]) # - all_diffs_new[i].mean())
+            ddm_mat[i] = abs(temp*np.conj(temp))/(ndx*ndy)
+            ddm_mat[i] = np.fft.fftshift(ddm_mat[i])
 
     radial_avg_ddm = radial_avg_ddm_matrix(ddm_mat)
 

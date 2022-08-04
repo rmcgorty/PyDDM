@@ -785,7 +785,8 @@ class DDM_Analysis:
         return ddm_dataset
     
     def variationInDDMMatrix(self, lagtime, orientation_axis=0,
-                             save_full_ddmmat=True):
+                             save_full_ddmmat=True,
+                             velocity=[0,0]):
         r"""
         Creates the xarray Dataset and PDF report.
 
@@ -805,6 +806,9 @@ class DDM_Analysis:
             DDM matrix is just a function of the magnitude of the 
             wavevector, the lagtime, and the time. If True, then 
             it may potentially use up a lot of memory. 
+        velocity : list-like, optional
+            Deafult is [0,0]. If not [0,0], then will use phiDM
+            to correct for drift or ballistic motion. 
 
         Returns
         -------
@@ -828,7 +832,14 @@ class DDM_Analysis:
             self.q=np.arange(0,self.im.shape[1]/2)*2*np.pi*(1./(self.im.shape[1]*self.pixel_size))
             
         if np.isscalar(lagtime):
-            ddmmat, radav_ddmmat = ddm.temporalVarianceDDMMatrix(self.im, lagtime)
+            if abs(velocity[0]>0) or abs(velocity[1]>0):
+                print("Will run DDM computation to correct for velocity...")
+                vx = velocity[0] / self.frame_rate
+                vy = velocity[1] / self.frame_rate
+                ddmmat, radav_ddmmat = ddm.temporalVarianceDDMMatrix(self.im, lagtime, vel_corr=[vx, vy, self.pixel_size])
+                
+            else:
+                ddmmat, radav_ddmmat = ddm.temporalVarianceDDMMatrix(self.im, lagtime)
             
             number_of_times = ddmmat.shape[0]
             times = np.arange(number_of_times) / self.frame_rate
@@ -862,7 +873,15 @@ class DDM_Analysis:
             AF.fill(np.nan)
             
             for i,lag in enumerate(lagtime):
-                ddmmat_temp, radav_ddmmat_temp = ddm.temporalVarianceDDMMatrix(self.im, lag)
+                if abs(velocity[0]>0) or abs(velocity[1]>0):
+                    if i==0:
+                        print("Will run DDM computation to correct for velocity...")
+                    vx = velocity[0] / self.frame_rate
+                    vy = velocity[1] / self.frame_rate
+                    ddmmat_temp, radav_ddmmat_temp = ddm.temporalVarianceDDMMatrix(self.im, lag, vel_corr=[vx, vy, self.pixel_size])
+                else:
+                    ddmmat_temp, radav_ddmmat_temp = ddm.temporalVarianceDDMMatrix(self.im, lag)
+                    
                 AF_temp,af_axis = self.find_alignment_factor(ddmmat_temp, orientation_axis=orientation_axis)
                 
                 if save_full_ddmmat:
