@@ -1,6 +1,11 @@
 Examples/*.xlsx
 Examples/*.pdf
 Examples/*.nc
+Examples/*.pickle
+Examples/*.png
+Examples/*.svg
+Examples/Untitled.ipynb
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -134,3 +139,6 @@ docs/source/ddm_fit_report.pdf
 Examples/twotimecorr_q10.pickle
 Examples/twotimecorr_q7.pickle
 Examples/twotimecorr_q20.pickle
+Examples/01_25C_2TCF_q10.pickle
+Examples/DDM - Generating data for training - 2021-08-19.ipynb
+Examples/Example - phiDM and time varying.ipynb
