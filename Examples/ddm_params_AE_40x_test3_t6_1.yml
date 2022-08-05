@@ -7,8 +7,13 @@ Analysis_parameters:
   number_lag_times: 40
   last_lag_time: 500
   overlap_method: 3
+  crop_to_roi: null # set to 'null' (no quotes) for no cropping [topleft,bottomleft,topright,bottomright] 
+  split_into_4_rois: no
+  use_windowing_function: no #Use Blackmann-Harris windowing or not?
   binning: yes
-  bin_size: 2
+  bin_size: 2 
+  central_angle: null
+  angle_range: null
 Fitting_parameters:
   model: 'DDM Matrix - Single Exponential' 
   Tau: [1.0, 0.001, 10]
