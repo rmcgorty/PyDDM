@@ -745,7 +745,7 @@ def get_schulz_dist(mean_velocity, schulz_num):
     return f
 
 
-def create_two_time_correlation_matrix(ddm_variability, number_of_frames, q_index):
+def create_two_time_correlation_matrix(ddm_variability, number_of_frames, q_index, af=False):
     r"""Create two-time correlation matrix
     
     After generating the DDM matrix as a function of time lag as well as 
@@ -773,7 +773,10 @@ def create_two_time_correlation_matrix(ddm_variability, number_of_frames, q_inde
         for i,lt in enumerate(ddm_variability.lagtime):
             t2 = t1 + lt
             if t2 < number_of_frames:
-                twotimecorr[t1,t2] = ddm_variability.ddm_matrix[i,t1,q_index]
+                if af:
+                    twotimecorr[t1,t2] = ddm_variability.alignment_factor[i,t1,q_index]
+                else:
+                    twotimecorr[t1,t2] = ddm_variability.ddm_matrix[i,t1,q_index]
                 
     twotimecorr2 = np.fliplr(twotimecorr)
     twotimecorr2 = np.rot90(twotimecorr2)
