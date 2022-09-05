@@ -28,6 +28,12 @@ try:
 except ModuleNotFoundError:
     print("nd2reader module not found. Reading of .nd2 files disabled.")
     able_to_open_nd2 = False
+try:
+    import dcimg_mod as dcimg
+    able_to_open_dcimg = True
+except ModuleNotFoundError:
+    print("dcimg readiner not found. try 'pip install dcimg'")
+    able_to_open_dcimg = False
 
 
 import fit_parameters_dictionaries as fpd
@@ -365,6 +371,16 @@ class DDM_Analysis:
 
         if (re.search(".\.tif$", self.filename) is not None) or (re.search(".\.tiff$", self.filename) is not None):
             im = io.imread(self.data_dir + self.filename)
+            
+        if (re.search(".\.dcimg$", self.filename) is not None):
+            if able_to_open_dcimg:
+                dcimg_loaded = dcimg.DCIMGFile(self.data_dir + self.filename)
+                im = np.zeros(dcimg_loaded.shape, dtype=np.uint16)
+                for i in range(im.shape[0]):
+                    im[i] = dcimg_loaded[i]
+            else:
+                print("dcimg not loaded...")
+                return
 
         return im
 
