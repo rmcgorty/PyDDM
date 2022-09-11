@@ -32,7 +32,7 @@ font_plt_ax = {'family': 'serif',
 
 cmap = plt.get_cmap("viridis") #Others: "plasma", "cividis", "gnuplot", "jet", "rainbow", "turbo"
 
-def view_colormap(cmap, axes=None, qminmax=None):
+def view_colormap(cmap, axes=None, qminmax=None, fontsize=8):
     r"""Colormap showing wavenumber range
     
     For plots of parameter (like decay time) versus q, will generate 
@@ -56,7 +56,7 @@ def view_colormap(cmap, axes=None, qminmax=None):
     if qminmax is None:
         plt.xticks([])
     elif len(qminmax)==2:
-        plt.xticks([0,10],["%.2f μm$^{-1}$" % qminmax[0], "%.2f μm$^{-1}$" % qminmax[1]], fontsize=8) 
+        plt.xticks([0,10],["%.2f μm$^{-1}$" % qminmax[0], "%.2f μm$^{-1}$" % qminmax[1]], fontsize=fontsize) 
     axes.imshow([colors], extent=[0,10,0,1])
     
     
