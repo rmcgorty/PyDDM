@@ -34,6 +34,12 @@ try:
 except ModuleNotFoundError:
     print("dcimg readiner not found. try 'pip install dcimg'")
     able_to_open_dcimg = False
+try:
+    import imageio #use 'conda install -c conda-forge imageio' and 'conda install -c conda-forge imageio-mmpeg'
+    able_to_open_mp4 = True
+except ModuleNotFoundError:
+    print("imageio not installed.")
+    able_to_open_mp4 = False
 
 
 import fit_parameters_dictionaries as fpd
@@ -185,6 +191,8 @@ class DDM_Analysis:
         self.filename = None
         self.number_of_lag_times = None
         
+        self.loaded_mp4 = False #if loading mp4, image data handled a bit differently 
+        
         if (isinstance(data_yaml, str)) or (isinstance(data_yaml, dict)):
             self.data_yaml=data_yaml
         else:
@@ -294,6 +302,18 @@ class DDM_Analysis:
                 self.num_dif_max = self.analysis_parameters['number_differences_max']
             else:
                 self.num_dif_max = None
+              
+            self.crp_region = None
+            if 'crop_to_roi' in self.analysis_parameters:
+                if self.analysis_parameters['crop_to_roi'] is not None:
+                    if len(self.analysis_parameters['crop_to_roi'])==4:
+                        #if there is a list with pixel coordinates for cropping the new image will be cropped
+                        self.crp_region = self.analysis_parameters['crop_to_roi']
+            self.binsize = 1
+            if 'binning' in self.analysis_parameters:
+                if self.analysis_parameters['binning']:
+                    if 'bin_size' in self.analysis_parameters:
+                        self.binsize = self.analysis_parameters['bin_size']
             
             #These paramters (overlap_method and background_method) could also 
             #be set as passed parameter to the method `calculate_DDM_matrix`
@@ -381,6 +401,34 @@ class DDM_Analysis:
             else:
                 print("dcimg not loaded...")
                 return
+            
+        if (re.search(".\.mp4$", self.filename) is not None):
+            if able_to_open_mp4:
+                vid = imageio.get_reader(self.data_dir + self.filename)
+                numFrames = vid.count_frames()
+                im1 = vid.get_data(0)
+                if self.crp_region is not None:
+                    im1 = im1[self.crp_region[0]:self.crp_region[1], self.crp_region[2]:self.crp_region[3],:]
+                if self.binsize > 1:
+                    im1 = downscale_local_mean(im1[:,:,0], (self.binsize, self.binsize))
+                else:
+                    im1 = im1[:,:,0]
+                if self.last_frame is not None:
+                    numFrames = self.last_frame - self.first_frame
+                im = np.zeros((numFrames, im1.shape[0], im1.shape[1]), dtype=np.uint16)
+                for i in range(self.first_frame, self.first_frame + numFrames):
+                    temp = vid.get_data(i)
+                    if self.crp_region is not None:
+                        temp = temp[self.crp_region[0]:self.crp_region[1], self.crp_region[2]:self.crp_region[3],:]
+                    if self.binsize > 1:
+                        temp = downscale_local_mean(temp[:,:,0], (self.binsize, self.binsize))
+                    else:
+                        temp = temp[:,:,0]
+                    im[i-self.first_frame] = temp
+                self.loaded_mp4 = True
+            else:
+                print("mp4 opener not loaded...")
+                return
 
         return im
 
@@ -401,6 +449,13 @@ class DDM_Analysis:
             print("Image not loaded.")
         else:
             print("Image shape: %i-by-%i-by-%i" % image_data.shape)
+            
+            if self.loaded_mp4:
+                print("Loaded mp4 file.")
+                self.im=image_data
+                self.image_for_report = self.im[0]
+                self.pixel_size = self.pixel_size*self.binsize
+                return
     
             #crops the number of frames based on given max frame numbers
             if self.last_frame is None:
