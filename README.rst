@@ -1,6 +1,6 @@
 btttsmith updates:   
 
-- Added ability to load and read lif files (for Leica microscopes)
+- Added ability to load and read lif files (uses bttsmith/readlif)
 
 PyDDM
 ============
