@@ -5,5 +5,5 @@ This is a Python package for making differential dynamic microscopy (**DDM**) ac
 Project documentation can be found here: https://rmcgorty.github.io/PyDDM
 
 
-btttsmith updates:
-Added ability to load and read lif files (for Leica microscopes)
+btttsmith updates:  
+- Added ability to load and read lif files (for Leica microscopes)
