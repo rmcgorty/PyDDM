@@ -40,6 +40,12 @@ try:
 except ModuleNotFoundError:
     print("imageio not installed.")
     able_to_open_mp4 = False
+try:
+    from readlif.reader import LifFile
+    able_to_open_lif = True
+except ModuleNotFoundError:
+    print('readlif not installed')
+    able_to_open_lif = False
 
 
 import fit_parameters_dictionaries as fpd
@@ -389,6 +395,34 @@ class DDM_Analysis:
                 print("It seems you have an nd2 file to open. But nd2reader not installed!")
                 return 
 
+        if re.search(".\.lif$", self.filename) is not None:
+            if able_to_open_lif:
+                # Files with lif extension will be read using the package
+                #  readlif. Leica systems may save data with this file type.
+                if self.channel is None:
+                    print("Need to specify channel/series in yaml metadata. Defaulting to c=0.")
+                    self.channel = 0
+                    
+                lif_img = LifFile(self.data_dir+self.filename).get_image(self.channel)
+                (x, y, z, t, m) = lif_img.dims
+                
+                scale_factor = (16 - lif_img.bit_depth[0]) ** 2
+                
+                print('\t%d x %d px' % (x, y))
+                print('\tPixel size of: %.2f microns' % lif_img.scale_n['X'])
+                print('\tNumber of frames: %i' % t)
+                
+                
+                images = lif_img.get_iter_t()
+                im = np.zeros((t, x, y), dtype=np.uint16)
+                for i in range(t):
+                    im[i] = images.get_frame(z = 0, t = i, c = 0)*scale_factor
+                
+            else:
+                print("It seems you have an lif file to open. But readlif not installed!")
+                return 
+
+
         if (re.search(".\.tif$", self.filename) is not None) or (re.search(".\.tiff$", self.filename) is not None):
             im = io.imread(self.data_dir + self.filename)
             
@@ -533,7 +567,6 @@ class DDM_Analysis:
                     print(f'Dimensions after binning {dims_after_binning}, the new pixel size {self.pixel_size}')
 
         
-
 
 
     def calculate_DDM_matrix(self, quiet=False, velocity=[0,0], **kwargs):
