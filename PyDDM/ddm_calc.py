@@ -124,7 +124,7 @@ def determining_A_and_B(im, use_BH_filter=False,
             bg_image = np.median(im, axis=0)
         else:
             bg_image = np.zeros_like(im[0])
-        im = im - bg_image
+        im = 1.0*im - bg_image
     if use_BH_filter:
         filterfunction = window_function(im)
     else:
