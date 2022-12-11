@@ -624,7 +624,7 @@ class DDM_Analysis:
         self.lag_times = self.lag_times_frames / self.frame_rate
 
         #print(f"Calculating the DDM matrix for {self.filename}...")
-        self._computeDDMMatrix(quiet=quiet, velocity=velocity)
+        self._computeDDMMatrix(quiet=quiet, velocity=velocity, bg_subtract_for_AB_determination=bg_subtract_for_AB_determination)
 
         return self.ddm_dataset
     
