@@ -121,11 +121,11 @@ def determining_A_and_B(im, use_BH_filter=False,
         if subtract_bg == 'mode':
             print("Subtracting mode of images in method to find A and B.")
             bg_image = stats.mode(im, axis=0)[0][0]
-        if subtract_bg == 'median':
+        elif subtract_bg == 'median':
             print("Subtracting median of images in method to find A and B.")
             bg_image = np.median(im, axis=0)
         else:
-            print("Options are 'mode' or 'median'. Treating as if None.")
+            print("Options are 'mode' or 'median'. Treating as if None. Option you passed was: ", subtract_bg)
             bg_image = np.zeros_like(im[0])
         im = 1.0*im - bg_image
     if use_BH_filter:
