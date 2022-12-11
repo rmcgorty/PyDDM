@@ -536,7 +536,8 @@ class DDM_Analysis:
 
 
 
-    def calculate_DDM_matrix(self, quiet=False, velocity=[0,0], **kwargs):
+    def calculate_DDM_matrix(self, quiet=False, velocity=[0,0],
+                             bg_subtract_for_AB_determination=None, **kwargs):
         r"""Calculates the DDM matrix
         This function computes the DDM matrix. The radially averaged DDM matrix will
         then also be found, along with estimates of the background and amplitude. From 
@@ -551,6 +552,9 @@ class DDM_Analysis:
             about every fourth time lag calculated (with a timestamp)
         velocity : array-like (optional)
             Velocity in x and y direction. 
+        bg_subtract_for_AB_determination: {None, 'mode', 'median'}
+            Deafault option is None. In method to find A(q) and B, one can subtract the mode or median of
+            the images. 
         **overlap_method : {0,1,2,3}, optional
             Optional keyword argument. Will be set to 2 if not specified here nor in the YAML file. 
             Determines how overlapped the different image pairs are. Let's say you are finding all pairs 
@@ -626,7 +630,8 @@ class DDM_Analysis:
     
 
     #Do not call this function, instead call analysis_flow
-    def _computeDDMMatrix(self, quiet=False, velocity=[0,0]):
+    def _computeDDMMatrix(self, quiet=False, velocity=[0,0],
+                          bg_subtract_for_AB_determination=None):
         '''
         Calculates the DDM matrix and radial averages then estimates
         amplitude (A) and background (B) based on direct fourier transform (FFT)
@@ -712,12 +717,14 @@ class DDM_Analysis:
             self.ravfft = []
             for i,im in enumerate(self.im):
                 r = ddm.determining_A_and_B(im, use_BH_filter=False,centralAngle=self.central_angle,
-                                            angRange=self.angle_range)
+                                            angRange=self.angle_range,
+                                            subtract_bg = bg_subtract_for_AB_determination)
                 self.ravfft.append(r)
         else:
             self.ravfft = ddm.determining_A_and_B(self.im, use_BH_filter=False,
                                                   centralAngle=self.central_angle,
-                                                  angRange=self.angle_range)
+                                                  angRange=self.angle_range,
+                                                  subtract_bg = bg_subtract_for_AB_determination)
 
 
         if type(self.im)==list:
@@ -2174,34 +2181,41 @@ def get_tau_vs_q_fit(fit_results, use_new_tau=True, use_tau2=False,
     for more on this linear model estimator
     see https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.RANSACRegressor.html
     '''
-    estimator = RANSACRegressor(random_state=42)
-    logq = np.log(q[lowq:hiq]).values
-    logt = np.log(tau[lowq:hiq]).values
-    estimator.fit(logq[:,np.newaxis], logt)
-    slope = estimator.estimator_.coef_
-    coef1 = estimator.estimator_.intercept_
-    inlier_mask = estimator.inlier_mask_
-    outlier_mask = np.logical_not(inlier_mask)
-
-    if update_good_q_range:
-        a=np.array([[len(list(g)),k] for k, g in itertools.groupby(inlier_mask)])
-        largest_run_of_trues = 0
-        index_start = 1
-        index_end = np.nan
-        index_to_mark = 0
-        for i in range(a.shape[0]):
-            if a[i,1]==1:
-                if a[i,0]>largest_run_of_trues:
-                    index_start = index_to_mark
-                    index_end = index_start + a[i,0]
-                    largest_run_of_trues = a[i,0]
-            index_to_mark += a[i,0]
-        if index_end != np.nan:
-            good_q_range = [index_start + lowq - 1, index_end + lowq - 1]
-
-    MSD_alpha = 2./(-1*slope)
-    MSD_effective_diffconst = (1.0/np.exp(coef1))**MSD_alpha
-    effective_diffconst = 1.0/np.exp(coef1)
+    try:
+        estimator = RANSACRegressor(random_state=42)
+        logq = np.log(q[lowq:hiq]).values
+        logt = np.log(tau[lowq:hiq]).values
+        estimator.fit(logq[:,np.newaxis], logt)
+        slope = estimator.estimator_.coef_
+        coef1 = estimator.estimator_.intercept_
+        inlier_mask = estimator.inlier_mask_
+        outlier_mask = np.logical_not(inlier_mask)
+    
+        if update_good_q_range:
+            a=np.array([[len(list(g)),k] for k, g in itertools.groupby(inlier_mask)])
+            largest_run_of_trues = 0
+            index_start = 1
+            index_end = np.nan
+            index_to_mark = 0
+            for i in range(a.shape[0]):
+                if a[i,1]==1:
+                    if a[i,0]>largest_run_of_trues:
+                        index_start = index_to_mark
+                        index_end = index_start + a[i,0]
+                        largest_run_of_trues = a[i,0]
+                index_to_mark += a[i,0]
+            if index_end != np.nan:
+                good_q_range = [index_start + lowq - 1, index_end + lowq - 1]
+    
+        MSD_alpha = 2./(-1*slope)
+        MSD_effective_diffconst = (1.0/np.exp(coef1))**MSD_alpha
+        effective_diffconst = 1.0/np.exp(coef1)
+    except:
+        print("RANSACRegressor failed")
+        slope = np.nan
+        MSD_alpha = np.nan
+        MSD_effective_diffconst = np.nan
+        effective_diffconst = np.nan
 
     '''
     If we force a tau ~ 1/q or tau ~ 1/q^2 dependence to get

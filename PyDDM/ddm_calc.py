@@ -19,6 +19,7 @@ from scipy.optimize import least_squares, curve_fit
 from scipy.special import gamma
 from scipy.signal import blackmanharris #for Blackman-Harris windowing
 from scipy.ndimage import gaussian_filter as gf
+from scipy import stats
 import socket
 import skimage
 import fit_parameters_dictionaries as fpd
@@ -87,7 +88,8 @@ def window_function(im):
     return filter_func
 
 def determining_A_and_B(im, use_BH_filter=False,
-                        centralAngle=None, angRange=None):
+                        centralAngle=None, angRange=None,
+                        subtract_bg = None):
     r"""
     Used to assist in determining the parameters :math:`A` and :math:`B` in the expression for the 
     DDM matrix :math:`D(q,\Delta t) = A(q) [1 - f(q, \Delta t)] + B(q)`. We take the Fourier transforms 
@@ -115,6 +117,14 @@ def determining_A_and_B(im, use_BH_filter=False,
 
     av_fftsq_of_each_frame = np.zeros_like(im[0]*1.0) #initialize array
     nFrames,ndx,ndy = im.shape
+    if subtract_bg is not None:
+        if subtract_bg == 'mode':
+            bg_image = stats.mode(im, axis=0)[0][0]
+        if subtract_bg == 'median':
+            bg_image = np.median(im, axis=0)
+        else:
+            bg_image = np.zeros_like(im[0])
+        im = im - bg_image
     if use_BH_filter:
         filterfunction = window_function(im)
     else:
