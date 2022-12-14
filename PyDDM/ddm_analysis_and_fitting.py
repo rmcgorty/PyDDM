@@ -407,6 +407,8 @@ class DDM_Analysis:
                 (x, y, z, t, m) = lif_img.dims
                 
                 scale_factor = (16 - lif_img.bit_depth[0]) ** 2
+                if scale_factor == 0:
+                    scale_factor = 1
                 
                 print('\t%d x %d px' % (x, y))
                 print('\tPixel size of: %.2f microns' % lif_img.scale_n['X'])
@@ -417,7 +419,6 @@ class DDM_Analysis:
                     end_frame = t
                 else:
                     end_frame = self.last_frame
-
 
                 im = np.zeros(((end_frame-start_frame), x, y), dtype=np.uint16)
                 
