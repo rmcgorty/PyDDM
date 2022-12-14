@@ -416,7 +416,7 @@ class DDM_Analysis:
                 if self.last_frame == None:
                     end_frame = t
                 else:
-                    end_frame - self.last_frame
+                    end_frame = self.last_frame
 
 
                 im = np.zeros(((end_frame-start_frame), x, y), dtype=np.uint16)
