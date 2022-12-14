@@ -411,11 +411,24 @@ class DDM_Analysis:
                 print('\t%d x %d px' % (x, y))
                 print('\tPixel size of: %.2f microns' % lif_img.scale_n['X'])
                 print('\tNumber of frames: %i' % t)
+                                
+                start_frame = self.first_frame
+                if self.last_frame == None:
+                    end_frame = t
+                else:
+                    end_frame - self.last_frame
                 
+<<<<<<< Updated upstream
                 im = np.zeros((t, x, y), dtype=np.uint16)
                 for i in range(t):
                     im[i] = lif_img.get_frame(z = 0, t = i, c = 0)*scale_factor
                 
+=======
+                im = np.zeros(((end_frame-start_frame), x, y), dtype=np.uint16)
+                
+                for i in range(start_frame, end_frame):
+                    im[i-start_frame] = lif_img.get_frame(z = 0, t = i, c = 0).T*scale_factor
+>>>>>>> Stashed changes
             else:
                 print("It seems you have an lif file to open. But readlif not installed!")
                 return 
@@ -475,8 +488,13 @@ class DDM_Analysis:
 
         """
 
+        #??????????????????????????
+        #Goal: in _openImage, only grab required frames/crop
+
 
         image_data = self._openImage(load_images)
+        
+        
         if image_data is None:
             print("Image not loaded.")
         else:
@@ -645,6 +663,8 @@ class DDM_Analysis:
         if (self.background_method is None) or (self.background_method not in [0,1,2,3]):
             self.background_method = 0
             
+        #??????????????????????????????????????????????????????????????????????????????????
+        # if number of lag times is larger than last lag time, we have a problem
             
         self.lag_times_frames = ddm.generateLogDistributionOfTimeLags(self.first_lag_time, self.last_lag_time,
                                                                       self.number_of_lag_times)
