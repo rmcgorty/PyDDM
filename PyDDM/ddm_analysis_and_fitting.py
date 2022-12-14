@@ -412,11 +412,9 @@ class DDM_Analysis:
                 print('\tPixel size of: %.2f microns' % lif_img.scale_n['X'])
                 print('\tNumber of frames: %i' % t)
                 
-                
-                images = lif_img.get_iter_t()
                 im = np.zeros((t, x, y), dtype=np.uint16)
                 for i in range(t):
-                    im[i] = images.get_frame(z = 0, t = i, c = 0)*scale_factor
+                    im[i] = lif_img.get_frame(z = 0, t = i, c = 0)*scale_factor
                 
             else:
                 print("It seems you have an lif file to open. But readlif not installed!")
