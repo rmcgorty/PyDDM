@@ -417,18 +417,13 @@ class DDM_Analysis:
                     end_frame = t
                 else:
                     end_frame - self.last_frame
-                
-<<<<<<< Updated upstream
-                im = np.zeros((t, x, y), dtype=np.uint16)
-                for i in range(t):
-                    im[i] = lif_img.get_frame(z = 0, t = i, c = 0)*scale_factor
-                
-=======
+
+
                 im = np.zeros(((end_frame-start_frame), x, y), dtype=np.uint16)
                 
                 for i in range(start_frame, end_frame):
                     im[i-start_frame] = lif_img.get_frame(z = 0, t = i, c = 0).T*scale_factor
->>>>>>> Stashed changes
+
             else:
                 print("It seems you have an lif file to open. But readlif not installed!")
                 return 
