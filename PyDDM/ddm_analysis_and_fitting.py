@@ -421,10 +421,21 @@ class DDM_Analysis:
                 else:
                     end_frame = self.last_frame
 
-                im = np.zeros(((end_frame-start_frame), x, y), dtype=np.uint16)
+
+                if 'crop_to_roi' in self.analysis_parameters:
+                    if self.analysis_parameters['crop_to_roi'] is not None:
+                        if len(self.analysis_parameters['crop_to_roi'])==4:
+                            [y1,y2,x1,x2] = self.analysis_parameters['crop_to_roi']
+                else:
+                    y1 = 0
+                    x1 = 0
+                    y2 = y
+                    x2 = x
+
+                im = np.zeros(((end_frame-start_frame), x2-x1, y2-y1), dtype=np.uint16)
                 
                 for i in range(start_frame, end_frame):
-                    im[i-start_frame] = lif_img.get_frame(z = 0, t = i, c = 0).T*scale_factor
+                    im[i-start_frame] = lif_img.get_frame(z = 0, t = i, c = 0)[y1:y2, x1:x2]*scale_factor
                 self.loaded_lif = True
             else:
                 print("It seems you have an lif file to open. But readlif not installed!")
@@ -504,10 +515,17 @@ class DDM_Analysis:
                 self.pixel_size = self.pixel_size*self.binsize
                 return
     
-            #crops the number of frames based on given max frame numbers
+            
+            #Lif files do work beforehand like mp4s
+            #still need to implement binning, 4rois
             if self.loaded_lif: #Lif only loads needed frames
-                pass
-            elif self.last_frame is None:
+                self.im=image_data
+                self.image_for_report = self.im[0]
+                print("Loaded lif file.")
+                return
+            
+            #crops the number of frames based on given max frame numbers
+            if self.last_frame is None:
                 self.im=image_data[self.first_frame::,:,:]
             elif self.last_frame <= self.last_lag_time:
                 print('The last frame number should be higher than the frame for the last lag time')
