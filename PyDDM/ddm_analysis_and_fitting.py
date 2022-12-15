@@ -198,6 +198,7 @@ class DDM_Analysis:
         self.number_of_lag_times = None
         
         self.loaded_mp4 = False #if loading mp4, image data handled a bit differently 
+        self.loaded_lif = False #Lif loading also handled a bit differently?
         
         if (isinstance(data_yaml, str)) or (isinstance(data_yaml, dict)):
             self.data_yaml=data_yaml
@@ -424,7 +425,7 @@ class DDM_Analysis:
                 
                 for i in range(start_frame, end_frame):
                     im[i-start_frame] = lif_img.get_frame(z = 0, t = i, c = 0).T*scale_factor
-
+                self.loaded_lif = True
             else:
                 print("It seems you have an lif file to open. But readlif not installed!")
                 return 
@@ -504,7 +505,9 @@ class DDM_Analysis:
                 return
     
             #crops the number of frames based on given max frame numbers
-            if self.last_frame is None:
+            if self.loaded_lif: #Lif only loads needed frames
+                pass
+            elif self.last_frame is None:
                 self.im=image_data[self.first_frame::,:,:]
             elif self.last_frame <= self.last_lag_time:
                 print('The last frame number should be higher than the frame for the last lag time')
