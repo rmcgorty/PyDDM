@@ -437,6 +437,7 @@ class DDM_Analysis:
                 for i in range(start_frame, end_frame):
                     im[i-start_frame] = lif_img.get_frame(z = 0, t = i, c = 0)[y1:y2, x1:x2]*scale_factor
                 self.loaded_lif = True
+                self.image_for_report = lif_img.get_frame(z=0, t=start_frame, c=0)
             else:
                 print("It seems you have an lif file to open. But readlif not installed!")
                 return 
@@ -520,7 +521,6 @@ class DDM_Analysis:
             #still need to implement binning, 4rois
             if self.loaded_lif: #Lif only loads needed frames
                 self.im=image_data
-                self.image_for_report = self.im[0]
                 print("Loaded lif file.")
                 return
             
