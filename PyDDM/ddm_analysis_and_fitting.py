@@ -421,16 +421,16 @@ class DDM_Analysis:
                 else:
                     end_frame = self.last_frame
 
+                y1 = 0
+                x1 = 0
+                y2 = y
+                x2 = x
 
                 if 'crop_to_roi' in self.analysis_parameters:
                     if self.analysis_parameters['crop_to_roi'] is not None:
                         if len(self.analysis_parameters['crop_to_roi'])==4:
                             [y1,y2,x1,x2] = self.analysis_parameters['crop_to_roi']
-                else:
-                    y1 = 0
-                    x1 = 0
-                    y2 = y
-                    x2 = x
+
 
                 im = np.zeros(((end_frame-start_frame), x2-x1, y2-y1), dtype=np.uint16)
                 
@@ -680,8 +680,6 @@ class DDM_Analysis:
         if (self.background_method is None) or (self.background_method not in [0,1,2,3]):
             self.background_method = 0
             
-        #??????????????????????????????????????????????????????????????????????????????????
-        # if number of lag times is larger than last lag time, we have a problem
             
         self.lag_times_frames = ddm.generateLogDistributionOfTimeLags(self.first_lag_time, self.last_lag_time,
                                                                       self.number_of_lag_times)
