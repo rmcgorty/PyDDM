@@ -1889,8 +1889,6 @@ class DDM_Fit:
                                  fit_report_name=pdf_report_filename, show=show)
         return new_fit_res
 
-
-
     def extract_MSD(self, fit=None, qrange=None):
         r"""
         
@@ -1945,6 +1943,42 @@ class DDM_Fit:
         fit['msd_std'] = msd_std
         return msd, msd_std
 
+
+    def rheo_Mods(self, a, fit = None, tau = None, msd = None, 
+                  width = 0.7, dim = 3, T=290, clip = 0.03):
+        
+        #ToDo: incorporate this data into fit variable/YAML file
+        
+        if fit == None:
+            fit_keys = list(self.fittings)
+            fit = self.fittings[fit_keys[-1]]['fit'] #gets the latest fit
+        
+        
+        if (tau == None):
+            try:
+                fit_msd = fit['msd']
+                
+            except:
+                fit_msd = extract_MSD()
+        
+            tau = np.array(fit_msd.lagtime)
+        
+        if (msd == None):
+            try:
+                fit_msd = fit['msd']
+                
+            except:
+                fit_msd = extract_MSD()
+        
+            msd = np.array(fit_msd)
+            
+            
+        omega, Gs, Gp, Gpp = ddm.micrheo(tau, msd, a, width = 0.7, dim = 3, T=290, clip = 0.03)
+        
+        return omega, Gs, Gp, Gpp
+    
+    
+    
 
     def error_in_fit(self, fit=None, q_index=10, show_plot=True,
                      show_error_vs_q=False, use_isf=True):
