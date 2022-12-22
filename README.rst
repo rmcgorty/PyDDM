@@ -1,6 +1,7 @@
 btttsmith updates:   
 
 - Added ability to load and read lif files (uses bttsmith/readlif)
+- Working on adding the ability to calculate rheological properties from MSD
 
 PyDDM
 ============
