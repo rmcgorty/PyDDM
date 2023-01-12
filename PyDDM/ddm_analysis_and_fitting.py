@@ -1258,7 +1258,7 @@ class DDM_Analysis:
                     y1 = self.analysis_parameters['crop_to_roi'][2]
                     xsize = self.analysis_parameters['crop_to_roi'][1] - self.analysis_parameters['crop_to_roi'][0]
                     ysize = self.analysis_parameters['crop_to_roi'][3] - self.analysis_parameters['crop_to_roi'][2]
-                    rect = Rectangle((x1,y1),xsize,ysize,linewidth=2,edgecolor='r',facecolor='none')
+                    rect = Rectangle((y1,x1),xsize,ysize,linewidth=2,edgecolor='r',facecolor='none')
                     ax.add_patch(rect)
         if 'split_into_4_rois' in self.analysis_parameters:
             if self.analysis_parameters['split_into_4_rois'] and (type(self.im)==list):
