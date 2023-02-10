@@ -1334,13 +1334,15 @@ class DDM_Fit:
 
     """
 
-    def __init__(self, data_yaml, subimage_num=None):
+    def __init__(self, data_yaml, subimage_num=None, silent=False):
         self.subimage_num = subimage_num
+        self.silent = silent
         self.model_dict = None
         self.data_yaml = data_yaml
         self.loadYAML()
         self.fittings = {} #Stores fit_model,parameters and data set, key-value provided by user
-        self.use_parameters_provided()
+        display_table = not silent
+        self.use_parameters_provided(display_params_table = display_table)
         self.load_data()
         
         
@@ -1429,7 +1431,7 @@ class DDM_Fit:
             
 
 
-    def use_parameters_provided(self, print_par_names=False):
+    def use_parameters_provided(self, print_par_names=False, display_params_table=True):
         """Gives the parameters and their values, as provided in the initiation file (YAML file)
 
         :param print_par_names: Default is False
@@ -1445,7 +1447,8 @@ class DDM_Fit:
             else:
                 fpd.set_parameter_guess_and_limits(self.model_dict,
                                                    p, self.fit_options[p])
-        fpd.turn_parameters_into_dataframe_for_display(self.model_dict['parameter_info'])
+        if display_params_table:
+            fpd.turn_parameters_into_dataframe_for_display(self.model_dict['parameter_info'])
 
     def set_parameter_initial_guess(self, param_name, value):
         """Set the intitial value of parameter.
@@ -1687,7 +1690,8 @@ class DDM_Fit:
             update_good_q_range = True
 
         qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = get_tau_vs_q_fit(fit_results, forced_qs=force_q_range, 
-                                                                                          update_good_q_range=update_good_q_range)
+                                                                                          update_good_q_range=update_good_q_range,
+                                                                                          silent=self.silent)
         fit_results.attrs['effective_diffusion_coeff'] = d_eff
         fit_results.attrs['tau_vs_q_slope'] = slope
         fit_results.attrs['msd_alpha'] = msd_alpha
@@ -1700,7 +1704,8 @@ class DDM_Fit:
 
         if ('Tau2' in fit_results.parameters.parameter):
             qrange, slope, d_eff, msd_alpha, msd_d_eff, d, d_std, v, v_std = get_tau_vs_q_fit(fit_results, use_tau2=True, 
-                                                                                              forced_qs=force_q_range, update_good_q_range=update_good_q_range)
+                                                                                              forced_qs=force_q_range, update_good_q_range=update_good_q_range,
+                                                                                              silent=self.silent)
             fit_results.attrs['tau2_effective_diffusion_coeff'] = d_eff
             fit_results.attrs['tau2_tau_vs_q_slope'] = slope
             fit_results.attrs['tau2_msd_alpha'] = msd_alpha
@@ -1713,7 +1718,8 @@ class DDM_Fit:
 
         if save:
             name = self._save_fit(fit_results, name_fit = name_fit)
-            print(f"Fit is saved in fittings dictionary with key '{name}'.")
+            if not self.silent:
+                print(f"Fit is saved in fittings dictionary with key '{name}'.")
 
         if display_table:
             pd = hf.generate_pandas_table_fit_results(fit_results)
@@ -2097,7 +2103,7 @@ class DDM_Fit:
 
 
 def get_tau_vs_q_fit(fit_results, use_new_tau=True, use_tau2=False, 
-                     forced_qs=None, update_good_q_range=True):
+                     forced_qs=None, update_good_q_range=True, silent=False):
     r"""From decay  time (tau) vs wavevector (q), gets effective diffusion coeff and scaling exponent
     
     This function looks at tau vs q and fits tau(q) to a powerlaw. From this we
@@ -2164,7 +2170,8 @@ def get_tau_vs_q_fit(fit_results, use_new_tau=True, use_tau2=False,
         stretch_exp = fit_results.parameters.loc['StretchingExp',:]
         if (use_tau2 and ('StretchingExp2' in fit_results.parameters.parameter)):
             stretch_exp = fit_results.parameters.loc['StretchingExp2',:]
-        print("In function 'get_tau_vs_q_fit', using new tau...")
+        if not silent:
+            print("In function 'get_tau_vs_q_fit', using new tau...")
         tau = newt(tau, stretch_exp)
         
     q = fit_results.q
