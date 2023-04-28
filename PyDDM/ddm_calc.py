@@ -25,6 +25,8 @@ import skimage
 import fit_parameters_dictionaries as fpd
 import logging
 from IPython.core.display import clear_output
+from numpy.polynomial import Polynomial
+
 
 class IPythonStreamHandler(logging.StreamHandler):
     "A StreamHandler for logging that clears output between entries."
@@ -1314,3 +1316,116 @@ def getVel_phiDM(phase, dt, pixel_size, framerate, halfsize=5):
         
     return vxs, vys, errs
 
+
+
+
+def logderiv(x_arr, y_arr, width):
+    r'''
+    Used in micrheo funciton
+    A special purpose routine for finding the first and
+	second logarithmic derivatives of slowly varying,
+	but noisy data.  It returns 'f2'-- a smoother version 
+	of 'f' and the first and second log derivative of f2.
+    '''
+    arr_len = len(x_arr)
+    dy = np.zeros(arr_len)
+    ddy = np.zeros(arr_len)
+    y2 = np.zeros(arr_len)
+    lx = np.array(np.log(x_arr))
+    ly = np.array(np.log(y_arr))
+
+    for i in range(arr_len):
+        w = np.exp(-(lx - lx[i])**2 / (2.*width**2) )
+        ww = w[w>0.03]
+        #There is probably a better way of translating this IDL code:
+        ''' res = polyfitw(lx(ww),ly(ww),w(ww),2) '''
+        #I'm not entirely clear on its exact meaning, but this python code
+        #assumes that the high values of w are always at the front of the array,
+        #and so crops away those values as follows
+        w_crop = len(w)-len(ww)
+        res = Polynomial.fit(lx[w_crop:], ly[w_crop:], 2, w=w[w_crop:]).convert().coef         
+        y2[i] = np.exp(res[0]+res[1]*lx[i]+res[2]*(lx[i]**2))
+        dy[i] = res[1]+2.*res[2]*lx[i]
+        ddy[i] = 2.*res[2]
+
+    return y2, dy, ddy
+
+
+
+def micrheo(tau, msd, a, width = 0.7, dim = 3, T=290, clip = 0.03):
+    r'''
+    ***Mason-Weitz micro-rheology in the world of Python (via IDL)!***
+    
+    Parameters
+    ----------
+    a : float
+        radius in microns,
+    msd : ndarray
+        Mean Square Displacement in microns^2
+    tau : ndarray
+        Lag time in seconds
+    T : float
+        Default is 290. Temperature in Kelvin.
+    dim : int
+        Default is 3. The dimensionality 'dim' of 'msd'.
+        
+   	Returns
+    -------
+    omega : ndarray
+        Frequency in s^{-1}
+    Gs : ndarray
+        G(s) in Pascals
+    Gp : ndarray
+        G'(w) in Pascals
+    Gpp : ndarray
+        G''(w) in Pascals
+   
+   
+    NOTES:
+       It needs more than a 7-8 points per decade of time/frequency 
+   	and really hates noise and long-wavelength ripples in the data
+        
+   	G'(w) and G"(w) are clipped at 0.03x G(w) as they are almost 
+   	certainly meaningless below that point unless the data is
+   	*extremely* clean.  Set 'clip' to less than 0.03 to see more.
+   	See Tom Mason's paper: PRL *79*, 3284, (1997) for details.
+   
+       REVISION HISTORY:
+   		Written by John C. Crocker, U. Penn:	5/'99
+   		Made 'width' a keyword, JCC		7/'99
+   		Change Gp,Gpp formulae, JCC		7/'99
+    Ported to Python, Barrett Smith 12/'22
+   
+    IDL Code at https://physics.emory.edu/faculty/weeks/idl/micrheo.html
+   	This code 'micrheo.pro' is copyright 1999 by John C. Crocker
+   	and may be freely distributed and used if properly attributed
+    '''
+
+    k_B = 1.38065e-23
+
+    am = a*1e-6
+    dt = np.array(tau)
+    omega = 1/dt
+    msdm = np.array(msd)*1e-12 
+
+    C = dim*k_B*T/(3*np.pi*am)
+    foo = np.pi/2 - 1
+
+    m, d, dd = logderiv(dt, msdm, width=width)
+    Gs = C/((m*gamma(1+d))*(1+dd/2))
+
+    g, da, dda = logderiv(omega, Gs, width=width)
+
+    Gp  = g*(1/(1+dda))*np.cos((np.pi/2)*da-foo*da*dda)
+    Gpp = g*(1/(1+dda))*np.sin((np.pi/2)*da-foo*(1-da)*dda)
+
+    #clip suspicious data:
+    Gp[np.where(Gp<Gs*clip)] = 0
+    Gpp[np.where(Gpp<Gs*clip)] = 0
+
+
+    if (np.max(np.abs(dd)) > 0.15) or (np.max(np.abs(dda)) > 0.15):
+        print('Warning, high curvature in data, moduli may be unreliable!')
+
+
+    return omega, Gs, Gp, Gpp
