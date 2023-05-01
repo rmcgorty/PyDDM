@@ -40,12 +40,6 @@ try:
 except ModuleNotFoundError:
     print("imageio not installed.")
     able_to_open_mp4 = False
-try:
-    from readlif.reader import LifFile
-    able_to_open_lif = True
-except ModuleNotFoundError:
-    print('readlif not installed')
-    able_to_open_lif = False
 
 
 import fit_parameters_dictionaries as fpd
@@ -198,7 +192,6 @@ class DDM_Analysis:
         self.number_of_lag_times = None
         
         self.loaded_mp4 = False #if loading mp4, image data handled a bit differently 
-        self.loaded_lif = False #Lif loading also handled a bit differently?
         
         if (isinstance(data_yaml, str)) or (isinstance(data_yaml, dict)):
             self.data_yaml=data_yaml
@@ -396,53 +389,6 @@ class DDM_Analysis:
                 print("It seems you have an nd2 file to open. But nd2reader not installed!")
                 return 
 
-        if re.search(".\.lif$", self.filename) is not None:
-            if able_to_open_lif:
-                # Files with lif extension will be read using the package
-                #  readlif. Leica systems may save data with this file type.
-                if self.channel is None:
-                    print("Need to specify channel/series in yaml metadata. Defaulting to c=0.")
-                    self.channel = 0
-                    
-                lif_img = LifFile(self.data_dir+self.filename).get_image(self.channel)
-                (x, y, z, t, m) = lif_img.dims
-                
-                scale_factor = (16 - lif_img.bit_depth[0]) ** 2
-                if scale_factor == 0:
-                    scale_factor = 1
-                
-                print('\t%d x %d px' % (x, y))
-                print('\tPixel size of: %.2f microns' % lif_img.scale_n['X'])
-                print('\tNumber of frames: %i' % t)
-                                
-                start_frame = self.first_frame
-                if self.last_frame == None:
-                    end_frame = t
-                else:
-                    end_frame = self.last_frame
-
-                y1 = 0
-                x1 = 0
-                y2 = y
-                x2 = x
-
-                if 'crop_to_roi' in self.analysis_parameters:
-                    if self.analysis_parameters['crop_to_roi'] is not None:
-                        if len(self.analysis_parameters['crop_to_roi'])==4:
-                            [y1,y2,x1,x2] = self.analysis_parameters['crop_to_roi']
-
-
-                im = np.zeros(((end_frame-start_frame), x2-x1, y2-y1), dtype=np.uint16)
-                
-                for i in range(start_frame, end_frame):
-                    im[i-start_frame] = lif_img.get_frame(z = 0, t = i, c = 0)[y1:y2, x1:x2]*scale_factor
-                self.loaded_lif = True
-                self.image_for_report = lif_img.get_frame(z=0, t=start_frame, c=0)
-            else:
-                print("It seems you have an lif file to open. But readlif not installed!")
-                return 
-
-
         if (re.search(".\.tif$", self.filename) is not None) or (re.search(".\.tiff$", self.filename) is not None):
             im = io.imread(self.data_dir + self.filename)
             
@@ -497,13 +443,8 @@ class DDM_Analysis:
 
         """
 
-        #??????????????????????????
-        #Goal: in _openImage, only grab required frames/crop
-
 
         image_data = self._openImage(load_images)
-        
-        
         if image_data is None:
             print("Image not loaded.")
         else:
@@ -516,14 +457,6 @@ class DDM_Analysis:
                 self.pixel_size = self.pixel_size*self.binsize
                 return
     
-            
-            #Lif files do work beforehand like mp4s
-            #still need to implement binning, 4rois
-            if self.loaded_lif: #Lif only loads needed frames
-                self.im=image_data
-                print("Loaded lif file.")
-                return
-            
             #crops the number of frames based on given max frame numbers
             if self.last_frame is None:
                 self.im=image_data[self.first_frame::,:,:]
@@ -601,9 +534,10 @@ class DDM_Analysis:
 
         
 
+
+
     def calculate_DDM_matrix(self, quiet=False, velocity=[0,0],
                              bg_subtract_for_AB_determination=None, **kwargs):
-
         r"""Calculates the DDM matrix
         This function computes the DDM matrix. The radially averaged DDM matrix will
         then also be found, along with estimates of the background and amplitude. From 
@@ -1320,13 +1254,11 @@ class DDM_Analysis:
             if self.analysis_parameters['crop_to_roi'] is not None:
                 if len(self.analysis_parameters['crop_to_roi'])==4:
                     ax=plt.gca()
-
                     x1 = self.analysis_parameters['crop_to_roi'][0]
                     y1 = self.analysis_parameters['crop_to_roi'][2]
                     xsize = self.analysis_parameters['crop_to_roi'][1] - self.analysis_parameters['crop_to_roi'][0]
                     ysize = self.analysis_parameters['crop_to_roi'][3] - self.analysis_parameters['crop_to_roi'][2]
                     rect = Rectangle((y1,x1),xsize,ysize,linewidth=2,edgecolor='r',facecolor='none')
-
                     ax.add_patch(rect)
         if 'split_into_4_rois' in self.analysis_parameters:
             if self.analysis_parameters['split_into_4_rois'] and (type(self.im)==list):
@@ -1904,6 +1836,8 @@ class DDM_Fit:
                                  fit_report_name=pdf_report_filename, show=show)
         return new_fit_res
 
+
+
     def extract_MSD(self, fit=None, qrange=None):
         r"""
         
@@ -1958,42 +1892,6 @@ class DDM_Fit:
         fit['msd_std'] = msd_std
         return msd, msd_std
 
-
-    def rheo_Mods(self, a, fit = None, tau = None, msd = None, 
-                  width = 0.7, dim = 3, T=290, clip = 0.03):
-        
-        #ToDo: incorporate this data into fit variable/YAML file
-        
-        if fit == None:
-            fit_keys = list(self.fittings)
-            fit = self.fittings[fit_keys[-1]]['fit'] #gets the latest fit
-        
-        
-        if (tau == None):
-            try:
-                fit_msd = fit['msd']
-                
-            except:
-                fit_msd = extract_MSD()
-        
-            tau = np.array(fit_msd.lagtime)
-        
-        if (msd == None):
-            try:
-                fit_msd = fit['msd']
-                
-            except:
-                fit_msd = extract_MSD()
-        
-            msd = np.array(fit_msd)
-            
-            
-        omega, Gs, Gp, Gpp = ddm.micrheo(tau, msd, a, width = 0.7, dim = 3, T=290, clip = 0.03)
-        
-        return omega, Gs, Gp, Gpp
-    
-    
-    
 
     def error_in_fit(self, fit=None, q_index=10, show_plot=True,
                      show_error_vs_q=False, use_isf=True):
