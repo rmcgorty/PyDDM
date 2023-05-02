@@ -279,7 +279,7 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
                 logger.info("Running dt = %i..." % dt)
 
         #Calculates all differences of images with a delay time dt
-        all_diffs = (imageArray[dt:] - imageArray[0:(-1*dt)]).astype(float)
+        all_diffs = (imageArray[dt:] - imageArray[0:(-1*dt)].astype(float))
         if use_BH_windowing:
             all_diffs = filterfunction*all_diffs
 
