@@ -391,6 +391,13 @@ class DDM_Analysis:
 
         if (re.search(".\.tif$", self.filename) is not None) or (re.search(".\.tiff$", self.filename) is not None):
             im = io.imread(self.data_dir + self.filename)
+            if len(im.shape)==4:
+                if self.channel is None:
+                    self.channel = 0
+                if self.channel >= im.shape[1]:
+                    print("Channel outside of range. Only have %i channels." % im.shape[1])
+                    self.channel = 0
+                im = im[:,self.channel,:,:]
             
         if (re.search(".\.dcimg$", self.filename) is not None):
             if able_to_open_dcimg:
