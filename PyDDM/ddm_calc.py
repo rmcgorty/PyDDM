@@ -252,7 +252,7 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
     ntimes, ndx, ndy = imageArray.shape
 
     #Initializes array for Fourier transforms of differences
-    ddm_mat = np.zeros((len(dts), ndx, ndy),dtype=np.float)
+    ddm_mat = np.zeros((len(dts), ndx, ndy),dtype=float)
 
     #We *don't* necessarily want to take the Fourier transform of *every* possible difference
     #of images separated by a given lag time. 
@@ -260,9 +260,9 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
         steps_in_diffs = dts
     elif overlap_method == 1:
         num_possible_diffs = ntimes - dts
-        steps_in_diffs = np.ceil(num_possible_diffs / num_dif_max).astype(np.int)
+        steps_in_diffs = np.ceil(num_possible_diffs / num_dif_max).astype(int)
     elif overlap_method == 2:
-        steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
+        steps_in_diffs = np.ceil(dts/3.0).astype(int)
     elif overlap_method == 3:
         steps_in_diffs = np.ones_like(dts)
 
@@ -369,7 +369,7 @@ def computeDDMMatrix_correctVelocityPhase(imageArray, dts, velocity, pixel_size,
     x1,y1 = np.meshgrid(q_x, q_y)
 
     #Initializes array for Fourier transforms of differences
-    ddm_mat = np.zeros((len(dts), ndx, ndy),dtype=np.float)
+    ddm_mat = np.zeros((len(dts), ndx, ndy),dtype=float)
     
     indices_ims = np.arange(ntimes)
 
@@ -379,9 +379,9 @@ def computeDDMMatrix_correctVelocityPhase(imageArray, dts, velocity, pixel_size,
         steps_in_diffs = dts
     elif overlap_method == 1:
         num_possible_diffs = ntimes - dts
-        steps_in_diffs = np.ceil(num_possible_diffs / num_dif_max).astype(np.int)
+        steps_in_diffs = np.ceil(num_possible_diffs / num_dif_max).astype(int)
     elif overlap_method == 2:
-        steps_in_diffs = np.ceil(dts/3.0).astype(np.int)
+        steps_in_diffs = np.ceil(dts/3.0).astype(int)
     elif overlap_method == 3:
         steps_in_diffs = np.ones_like(dts)
 
@@ -503,7 +503,7 @@ def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=Fals
         phase = 0
 
     #Initializes array for Fourier transforms of differences
-    ddm_mat = np.zeros((num_possible_diffs, ndx, ndy),dtype=np.float)
+    ddm_mat = np.zeros((num_possible_diffs, ndx, ndy),dtype=float)
 
     #If we DO correct for phase with phDM
     if do_vel_correction_with_phiDM:
@@ -521,7 +521,7 @@ def temporalVarianceDDMMatrix(imageArray, dt, use_BH_windowing=False, quiet=Fals
     #If we don't correct for phase with phDM
     else:
         #Calculates all differences of images with a delay time dt
-        all_diffs = filterfunction*(imageArray[dt:].astype(np.float) - imageArray[0:(-1*dt)].astype(np.float))
+        all_diffs = filterfunction*(imageArray[dt:].astype(float) - imageArray[0:(-1*dt)].astype(float))
     
         #Loop through each image difference and take the fourier transform
         for i in range(0,all_diffs.shape[0]):
@@ -576,7 +576,7 @@ def get_FF_DDM_matrix(imageFile, dts, submean=True,
     #Initializes array for Fourier transforms of images
     fft_images = np.zeros((ntimes, ndx, ndy),dtype=np.complex128)
 
-    ddm_matrix = np.zeros((len(dts),ndx,ndy),dtype=np.float)
+    ddm_matrix = np.zeros((len(dts),ndx,ndy),dtype=float)
 
     for i in range(ntimes):
         new_image = filterfunction*ims[i]
