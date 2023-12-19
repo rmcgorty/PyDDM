@@ -1,0 +1,24 @@
+DataDirectory: 'Z:/Gregor L/__Kai Colloids/6-20-22 1xB WT vs WT-kaiA/test videos/AE_40x_test3_t6_1/'
+FileName: 'AE_40x_test3_t6_1_MMStack_Pos0.ome.tif'
+Metadata:
+  pixel_size: 0.091 # size of pixel in um
+  frame_rate: 64.3 #frames per second
+Analysis_parameters:
+  number_lag_times: 40
+  last_lag_time: 500
+  overlap_method: 3
+  crop_to_roi: null # set to 'null' (no quotes) for no cropping [topleft,bottomleft,topright,bottomright] 
+  split_into_4_rois: no
+  use_windowing_function: no #Use Blackmann-Harris windowing or not?
+  binning: yes
+  bin_size: 2 
+  central_angle: null
+  angle_range: null
+Fitting_parameters:
+  model: 'DDM Matrix - Single Exponential' 
+  Tau: [1.0, 0.001, 10]
+  StretchingExp: [1.0, 0.5, 1.1]
+  Amplitude: [1e2, 1, 1e6]
+  Background: [2.5e4, 0, 1e7]
+  Good_q_range: [20, 100]
+  Auto_update_good_q_range: True
