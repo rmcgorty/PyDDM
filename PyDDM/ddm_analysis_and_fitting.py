@@ -178,7 +178,6 @@ def recalculate_ISF_with_new_background(ddm_dataset,
                 
         ddm_dataset["Amplitude"] = (2 * aplusb_half) - ddm_dataset.B
             
-        ddm_dataset['Amplitude'] = 2 * avg_ft - ddm_dataset.B
         ddm_dataset['ISF'] = 1-(ddm_dataset.ddm_matrix-ddm_dataset.B)/ddm_dataset.Amplitude
         ddm_dataset.attrs['BackgroundMethod'] = background_method
         ddm_dataset.attrs['AmplitudeMethod'] = amplitude_method
