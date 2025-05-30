@@ -70,7 +70,10 @@ def apply_binning(im, binsize):
 
 def recalculate_ISF_with_new_background(ddm_dataset, 
                                         background_method = None,
-                                        background_val = None):
+                                        background_val = None,
+                                        amplitude_method = None,
+                                        lowq_edge = 2,
+                                        highq_edge = 5):
     r"""
     The intermediate scattering function (ISF) is re-calculated from the DDM matrix, with the given background value.
     
@@ -99,8 +102,14 @@ def recalculate_ISF_with_new_background(ddm_dataset,
         If 1, then we estimate the background to be the minimum of the DDM matrix.
         If 2, then we estimate the background to be :math:`\left< DDM\_Matrix(q_{max}, \Delta t) \right>_{\Delta t}`
         If 3, then we estimate the background to be zero. 
+        If 4, then we do something similar to option '0', but we instead of :math:`\left< | \tilde{I}(q, t) |^2 \right>_t`, 
+        we use :math:`\left< | \tilde{I}(q, t) |^2 \right>_t - \left< | \tilde{I_{0}}(q) |^2 \right>` where :math:`I_0` is the mean
+        image. 
+        If 5, for each q, we fit the first 5 pts of D(q,dt) to a 2nd order polynomial and find the 
     background_val : float, optional
         Default is None. If not None, then will use this value for :math:`B`.
+    amplitude_method : {0,1,2}, optional
+        Method for calculating the amplitude.
 
     Returns
     -------
@@ -111,8 +120,8 @@ def recalculate_ISF_with_new_background(ddm_dataset,
     
             
     if background_method is not None:
-        if background_method not in [0,1,2,3]:
-            print("The `background_method` option must be either 0, 1, 2 or 3. Setting to 0.")
+        if background_method not in [0,1,2,3,4,5]:
+            print("The `background_method` option must be either 0, 1, 2, 3, 4, or 5. Setting to 0.")
             background_method = 0
         if "avg_image_ft" in ddm_dataset:
             avg_ft = ddm_dataset['avg_image_ft']
@@ -128,9 +137,51 @@ def recalculate_ISF_with_new_background(ddm_dataset,
             ddm_dataset['B'] = ddm_dataset.ddm_matrix[1:,-1].mean()
         elif background_method==3:
             ddm_dataset['B'] = 0
+        elif background_method==4:
+            number_of_hi_qs = int(0.1*len(ddm_dataset.q))
+            if "ft_of_avg_image" in ddm_dataset:
+                ddm_dataset['B'] = 2*np.mean(avg_ft[-1*number_of_hi_qs:] - ddm_dataset.ft_of_avg_image[-1*number_of_hi_qs:])
+                ddm_dataset['B_std'] = 2*np.std(avg_ft[-1*number_of_hi_qs:] - ddm_dataset.ft_of_avg_image[-1*number_of_hi_qs:])
+            else:
+                ddm_dataset['B'] = 2*avg_ft[-1*number_of_hi_qs:].mean()
+                ddm_dataset['B_std'] = 2*avg_ft[-1*number_of_hi_qs:].std()
+        elif background_method==5:
+            bgs = np.zeros_like(ddm_dataset.q)
+            time_pts = 5
+            for i in range(1,len(ddm_dataset.q)):
+                times = ddm_dataset.lagtime[0:time_pts]
+                dqt = ddm_dataset.ddm_matrix[0:time_pts, i]
+                pfit = np.polyfit(times, dqt, 2)
+                bgs[i] = pfit[-1]
+            ddm_dataset['B'] = xr.DataArray(bgs, {'q': ddm_dataset.ddm_matrix.q})
+        
+        if amplitude_method is not None:
+            if amplitude_method not in [0,1,2]:
+                print("The `amplitude_method` option must be either 0, 1, or 2. Setting to 1.")
+                amplitude_method = 1
+        else:
+            amplitude_method = 1
+        if amplitude_method == 0:
+            if "ft_of_avg_image" in ddm_dataset:
+                aplusb_half = avg_ft - ddm_dataset['ft_of_avg_image']
+            else:
+                aplusb_half = avg_ft
+                amplitude_method = 1
+        elif amplitude_method == 1:
+            aplusb_half = avg_ft
+        elif amplitude_method == 2:
+            if "ft_of_avg_image" in ddm_dataset:
+                aplusb_half = avg_ft - hf.smoothstep(lowq_edge,highq_edge,ddm_dataset.q)*ddm_dataset['ft_of_avg_image']
+            else:
+                aplusb_half = avg_ft
+                amplitude_method = 1
+                
+        ddm_dataset["Amplitude"] = (2 * aplusb_half) - ddm_dataset.B
+            
         ddm_dataset['Amplitude'] = 2 * avg_ft - ddm_dataset.B
         ddm_dataset['ISF'] = 1-(ddm_dataset.ddm_matrix-ddm_dataset.B)/ddm_dataset.Amplitude
         ddm_dataset.attrs['BackgroundMethod'] = background_method
+        ddm_dataset.attrs['AmplitudeMethod'] = amplitude_method
         return ddm_dataset
             
     if background_val is not None:
@@ -319,16 +370,22 @@ class DDM_Analysis:
             #be set as passed parameter to the method `calculate_DDM_matrix`
             self.overlap_method = None
             self.background_method = None
+            self.amplitude_method = None
             if 'overlap_method' in self.analysis_parameters:
                 if self.analysis_parameters['overlap_method'] in [0,1,2,3]:
                     self.overlap_method = self.analysis_parameters['overlap_method']
                 else:
                     print("Parameter 'overlap_method' must be 0, 1, 2, or 3.")
             if 'background_method' in self.analysis_parameters:
-                if self.analysis_parameters['background_method'] in [0,1,2,3]:
+                if self.analysis_parameters['background_method'] in [0,1,2,3,4,5]:
                     self.background_method = self.analysis_parameters['background_method']
                 else:
-                    print("Parameter 'overlap_method' must be 0, 1, 2, or 3.")
+                    print("Parameter 'background_method' must be 0, 1, 2, or 3.")
+            if 'amplitude_method' in self.analysis_parameters:
+                if self.analysis_parameters['amplitude_method'] in [0,1,2]:
+                    self.amplitude_method = self.analysis_parameters['amplitude_method']
+                else:
+                    print("Parameter 'amplitude_method' must be 0, 1, or 2.")
                 
             print(f'Provided metadata: {self.metadata}')
             #ddm.logger2.info(f'Provided metadata: {self.metadata}')
@@ -512,8 +569,14 @@ class DDM_Analysis:
         
                     self.im = [roi0, roi1, roi2, roi3]
     
-            else:
-                if 'use_windowing_function' in self.analysis_parameters:
+
+            if 'use_windowing_function' in self.analysis_parameters:
+                if 'split_into_4_rois' in self.analysis_parameters:
+                    if not self.analysis_parameters['split_into_4_rois']:
+                        if self.analysis_parameters['use_windowing_function']:
+                            print("Applying windowing function...")
+                            self.im=ddm.window_function(self.im)*self.im
+                else:
                     if self.analysis_parameters['use_windowing_function']:
                         print("Applying windowing function...")
                         self.im=ddm.window_function(self.im)*self.im
@@ -575,12 +638,14 @@ class DDM_Analysis:
             So for example, with a lag time of 1 frame and 
             a movie that has 1000 frames, we could theoretically use 999 differences of images (and we would for the other methods). But 
             for overlap_method=2, we would only use 50 of those. This is for quickening up the computation. 
-        **background_method : {0,1,2,3}, optional
+        **background_method : {0,1,2,3,4,5}, optional
             Optional keyword argument. Will be set to 0 if not specified here nor in the YAML file. 
             Determines how we estimate the :math:`B` parameter. This can be done by lookinag the average of the 
             Fourier transform of each image (not image difference!) squared (that's background_method=0). We could 
             also use the minimum of the DDM matrix (background_method=1). Or we could use the average DDM matrix for 
             the largest q (background_method=2). Or we could just set :math:`B` to zero (background_method=3).
+        **amplitude_method: {0,1,2}, optional
+            Optional keyword argument. 
         **number_lag_times : int
             Optional keyword argument. Must be set in the YAML file. 
             You may pass this optional keyword argument if you want to overwrite the value for the number of lag 
@@ -609,6 +674,8 @@ class DDM_Analysis:
             self.overlap_method = kwargs['overlap_method']
         if 'background_method' in kwargs:
             self.background_method = kwargs['background_method']
+        if 'amplitude_method' in kwargs:
+            self.amplitude_method = kwargs['amplitude_method']
         if 'number_lag_times' in kwargs:
             self.number_of_lag_times = kwargs['number_lag_times']
         if 'number_differences_max' in kwargs:
@@ -622,9 +689,10 @@ class DDM_Analysis:
         # These parameters must also be either 0, 1, 2, or 3. So check that as well. 
         if (self.overlap_method is None) or (self.overlap_method not in [0,1,2,3]):
             self.overlap_method = 2
-        if (self.background_method is None) or (self.background_method not in [0,1,2,3]):
+        if (self.background_method is None) or (self.background_method not in [0,1,2,3,4,5]):
             self.background_method = 0
-            
+        if (self.amplitude_method is None) or (self.amplitude_method not in [0,1,2]):
+            self.amplitude_method = 0
             
         self.lag_times_frames = ddm.generateLogDistributionOfTimeLags(self.first_lag_time, self.last_lag_time,
                                                                       self.number_of_lag_times)
@@ -722,13 +790,15 @@ class DDM_Analysis:
         # Note: windowing (if applicable) already applied to self.im, so "use_BH_filter" should be False always
         if type(self.im)==list:
             self.ravfft = []
+            self.ravfft_avim = []
             for i,im in enumerate(self.im):
-                r = ddm.determining_A_and_B(im, use_BH_filter=False,centralAngle=self.central_angle,
+                r,r0 = ddm.determining_A_and_B(im, use_BH_filter=False,centralAngle=self.central_angle,
                                             angRange=self.angle_range,
                                             subtract_bg = bg_subtract_for_AB_determination)
                 self.ravfft.append(r)
+                self.ravfft_avim.append(r)
         else:
-            self.ravfft = ddm.determining_A_and_B(self.im, use_BH_filter=False,
+            self.ravfft, self.ravfft_avim = ddm.determining_A_and_B(self.im, use_BH_filter=False,
                                                   centralAngle=self.central_angle,
                                                   angRange=self.angle_range,
                                                   subtract_bg = bg_subtract_for_AB_determination)
@@ -778,6 +848,7 @@ class DDM_Analysis:
         else:
             ddm_matrix = self.ddm_matrix
             ravfft = self.ravfft
+            ravfft_avim = self.ravfft_avim
             ravs = self.ravs
             image0 = self.im[0].astype(np.float64)
             AF = self.AF
@@ -797,10 +868,12 @@ class DDM_Analysis:
                                       'info':'ddm_matrix is the averages of FFT difference images, ravs are the radial averages'})
         
         ddm_dataset.attrs['BackgroundMethod'] = self.background_method
+        ddm_dataset.attrs['AmplitudeMethod'] = self.amplitude_method
         ddm_dataset.attrs['OverlapMethod'] = self.overlap_method
         ddm_dataset.attrs['AlignmentFactorAxis'] = self.af_axis
 
         ddm_dataset['avg_image_ft'] = (('q'), ravfft[0,:]) # av_fft_offrame=0.5*(A+B) #was 'av_fft_offrame'
+        ddm_dataset['ft_of_avg_image'] = (('q'), ravfft_avim[0,:]) # fourier transform (sqrd) of avg image
         
         #Get last 10% of q. Average used for estimating background
         number_of_hi_qs = int(0.1*len(self.q))
@@ -821,10 +894,30 @@ class DDM_Analysis:
         elif self.background_method==3:
             ddm_dataset['B'] = 0
             print(f" Background estimate is {ddm_dataset.B.values:.2f}")
+        elif self.background_method==4:
+            ddm_dataset['B'] = 2*np.mean(ddm_dataset.avg_image_ft[-1*number_of_hi_qs:] - ddm_dataset.ft_of_avg_image[-1*number_of_hi_qs:])
+            ddm_dataset['B_std'] = 2*np.std(ddm_dataset.avg_image_ft[-1*number_of_hi_qs:] - ddm_dataset.ft_of_avg_image[-1*number_of_hi_qs:])
+            print(f" Background estimate ± std is {ddm_dataset.B.values:.2f} ± {ddm_dataset.B_std.values:.2f}")
+        elif self.background_method==5:
+            bgs = np.zeros_like(ddm_dataset.q)
+            time_pts = 5
+            for i in range(1,len(ddm_dataset.q)):
+                times = ddm_dataset.lagtime[0:time_pts]
+                dqt = ddm_dataset.ddm_matrix[0:time_pts, i]
+                pfit = np.polyfit(times, dqt, 2)
+                bgs[i] = pfit[-1]
+            ddm_dataset['B'] = xr.DataArray(bgs, {'q': ddm_dataset.ddm_matrix.q})
+            ddm_dataset['B_std'] = np.std(bgs)
         
 
         # Calculate amplitude: av_fft_frame=0.5(A+B)->A=2*av_fft_frame-B
-        ddm_dataset["Amplitude"] = (2 * ddm_dataset['avg_image_ft']) - ddm_dataset.B
+        if self.amplitude_method == 0:
+            aplusb_half = ddm_dataset['avg_image_ft'] - ddm_dataset['ft_of_avg_image']
+        elif self.amplitude_method == 1:
+            aplusb_half = ddm_dataset['avg_image_ft']
+        elif self.amplitude_method == 2:
+            aplusb_half = ddm_dataset['avg_image_ft'] - hf.smoothstep(2,5,self.q)*ddm_dataset['ft_of_avg_image']
+        ddm_dataset["Amplitude"] = (2 * aplusb_half) - ddm_dataset.B
 
         # calculate ISF with new amplitude and background
         ddm_dataset['ISF']=1-(ddm_dataset.ddm_matrix-ddm_dataset.B)/ddm_dataset.Amplitude
@@ -1300,11 +1393,18 @@ class DDM_Analysis:
 
         ##Plot graph of rav FFT of frames, used to determine A  and B
         fig2=plt.figure(figsize=(6, 6/1.2))
-        plt.semilogy(ddmdataset.coords['q'][3:], ddmdataset.avg_image_ft[3:],'ro')
+        plt.semilogy(ddmdataset.coords['q'][3:], 2*ddmdataset.avg_image_ft[3:],'ro')
+        plt.semilogy(ddmdataset.coords['q'][3:], 2*(ddmdataset.avg_image_ft[3:] - ddmdataset.ft_of_avg_image[3:]),'mo')
         plt.xlabel("q μm$^{-1}$")
         plt.ylabel(r"$\left< | \tilde{I}(q, t) |^2 \right>_t$")
-        plt.hlines(0.5*ddmdataset.B.values, ddmdataset.coords['q'][3], ddmdataset.coords['q'][-1], linestyles='dashed')
-        plt.title(f"Used to estimate background (B) and amplitude (A). Dashed line at {0.5*ddmdataset.B.values:.2f}. \n Background ~ {ddmdataset.B.values:.0f}", fontsize=10)
+        if ddmdataset.B.size==1:
+            plt.hlines(ddmdataset.B.values, ddmdataset.coords['q'][3], ddmdataset.coords['q'][-1], linestyles='dashed')
+        elif ddmdataset.B.size > 1:
+            plt.plot(ddmdataset.q, ddmdataset.B, '--k')
+        if ddmdataset.B.size==1: 
+            plt.title(f"Used to estimate background (B) and amplitude (A). Dashed line at {0.5*ddmdataset.B.values:.2f}. \n Background ~ {ddmdataset.B.values:.0f}", fontsize=10)
+        else:
+            plt.title(f"Used to estimate background (B) and amplitude (A).")
         if pdf_to_save_to != None:
             pdf_to_save_to.savefig()
 

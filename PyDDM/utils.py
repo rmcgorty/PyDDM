@@ -796,3 +796,21 @@ def create_two_time_correlation_matrix(ddm_variability, number_of_frames, q_inde
         
     return twotimecorr_total
 
+
+def smoothstep(edge0, edge1, x):
+    """
+    Performs smooth Hermite interpolation between 0 and 1 when edge0 < x < edge1.
+    
+    Args:
+        edge0: The left edge of the transition.
+        edge1: The right edge of the transition.
+        x: The input value.
+    
+    Returns:
+        A value between 0 and 1, smoothly interpolated.
+    """
+    x = (x - edge0) / (edge1 - edge0) # Normalize x to 0-1 range
+    for i,item in enumerate(x):
+        x[i] = max(0, min(1,item))
+    #x = max(0, min(1, x)) # Clamp x to range [0, 1]
+    return x * x * (3 - 2 * x)

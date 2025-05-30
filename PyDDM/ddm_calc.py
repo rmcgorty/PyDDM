@@ -17,7 +17,10 @@ import copy
 import numpy as np
 from scipy.optimize import least_squares, curve_fit
 from scipy.special import gamma
-from scipy.signal import blackmanharris #for Blackman-Harris windowing
+try:
+    from scipy.signal import blackmanharris #for Blackman-Harris windowing
+except:
+    from scipy.signal.windows import blackmanharris
 from scipy.ndimage import gaussian_filter as gf
 from scipy import stats
 import socket
@@ -132,6 +135,11 @@ def determining_A_and_B(im, use_BH_filter=False,
         filterfunction = window_function(im)
     else:
         filterfunction = np.ones_like(im[0])
+    
+    mean_image = np.mean(im, axis=0)
+    fft_of_mean_image = np.fft.fft2(mean_image*filterfunction)
+    sqr_fft_mean_im = abs(np.fft.fftshift(fft_of_mean_image*np.conj(fft_of_mean_image))) / (ndx*ndy)
+    
     for i in range(nFrames):
         fft_of_image = np.fft.fft2(im[i]*filterfunction)
         sqr_of_fft = np.fft.fftshift(fft_of_image*np.conj(fft_of_image))
@@ -140,7 +148,10 @@ def determining_A_and_B(im, use_BH_filter=False,
     rad_av_av_fftsq = radial_avg_ddm_matrix(av_fftsq_of_each_frame.reshape(1,ndx,ndy),
                                       centralAngle=centralAngle,
                                       angRange=angRange)
-    return rad_av_av_fftsq
+    rad_av_av_fftsq0 = radial_avg_ddm_matrix(sqr_fft_mean_im.reshape(1,ndx,ndy),
+                                      centralAngle=centralAngle,
+                                      angRange=angRange)
+    return rad_av_av_fftsq, rad_av_av_fftsq0
 
 def generateLogDistributionOfTimeLags(start,stop,numPoints):
     '''
@@ -239,6 +250,10 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
             num_dif_max = 300
     else:
         num_dif_max = 300
+    if 'b_est_method' in kwargs:
+        b_est_meth = kwargs['b_est_method']
+    else:
+        b_est_meth = 'PS'
 
     if imageArray.ndim != 3:
         print("Images passed to `computeDDMMatrix` must be 3D array.")
@@ -250,6 +265,7 @@ def computeDDMMatrix(imageArray, dts, use_BH_windowing=False, quiet=False,
     
     #Determines the dimensions of the data set (number of frames, x- and y-resolution in pixels
     ntimes, ndx, ndy = imageArray.shape
+    
 
     #Initializes array for Fourier transforms of differences
     ddm_mat = np.zeros((len(dts), ndx, ndy),dtype=float)
@@ -1066,9 +1082,9 @@ def find_radial_average(im, mask=None, centralAngle=None, angRange=None,
     #From https://github.com/MathieuLeocmach/DDM/blob/master/python/DDM.ipynb
     nx,ny = im.shape
 
-    if (centralAngle!=None) and (angRange!=None) and (mask==None):
+    if (centralAngle!=None) and (angRange!=None) and (mask is None):
         mask = generate_mask(im, centralAngle, angRange)
-    elif mask==None:
+    elif mask is None:
         mask = np.ones_like(im)
         
     if remove_vert_line:
@@ -1132,9 +1148,9 @@ def radial_avg_ddm_matrix(ddm_matrix, mask=None,
     bins = np.arange(max(nx,ny)/2+1) #- 0.5 #2023-05-04: remove the "-0.5"
     
 
-    if (centralAngle!=None) and (angRange!=None) and (mask==None):
+    if (centralAngle!=None) and (angRange!=None) and (mask is None):
         mask = generate_mask(ddm_matrix[0], centralAngle, angRange)
-    elif mask==None:
+    elif mask is None:
         mask = np.ones_like(ddm_matrix[0])
 
     array_to_radial_avg = ddm_matrix[0].copy()
