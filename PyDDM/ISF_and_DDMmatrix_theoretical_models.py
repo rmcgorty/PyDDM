@@ -247,6 +247,38 @@ def dTheoryDoubleExp_ISF(lagtime,f,t1,s1,t2,s2):
     isf = (f*np.exp(-1.0*(lagtime/t1)**s1)) + ((1-f)*np.exp(-1.0*(lagtime/t2)**s2))
     return isf
 
+
+def dTheoryDoubleExp_OneNonerg_ISF(lagtime,f,tau1,s1,C,tau2,s2):
+    r'''
+    Theoretical model with an exponential term for the 
+    intermediate scatting function. 
+
+    Parameters
+    ----------
+    lagtime : array
+        1D array of the lagtimes
+    f : float
+        Fraction with relaxation time tau1 (part of non-ergodic)
+    tau1 : float
+        The characteristic decay time
+    s1 : float
+        Stretching exponent
+    C : float
+        The non-ergodicity parameter
+
+    Returns
+    -------
+    ddm_matrix : array
+        DDM matrix as shown in equation below
+        
+
+    '''
+    
+    part1 = ((1-C)*np.exp(-1.0*(lagtime/tau1)**s1)) + C
+    part2 = np.exp(-1.0*(lagtime/tau2)**s2)
+    
+    return (f*part1) + ((1-f)*part2)
+
 ###########################################################################
 # Models that include a ballistic component (Schulz distributions)        #
 #  along with an exponential term.                                        #

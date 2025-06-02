@@ -320,6 +320,23 @@ isf_single_exponential_nonerg['parameter_info'] = [
 isf_single_exponential_nonerg['model_function'] = models.dTheorySingleExp_Nonerg_ISF
 isf_single_exponential_nonerg['data_to_use'] = 'ISF'
 
+isf_double_exponential_nonerg = {}
+isf_double_exponential_nonerg['parameter_info'] = [
+        {'n': 0, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "Fraction1", 'error': 0, 'step':0},
+        {'n': 1, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "Tau", 'error': 0, 'step':0},
+        {'n': 2, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "StretchingExp", 'error': 0, 'step':0},
+        {'n': 3, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "NonErgodic", 'error': 0, 'step':0},
+        {'n': 4, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "Tau2", 'error': 0, 'step':0},
+        {'n': 5, 'value': 0, 'limits': [0,0], 'limited': [True,True],
+         'fixed': False, 'parname': "StretchingExp2", 'error': 0, 'step':0}]
+isf_double_exponential_nonerg['model_function'] = models.dTheoryDoubleExp_OneNonerg_ISF
+isf_double_exponential_nonerg['data_to_use'] = 'ISF'
+
 
 isf_double_exponential = {}
 isf_double_exponential['parameter_info'] = [
@@ -436,6 +453,7 @@ fitting_models['ISF - Exponential and Ballistic'] = isf_exponential_ballistic
 fitting_models['ISF - Ballistic'] = isf_ballistic
 fitting_models['ISF - Double Ballistic'] = isf_double_ballistic
 fitting_models['ISF - Single Exponential - NonErgodic'] = isf_single_exponential_nonerg
+fitting_models['ISF - Double Exponential - NonErgodic'] = isf_double_exponential_nonerg
 
 ###############################################################################
 # Below are functions for working with the fitting.                           #
