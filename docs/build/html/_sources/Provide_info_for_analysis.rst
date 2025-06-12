@@ -122,6 +122,7 @@ There are different methods for estimating the background paramater, *B*. The me
 amplitude_method
 -----------------
 There are different methods for estimating the amplitude paramater, *A*. The methods are selected by setting this parameter to 0, 1, or 2. The default is *1*. Those correspond to:
+
 * *0*: Like with background_method = *5*, we assume that the average of the Fourier transform squared of the images minus the Fourier transform squared of the average image is equal to 0.5*(A+B). 
 * *1*: Like with background_method = *0*, we assume that the average of the Fourier transform squared of the images is equal to 0.5*(A+B). 
 * *2*: Experimental. Don't use this.
