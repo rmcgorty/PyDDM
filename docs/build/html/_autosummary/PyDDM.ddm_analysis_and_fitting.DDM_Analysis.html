@@ -1,637 +1,448 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+
+<html lang="en" data-content_root="../" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>PyDDM.ddm_analysis_and_fitting.DDM_Analysis &#8212; PyDDM v0.1.0 documentation</title>
-    
-  <link href="../_static/css/theme.css" rel="stylesheet">
-  <link href="../_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    
-    <link rel="stylesheet" href="../_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    
-  <link rel="preload" as="script" href="../_static/js/index.be7d3bbb2ef33a8344ce.js">
-
-    <script id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/language_data.js"></script>
+    <script src="../_static/documentation_options.js?v=d47532a6"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="../_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Analysis';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="PyDDM.ddm_analysis_and_fitting.DDM_Fit" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html" />
     <link rel="prev" title="PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits" href="PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
     
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
-      
-      
-      
-      <h1 class="site-logo" id="site-title">PyDDM v0.1.0 documentation</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">PyDDM v0.1.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../gettingstarted.html">
-   Getting Started
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="../usage.html">
-   Usage
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="../Provide_info_for_analysis.html">
-     What metadata to provide in the YAML file
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Walkthrough%20-%20simple.html">
-   Basic walkthrough
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Walkthrough%20-%20details.html">
-   Advanced walkthrough
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html">
-   Adding a new DDM model
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../Walkthrough%20-%20intermittent%20dynamics.html">
-   Probing intermittent dynamics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../usage.html">Usage</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Provide_info_for_analysis.html">What metadata to provide in the YAML file</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../Walkthrough%20-%20simple.html">Basic walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Walkthrough%20-%20details.html">Advanced walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html">Adding a new DDM model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Walkthrough%20-%20intermittent%20dynamics.html">Probing intermittent dynamics</a></li>
 </ul>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active has-children">
-  <a class="reference internal" href="PyDDM.html">
-   PyDDM
-  </a>
-  <input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul class="current">
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.html">
-     PyDDM.ISF_and_DDMmatrix_theoretical_models
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-    <label for="toctree-checkbox-3">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 current active has-children">
-    <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.html">
-     PyDDM.ddm_analysis_and_fitting
-    </a>
-    <input checked="" class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-    <label for="toctree-checkbox-4">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul class="current">
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.apply_binning.html">
-       PyDDM.ddm_analysis_and_fitting.apply_binning
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.fit_report.html">
-       PyDDM.ddm_analysis_and_fitting.fit_report
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit.html">
-       PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection.html">
-       PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.newt.html">
-       PyDDM.ddm_analysis_and_fitting.newt
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.print_fitting_models.html">
-       PyDDM.ddm_analysis_and_fitting.print_fitting_models
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background.html">
-       PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel.html">
-       PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html">
-       PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits
-      </a>
-     </li>
-     <li class="toctree-l3 current active">
-      <a class="current reference internal" href="#">
-       PyDDM.ddm_analysis_and_fitting.DDM_Analysis
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html">
-       PyDDM.ddm_analysis_and_fitting.DDM_Fit
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="PyDDM.ddm_calc.html">
-     PyDDM.ddm_calc
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-    <label for="toctree-checkbox-5">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.computeDDMMatrix.html">
-       PyDDM.ddm_calc.computeDDMMatrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.determining_A_and_B.html">
-       PyDDM.ddm_calc.determining_A_and_B
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.execute_LSQ_fit.html">
-       PyDDM.ddm_calc.execute_LSQ_fit
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.execute_ScipyCurveFit_fit.html">
-       PyDDM.ddm_calc.execute_ScipyCurveFit_fit
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.find_radial_average.html">
-       PyDDM.ddm_calc.find_radial_average
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.fit_ddm.html">
-       PyDDM.ddm_calc.fit_ddm
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.fit_ddm_all_qs.html">
-       PyDDM.ddm_calc.fit_ddm_all_qs
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.generateLogDistributionOfTimeLags.html">
-       PyDDM.ddm_calc.generateLogDistributionOfTimeLags
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.generate_mask.html">
-       PyDDM.ddm_calc.generate_mask
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.get_FF_DDM_matrix.html">
-       PyDDM.ddm_calc.get_FF_DDM_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.get_MSD_from_DDM_data.html">
-       PyDDM.ddm_calc.get_MSD_from_DDM_data
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.newt.html">
-       PyDDM.ddm_calc.newt
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.radial_avg_ddm_matrix.html">
-       PyDDM.ddm_calc.radial_avg_ddm_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.temporalVarianceDDMMatrix.html">
-       PyDDM.ddm_calc.temporalVarianceDDMMatrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.window_function.html">
-       PyDDM.ddm_calc.window_function
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.ddm_calc.IPythonStreamHandler.html">
-       PyDDM.ddm_calc.IPythonStreamHandler
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.html">
-     PyDDM.fit_parameters_dictionaries
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-    <label for="toctree-checkbox-6">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not.html">
-       PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes.html">
-       PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values.html">
-       PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.populate_intial_guesses.html">
-       PyDDM.fit_parameters_dictionaries.populate_intial_guesses
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters.html">
-       PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.return_parameter_names.html">
-       PyDDM.fit_parameters_dictionaries.return_parameter_names
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.return_possible_fitting_models.html">
-       PyDDM.fit_parameters_dictionaries.return_possible_fitting_models
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_fixed.html">
-       PyDDM.fit_parameters_dictionaries.set_parameter_fixed
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits.html">
-       PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess.html">
-       PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_limits.html">
-       PyDDM.fit_parameters_dictionaries.set_parameter_limits
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display.html">
-       PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="PyDDM.utils.html">
-     PyDDM.utils
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-    <label for="toctree-checkbox-7">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.create_two_time_correlation_matrix.html">
-       PyDDM.utils.create_two_time_correlation_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.generate_pandas_data.html">
-       PyDDM.utils.generate_pandas_data
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.generate_pandas_table_fit_results.html">
-       PyDDM.utils.generate_pandas_table_fit_results
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.get_schulz_dist.html">
-       PyDDM.utils.get_schulz_dist
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.get_velocity_variance.html">
-       PyDDM.utils.get_velocity_variance
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.newt.html">
-       PyDDM.utils.newt
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_amplitude.html">
-       PyDDM.utils.plot_amplitude
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_amplitude_over_background.html">
-       PyDDM.utils.plot_amplitude_over_background
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_background.html">
-       PyDDM.utils.plot_background
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_fraction.html">
-       PyDDM.utils.plot_fraction
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_nonerg.html">
-       PyDDM.utils.plot_nonerg
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_one_tau_vs_q.html">
-       PyDDM.utils.plot_one_tau_vs_q
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_schulz.html">
-       PyDDM.utils.plot_schulz
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_stretching_exponent.html">
-       PyDDM.utils.plot_stretching_exponent
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_to_inspect_fit.html">
-       PyDDM.utils.plot_to_inspect_fit
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.plot_to_inspect_fit_2x2subplot.html">
-       PyDDM.utils.plot_to_inspect_fit_2x2subplot
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="PyDDM.utils.view_colormap.html">
-       PyDDM.utils.view_colormap
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="PyDDM.html">PyDDM</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.html">PyDDM.ISF_and_DDMmatrix_theoretical_models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_OneNonerg_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_OneNonerg_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.dcimg_mod.html">PyDDM.dcimg_mod</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.dcimg_mod.DCIMGFile.html">PyDDM.dcimg_mod.DCIMGFile</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.html">PyDDM.ddm_analysis_and_fitting</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.apply_binning.html">PyDDM.ddm_analysis_and_fitting.apply_binning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.fit_report.html">PyDDM.ddm_analysis_and_fitting.fit_report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit.html">PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection.html">PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.newt.html">PyDDM.ddm_analysis_and_fitting.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.print_fitting_models.html">PyDDM.ddm_analysis_and_fitting.print_fitting_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background.html">PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel.html">PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html">PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits</a></li>
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">PyDDM.ddm_analysis_and_fitting.DDM_Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html">PyDDM.ddm_analysis_and_fitting.DDM_Fit</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.ddm_calc.html">PyDDM.ddm_calc</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.computeDDMMatrix.html">PyDDM.ddm_calc.computeDDMMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.computeDDMMatrix_correctVelocityPhase.html">PyDDM.ddm_calc.computeDDMMatrix_correctVelocityPhase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.determining_A_and_B.html">PyDDM.ddm_calc.determining_A_and_B</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.execute_LSQ_fit.html">PyDDM.ddm_calc.execute_LSQ_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.execute_ScipyCurveFit_fit.html">PyDDM.ddm_calc.execute_ScipyCurveFit_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.find_radial_average.html">PyDDM.ddm_calc.find_radial_average</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.fit_ddm.html">PyDDM.ddm_calc.fit_ddm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.fit_ddm_all_qs.html">PyDDM.ddm_calc.fit_ddm_all_qs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.generateLogDistributionOfTimeLags.html">PyDDM.ddm_calc.generateLogDistributionOfTimeLags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.generate_mask.html">PyDDM.ddm_calc.generate_mask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.getPhase_phiDM.html">PyDDM.ddm_calc.getPhase_phiDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.getVel_phiDM.html">PyDDM.ddm_calc.getVel_phiDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.get_FF_DDM_matrix.html">PyDDM.ddm_calc.get_FF_DDM_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.get_MSD_from_DDM_data.html">PyDDM.ddm_calc.get_MSD_from_DDM_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.newt.html">PyDDM.ddm_calc.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.radial_avg_ddm_matrix.html">PyDDM.ddm_calc.radial_avg_ddm_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.temporalVarianceDDMMatrix.html">PyDDM.ddm_calc.temporalVarianceDDMMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.window_function.html">PyDDM.ddm_calc.window_function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.IPythonStreamHandler.html">PyDDM.ddm_calc.IPythonStreamHandler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.html">PyDDM.fit_parameters_dictionaries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not.html">PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes.html">PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values.html">PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.populate_intial_guesses.html">PyDDM.fit_parameters_dictionaries.populate_intial_guesses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters.html">PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.return_parameter_names.html">PyDDM.fit_parameters_dictionaries.return_parameter_names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.return_possible_fitting_models.html">PyDDM.fit_parameters_dictionaries.return_possible_fitting_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_fixed.html">PyDDM.fit_parameters_dictionaries.set_parameter_fixed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits.html">PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess.html">PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_limits.html">PyDDM.fit_parameters_dictionaries.set_parameter_limits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display.html">PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.utils.html">PyDDM.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.create_two_time_correlation_matrix.html">PyDDM.utils.create_two_time_correlation_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.generate_pandas_data.html">PyDDM.utils.generate_pandas_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.generate_pandas_table_fit_results.html">PyDDM.utils.generate_pandas_table_fit_results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.get_schulz_dist.html">PyDDM.utils.get_schulz_dist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.get_velocity_variance.html">PyDDM.utils.get_velocity_variance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.newt.html">PyDDM.utils.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_amplitude.html">PyDDM.utils.plot_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_amplitude_over_background.html">PyDDM.utils.plot_amplitude_over_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_background.html">PyDDM.utils.plot_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_fraction.html">PyDDM.utils.plot_fraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_nonerg.html">PyDDM.utils.plot_nonerg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_one_tau_vs_q.html">PyDDM.utils.plot_one_tau_vs_q</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_schulz.html">PyDDM.utils.plot_schulz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_stretching_exponent.html">PyDDM.utils.plot_stretching_exponent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_to_inspect_fit.html">PyDDM.utils.plot_to_inspect_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_to_inspect_fit_2x2subplot.html">PyDDM.utils.plot_to_inspect_fit_2x2subplot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.smoothstep.html">PyDDM.utils.smoothstep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.view_colormap.html">PyDDM.utils.view_colormap</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
-</div>
-
-</div>
-
-
-          
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
         
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="../_sources/_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Analysis.rst.txt"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.rst</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Analysis.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Source interaction buttons -->
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
 
-        </div>
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
 
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>PyDDM.ddm_analysis_and_fitting.DDM_Analysis</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-        </div>
-    </div>
-</div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>PyDDM.ddm_analysis_and_fitting.DDM_Analysis</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                    </div>
-                </div>
+            <div>
+                <h2> Contents </h2>
             </div>
-            
-              <div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.calculate_DDM_matrix()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.createTwoTimeCorr()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.find_alignment_factor()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.find_alignment_factor_one_lagtime()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.generate_plots()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.loadYAML()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.phiDM"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.phiDM()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.resave_ddm_dataset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.set_filename_for_saving()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.setup()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.variationInDDMMatrix()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-  <div class="section" id="pyddm-ddm-analysis-and-fitting-ddm-analysis">
-<h1>PyDDM.ddm_analysis_and_fitting.DDM_Analysis<a class="headerlink" href="#pyddm-ddm-analysis-and-fitting-ddm-analysis" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyddm-ddm-analysis-and-fitting-ddm-analysis">
+<h1>PyDDM.ddm_analysis_and_fitting.DDM_Analysis<a class="headerlink" href="#pyddm-ddm-analysis-and-fitting-ddm-analysis" title="Link to this heading">#</a></h1>
 <dl class="py class">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis">
-<em class="property">class </em><code class="sig-name descname">DDM_Analysis</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">data_yaml</span></em>, <em class="sig-param"><span class="n">load_images</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DDM_Analysis</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_yaml</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis" title="Link to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Performs preprossing of data, such as cropping, windowing etc. DDM calculations are performed on the processed time series
 to produce a xarray DataSet with DDM matrix, radial averages and ISF. The analysis parameters are provided by the user in
 a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.html"><span class="doc">More information here</span></a></p>
 <p class="rubric">Methods</p>
-<table class="longtable table autosummary">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_DDM_matrix</span></code></a></p></td>
 <td><p>Calculates the DDM matrix This function computes the DDM matrix.</p></td>
@@ -640,20 +451,10 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 <td><p>Create two-time correlation matrix</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_alignment_factor</span></code></a></p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param orientation_axis</dt>
-<dd class="field-odd"><p>DESCRIPTION. The default is np.pi/4.</p>
-</dd>
-</dl>
-</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_alignment_factor_one_lagtime</span></code></a></p></td>
-<td><p><dl class="field-list simple">
-<dt class="field-odd">param orientation_axis</dt>
-<dd class="field-odd"><p>DESCRIPTION. The default is np.pi/4.</p>
-</dd>
-</dl>
-</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">generate_plots</span></code></a></p></td>
 <td><p>Generates plot, which can be saved as PDF, to summarize the DDM matrix calulations.</p></td>
@@ -661,23 +462,27 @@ a YAML file: <a class="reference internal" href="../Provide_info_for_analysis.ht
 <tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loadYAML</span></code></a></p></td>
 <td><p>Opens yaml file and extracts parameter values.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resave_ddm_dataset</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.phiDM" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.phiDM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">phiDM</span></code></a></p></td>
+<td><p>For more info, see Colin, R., Zhang, R.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resave_ddm_dataset</span></code></a></p></td>
 <td><p>Resave the DDM dataset.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_filename_for_saving</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_filename_for_saving</span></code></a></p></td>
 <td><p>Change file name to save the data to disk.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setup</span></code></a></p></td>
 <td><p>Based off user-provided parameters, prepares images for the DDM analysis.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variationInDDMMatrix</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix" title="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variationInDDMMatrix</span></code></a></p></td>
 <td><p>Creates the xarray Dataset and PDF report.</p></td>
 </tr>
 </tbody>
 </table>
+</div>
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix">
-<code class="sig-name descname">calculate_DDM_matrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix">
+<span class="sig-name descname"><span class="pre">calculate_DDM_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bg_subtract_for_AB_determination</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix" title="Link to this definition">#</a></dt>
 <dd><p>Calculates the DDM matrix
 This function computes the DDM matrix. The radially averaged DDM matrix will
 then also be found, along with estimates of the background and amplitude. From
@@ -685,10 +490,13 @@ the amplitude and background, we can extract the intermediate scattering functio
 (ISF) from the DDM matrix. All of these computed variables will be stored as
 an xarray Dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>quiet</strong> (<em>boolean</em><em> (</em><em>optional</em><em>)</em>) – If set to <cite>False</cite>, then when calculating the DDM matrix, a message will print out at
 about every fourth time lag calculated (with a timestamp)</p></li>
+<li><p><strong>velocity</strong> (<em>array-like</em><em> (</em><em>optional</em><em>)</em>) – Velocity in x and y direction.</p></li>
+<li><p><strong>bg_subtract_for_AB_determination</strong> (<em>{None</em><em>, </em><em>'mode'</em><em>, </em><em>'median'}</em>) – Deafault option is None. In method to find A(q) and B, one can subtract the mode or median of
+the images.</p></li>
 <li><p><strong>**overlap_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3}</em><em>, </em><em>optional</em>) – Optional keyword argument. Will be set to 2 if not specified here nor in the YAML file.
 Determines how overlapped the different image pairs are. Let’s say you are finding all pairs
 of images separated by a lag time of 10 frames. You’d have frame 1 and 11, 2 and 12, 3 and 13, etc.
@@ -701,92 +509,87 @@ overlap_method=2, but we compute <em>at most</em> <cite>number_differences_max</
 So for example, with a lag time of 1 frame and
 a movie that has 1000 frames, we could theoretically use 999 differences of images (and we would for the other methods). But
 for overlap_method=2, we would only use 50 of those. This is for quickening up the computation.</p></li>
-<li><p><strong>**background_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3}</em><em>, </em><em>optional</em>) – Optional keyword argument. Will be set to 0 if not specified here nor in the YAML file.
+<li><p><strong>**background_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2</em><em>,</em><em>3</em><em>,</em><em>4</em><em>,</em><em>5}</em><em>, </em><em>optional</em>) – Optional keyword argument. Will be set to 0 if not specified here nor in the YAML file.
 Determines how we estimate the <span class="math notranslate nohighlight">\(B\)</span> parameter. This can be done by lookinag the average of the
 Fourier transform of each image (not image difference!) squared (that’s background_method=0). We could
 also use the minimum of the DDM matrix (background_method=1). Or we could use the average DDM matrix for
 the largest q (background_method=2). Or we could just set <span class="math notranslate nohighlight">\(B\)</span> to zero (background_method=3).</p></li>
+<li><p><strong>**amplitude_method</strong> (<em>{0</em><em>,</em><em>1</em><em>,</em><em>2}</em><em>, </em><em>optional</em>) – Optional keyword argument.</p></li>
 <li><p><strong>**number_lag_times</strong> (<em>int</em>) – Optional keyword argument. Must be set in the YAML file.
 You may pass this optional keyword argument if you want to overwrite the value for the number of lag
 times set in the YAML file.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ddm_dataset</strong> – Dataset containing the DDM matrix, the estimate of the background and amplitude, the ISF, etc. Coordinates
 of these variables will be the wavevector (either as q_x, q_y or the magnitude q), lagtime, etc.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>xarray Dataset</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr">
-<code class="sig-name descname">createTwoTimeCorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddm_var_dataset</span></em>, <em class="sig-param"><span class="n">qindex</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr">
+<span class="sig-name descname"><span class="pre">createTwoTimeCorr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddm_var_dataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qindex</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr" title="Link to this definition">#</a></dt>
 <dd><p>Create two-time correlation matrix</p>
 <p>After generating the DDM matrix as a function of time lag as well as
 of time, can use this function to generate a 2D two-time correlation
 function for a particular wavenumber.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ddm_variability</strong> (<em>xarray dataset</em>) – Results of function ‘variationInDDMMatrix’ in ‘ddm_analysis_and_fitting’ code</p></li>
 <li><p><strong>q_index</strong> (<em>int</em>) – Index of the wavenumber array</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>twotimecorrelation</strong> – Two time correlation function</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor">
-<code class="sig-name descname">find_alignment_factor</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddmmatrix3d</span></em>, <em class="sig-param"><span class="n">orientation_axis</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">remove_vert_line</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_hor_line</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor">
+<span class="sig-name descname"><span class="pre">find_alignment_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddmmatrix3d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_vert_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_hor_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor" title="Link to this definition">#</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>orientation_axis</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is np.pi/4.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime">
-<code class="sig-name descname">find_alignment_factor_one_lagtime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddmmatrix2d</span></em>, <em class="sig-param"><span class="n">orientation_axis</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">remove_vert_line</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">remove_hor_line</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime">
+<span class="sig-name descname"><span class="pre">find_alignment_factor_one_lagtime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddmmatrix2d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_vert_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_hor_line</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime" title="Link to this definition">#</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>orientation_axis</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – DESCRIPTION. The default is np.pi/4.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p></p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>None.</p>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots">
-<code class="sig-name descname">generate_plots</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddmdataset</span></em>, <em class="sig-param"><span class="n">pdf_to_save_to</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">q_to_see</span><span class="o">=</span><span class="default_value">1.5</span></em>, <em class="sig-param"><span class="n">num</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots">
+<span class="sig-name descname"><span class="pre">generate_plots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddmdataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdf_to_save_to</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_to_see</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots" title="Link to this definition">#</a></dt>
 <dd><p>Generates plot, which can be saved as PDF, to summarize the DDM matrix calulations. The region of interest is displayed;
 a Fourier transform of a difference image; a graph of radial averages of FFT of frames, used to determine amplitude and background
 and a plot of the intermediate scattering function at one given q-value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ddmdataset</strong> (<em>Dataset</em>) – DDM Dataset</p></li>
-<li><p><strong>pdf_to_save_to</strong> (<em>TYPE</em><em>, </em><em>optional</em>) – </p></li>
+<li><p><strong>pdf_to_save_to</strong> (<em>TYPE</em><em>, </em><em>optional</em>)</p></li>
 <li><p><strong>q_to_see</strong> (<em>float</em>) – The magnitude of the wavector for which to plot the ISF units: μm$^{-1}$</p></li>
 <li><p><strong>num</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of the ROI in case multiple ROIs have been analyzed</p></li>
 </ul>
@@ -799,19 +602,50 @@ and a plot of the intermediate scattering function at one given q-value.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML">
-<code class="sig-name descname">loadYAML</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML">
+<span class="sig-name descname"><span class="pre">loadYAML</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML" title="Link to this definition">#</a></dt>
 <dd><p>Opens yaml file and extracts parameter values.</p>
 <p>To analyze a recorded movie, there must be associated metadata. That can either
 be in the form of a yaml file or string in the yaml format. The yaml file</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset">
-<code class="sig-name descname">resave_ddm_dataset</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ddmdataset</span></em>, <em class="sig-param"><span class="n">file_name</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.phiDM">
+<span class="sig-name descname"><span class="pre">phiDM</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lagt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">halfsize</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_gf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gfsize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2e-05</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.phiDM" title="Link to this definition">#</a></dt>
+<dd><p>For more info, see Colin, R., Zhang, R. &amp; Wilson, L. G.
+Fast, high-throughput measurement of
+collective behaviour in a bacterial population.
+Journal of The Royal Society Interface
+11, 20140486 (2014).
+<a class="reference external" href="https://royalsocietypublishing.org/doi/10.1098/rsif.2014.0486">https://royalsocietypublishing.org/doi/10.1098/rsif.2014.0486</a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lagt</strong> (<em>int</em>) – Lag time (in units of frames).</p></li>
+<li><p><strong>halfsize</strong> (<em>int</em>) – Centered above zero frequency, size of region to fit to plane.</p></li>
+<li><p><strong>use_gf</strong> (<em>boolean</em><em>, </em><em>optional</em>) – Use Gaussian filter or not. The default is True.</p></li>
+<li><p><strong>gfsize</strong> (<em>int</em><em>, </em><em>optional</em>) – Size of Gaussian filter to apply. The default is 3.</p></li>
+<li><p><strong>err_limit</strong> (<em>float</em><em>, </em><em>optional</em>) – If error between data and plane that is fit is greater than this value
+per pixel, then won’t be used to get avg velocity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>phiDM_dataset</strong> – Dataset contains the phase of the Fourier tranform of each image,
+the velocity (v_x and v_y), and error between the fit of plane and
+the difference in phase.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>xarray Dataset</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset">
+<span class="sig-name descname"><span class="pre">resave_ddm_dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ddmdataset</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset" title="Link to this definition">#</a></dt>
 <dd><p>Resave the DDM dataset.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ddmdataset</strong> (<em>xarray dataset</em>) – DDM dataset</p></li>
 <li><p><strong>file_name</strong> (<em>string</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – Filename for saving data. The default is None. If None,
@@ -823,20 +657,20 @@ Note that ‘_ddmmatrix.nc’ is appended to the end of the filename.</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving">
-<code class="sig-name descname">set_filename_for_saving</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">quiet</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving">
+<span class="sig-name descname"><span class="pre">set_filename_for_saving</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quiet</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving" title="Link to this definition">#</a></dt>
 <dd><p>Change file name to save the data to disk. This is the file that will
 store the <cite>ddm_dataset</cite> as a netCDF file (with extension .nc).</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>filename</strong> (<em>str</em>) – New file name</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup">
-<code class="sig-name descname">setup</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">load_images</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup">
+<span class="sig-name descname"><span class="pre">setup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">load_images</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup" title="Link to this definition">#</a></dt>
 <dd><p>Based off user-provided parameters, prepares images for the DDM analysis.</p>
 <p>Using the parameters under the ‘Analysis_parameters’ section of the
 YAML file, this will get the image stack ready for DDM analysis. Possible
@@ -845,11 +679,11 @@ region of interest (ROI), binnning the image, applying a windowing function.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix">
-<code class="sig-name descname">variationInDDMMatrix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lagtime</span></em>, <em class="sig-param"><span class="n">orientation_axis</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">save_full_ddmmat</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix">
+<span class="sig-name descname"><span class="pre">variationInDDMMatrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lagtime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_full_ddmmat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">velocity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[0,</span> <span class="pre">0]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix" title="Link to this definition">#</a></dt>
 <dd><p>Creates the xarray Dataset and PDF report.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>lagtime</strong> (<em>int</em><em> or </em><em>list-like</em>) – If an integer, will compute the DDM matrix for this
 lag time over all times. If an arrary or list, then
@@ -862,13 +696,15 @@ then it will radially average that matrix so that the
 DDM matrix is just a function of the magnitude of the
 wavevector, the lagtime, and the time. If True, then
 it may potentially use up a lot of memory.</p></li>
+<li><p><strong>velocity</strong> (<em>list-like</em><em>, </em><em>optional</em>) – Deafult is [0,0]. If not [0,0], then will use phiDM
+to correct for drift or ballistic motion.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ddm_dataset</strong> – Dataset containing the DDM matrix and associated data
 and metadata.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>xarray Dataset</p>
 </dd>
 </dl>
@@ -876,47 +712,119 @@ and metadata.</p>
 
 </dd></dl>
 
-</div>
+</section>
 
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">PyDDM.ddm_analysis_and_fitting.DDM_Fit</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
+                </footer>
+              
+            </div>
             
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By Ryan McGorty and Hannah Noor Verwei<br/>
-    
-        &copy; Copyright 2021, Ryan McGorty and Hannah Noor Verwei.<br/>
-  </p>
-</footer>
-</main>
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-      </div>
-    </div>
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.calculate_DDM_matrix"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.calculate_DDM_matrix()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.createTwoTimeCorr"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.createTwoTimeCorr()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.find_alignment_factor()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.find_alignment_factor_one_lagtime"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.find_alignment_factor_one_lagtime()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.generate_plots"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.generate_plots()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.loadYAML"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.loadYAML()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.phiDM"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.phiDM()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.resave_ddm_dataset"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.resave_ddm_dataset()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.set_filename_for_saving"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.set_filename_for_saving()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.setup"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.setup()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.ddm_analysis_and_fitting.DDM_Analysis.variationInDDMMatrix"><code class="docutils literal notranslate"><span class="pre">DDM_Analysis.variationInDDMMatrix()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
   
-  <script src="../_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ryan McGorty and Hannah Noor Verwei
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021, Ryan McGorty and Hannah Noor Verwei.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

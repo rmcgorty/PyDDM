@@ -1,1064 +1,473 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+
+<html lang="en" data-content_root="./" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>More detailed walkthrough &#8212; PyDDM v0.1.0 documentation</title>
-    
-  <link href="_static/css/theme.css" rel="stylesheet">
-  <link href="_static/css/index.ff1ffe594081f20da1ef19478df9384b.css" rel="stylesheet">
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    
-      
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=eba8b062" />
+    <link rel="stylesheet" type="text/css" href="_static/nbsphinx-code-cells.css?v=2aa19091" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    
-    <link rel="stylesheet" href="_static/sphinx-book-theme.css?digest=c3fdc42140077d1ad13ad2f1588a4309" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-  <link rel="preload" as="script" href="_static/js/index.be7d3bbb2ef33a8344ce.js">
-
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <script src="_static/documentation_options.js?v=d47532a6"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="_static/sphinx-book-theme.d59cb220de22ca1c485ebbdc042f0030.js"></script>
-    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true, "ignoreClass": "tex2jax_ignore|mathjax_ignore|document", "processClass": "tex2jax_process|mathjax_process|math|output_area"}})</script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Walkthrough - details';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Creating a new DDM fitting function" href="Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html" />
     <link rel="prev" title="Simple walkthrough" href="Walkthrough%20-%20simple.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="en">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
-    
-    <div class="container-fluid" id="banner"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
-    <div class="container-xl">
-      <div class="row">
-          
-<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
     
-        <div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="index.html">
-      
-      
-      
-      <h1 class="site-logo" id="site-title">PyDDM v0.1.0 documentation</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">PyDDM v0.1.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         <ul class="current nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="gettingstarted.html">
-   Getting Started
-  </a>
- </li>
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="usage.html">
-   Usage
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/>
-  <label for="toctree-checkbox-1">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2">
-    <a class="reference internal" href="Provide_info_for_analysis.html">
-     What metadata to provide in the YAML file
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Walkthrough%20-%20simple.html">
-   Basic walkthrough
-  </a>
- </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   Advanced walkthrough
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html">
-   Adding a new DDM model
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="Walkthrough%20-%20intermittent%20dynamics.html">
-   Probing intermittent dynamics
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="usage.html">Usage</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="Provide_info_for_analysis.html">What metadata to provide in the YAML file</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="Walkthrough%20-%20simple.html">Basic walkthrough</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html">Adding a new DDM model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Walkthrough%20-%20intermittent%20dynamics.html">Probing intermittent dynamics</a></li>
 </ul>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1 has-children">
-  <a class="reference internal" href="_autosummary/PyDDM.html">
-   PyDDM
-  </a>
-  <input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/>
-  <label for="toctree-checkbox-2">
-   <i class="fas fa-chevron-down">
-   </i>
-  </label>
-  <ul>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.html">
-     PyDDM.ISF_and_DDMmatrix_theoretical_models
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/>
-    <label for="toctree-checkbox-3">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF.html">
-       PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.html">
-     PyDDM.ddm_analysis_and_fitting
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/>
-    <label for="toctree-checkbox-4">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.apply_binning.html">
-       PyDDM.ddm_analysis_and_fitting.apply_binning
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.fit_report.html">
-       PyDDM.ddm_analysis_and_fitting.fit_report
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit.html">
-       PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection.html">
-       PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.newt.html">
-       PyDDM.ddm_analysis_and_fitting.newt
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.print_fitting_models.html">
-       PyDDM.ddm_analysis_and_fitting.print_fitting_models
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background.html">
-       PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel.html">
-       PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html">
-       PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Analysis.html">
-       PyDDM.ddm_analysis_and_fitting.DDM_Analysis
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Fit.html">
-       PyDDM.ddm_analysis_and_fitting.DDM_Fit
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.html">
-     PyDDM.ddm_calc
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-5" name="toctree-checkbox-5" type="checkbox"/>
-    <label for="toctree-checkbox-5">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.computeDDMMatrix.html">
-       PyDDM.ddm_calc.computeDDMMatrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.determining_A_and_B.html">
-       PyDDM.ddm_calc.determining_A_and_B
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.execute_LSQ_fit.html">
-       PyDDM.ddm_calc.execute_LSQ_fit
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.execute_ScipyCurveFit_fit.html">
-       PyDDM.ddm_calc.execute_ScipyCurveFit_fit
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.find_radial_average.html">
-       PyDDM.ddm_calc.find_radial_average
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.fit_ddm.html">
-       PyDDM.ddm_calc.fit_ddm
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.fit_ddm_all_qs.html">
-       PyDDM.ddm_calc.fit_ddm_all_qs
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.generateLogDistributionOfTimeLags.html">
-       PyDDM.ddm_calc.generateLogDistributionOfTimeLags
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.generate_mask.html">
-       PyDDM.ddm_calc.generate_mask
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.get_FF_DDM_matrix.html">
-       PyDDM.ddm_calc.get_FF_DDM_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.get_MSD_from_DDM_data.html">
-       PyDDM.ddm_calc.get_MSD_from_DDM_data
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.newt.html">
-       PyDDM.ddm_calc.newt
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.radial_avg_ddm_matrix.html">
-       PyDDM.ddm_calc.radial_avg_ddm_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.temporalVarianceDDMMatrix.html">
-       PyDDM.ddm_calc.temporalVarianceDDMMatrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.window_function.html">
-       PyDDM.ddm_calc.window_function
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.ddm_calc.IPythonStreamHandler.html">
-       PyDDM.ddm_calc.IPythonStreamHandler
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.html">
-     PyDDM.fit_parameters_dictionaries
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-6" name="toctree-checkbox-6" type="checkbox"/>
-    <label for="toctree-checkbox-6">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not.html">
-       PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes.html">
-       PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values.html">
-       PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.populate_intial_guesses.html">
-       PyDDM.fit_parameters_dictionaries.populate_intial_guesses
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters.html">
-       PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.return_parameter_names.html">
-       PyDDM.fit_parameters_dictionaries.return_parameter_names
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.return_possible_fitting_models.html">
-       PyDDM.fit_parameters_dictionaries.return_possible_fitting_models
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.set_parameter_fixed.html">
-       PyDDM.fit_parameters_dictionaries.set_parameter_fixed
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits.html">
-       PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess.html">
-       PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.set_parameter_limits.html">
-       PyDDM.fit_parameters_dictionaries.set_parameter_limits
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display.html">
-       PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display
-      </a>
-     </li>
-    </ul>
-   </li>
-   <li class="toctree-l2 has-children">
-    <a class="reference internal" href="_autosummary/PyDDM.utils.html">
-     PyDDM.utils
-    </a>
-    <input class="toctree-checkbox" id="toctree-checkbox-7" name="toctree-checkbox-7" type="checkbox"/>
-    <label for="toctree-checkbox-7">
-     <i class="fas fa-chevron-down">
-     </i>
-    </label>
-    <ul>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.create_two_time_correlation_matrix.html">
-       PyDDM.utils.create_two_time_correlation_matrix
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.generate_pandas_data.html">
-       PyDDM.utils.generate_pandas_data
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.generate_pandas_table_fit_results.html">
-       PyDDM.utils.generate_pandas_table_fit_results
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.get_schulz_dist.html">
-       PyDDM.utils.get_schulz_dist
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.get_velocity_variance.html">
-       PyDDM.utils.get_velocity_variance
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.newt.html">
-       PyDDM.utils.newt
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_amplitude.html">
-       PyDDM.utils.plot_amplitude
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_amplitude_over_background.html">
-       PyDDM.utils.plot_amplitude_over_background
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_background.html">
-       PyDDM.utils.plot_background
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_fraction.html">
-       PyDDM.utils.plot_fraction
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_nonerg.html">
-       PyDDM.utils.plot_nonerg
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_one_tau_vs_q.html">
-       PyDDM.utils.plot_one_tau_vs_q
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_schulz.html">
-       PyDDM.utils.plot_schulz
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_stretching_exponent.html">
-       PyDDM.utils.plot_stretching_exponent
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_to_inspect_fit.html">
-       PyDDM.utils.plot_to_inspect_fit
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.plot_to_inspect_fit_2x2subplot.html">
-       PyDDM.utils.plot_to_inspect_fit_2x2subplot
-      </a>
-     </li>
-     <li class="toctree-l3">
-      <a class="reference internal" href="_autosummary/PyDDM.utils.view_colormap.html">
-       PyDDM.utils.view_colormap
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="_autosummary/PyDDM.html">PyDDM</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.html">PyDDM.ISF_and_DDMmatrix_theoretical_models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_OneNonerg_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_OneNonerg_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/PyDDM.dcimg_mod.html">PyDDM.dcimg_mod</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.dcimg_mod.DCIMGFile.html">PyDDM.dcimg_mod.DCIMGFile</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.html">PyDDM.ddm_analysis_and_fitting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.apply_binning.html">PyDDM.ddm_analysis_and_fitting.apply_binning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.fit_report.html">PyDDM.ddm_analysis_and_fitting.fit_report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit.html">PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection.html">PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.newt.html">PyDDM.ddm_analysis_and_fitting.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.print_fitting_models.html">PyDDM.ddm_analysis_and_fitting.print_fitting_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background.html">PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel.html">PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html">PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Analysis.html">PyDDM.ddm_analysis_and_fitting.DDM_Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_analysis_and_fitting.DDM_Fit.html">PyDDM.ddm_analysis_and_fitting.DDM_Fit</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.html">PyDDM.ddm_calc</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.computeDDMMatrix.html">PyDDM.ddm_calc.computeDDMMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.computeDDMMatrix_correctVelocityPhase.html">PyDDM.ddm_calc.computeDDMMatrix_correctVelocityPhase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.determining_A_and_B.html">PyDDM.ddm_calc.determining_A_and_B</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.execute_LSQ_fit.html">PyDDM.ddm_calc.execute_LSQ_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.execute_ScipyCurveFit_fit.html">PyDDM.ddm_calc.execute_ScipyCurveFit_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.find_radial_average.html">PyDDM.ddm_calc.find_radial_average</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.fit_ddm.html">PyDDM.ddm_calc.fit_ddm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.fit_ddm_all_qs.html">PyDDM.ddm_calc.fit_ddm_all_qs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.generateLogDistributionOfTimeLags.html">PyDDM.ddm_calc.generateLogDistributionOfTimeLags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.generate_mask.html">PyDDM.ddm_calc.generate_mask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.getPhase_phiDM.html">PyDDM.ddm_calc.getPhase_phiDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.getVel_phiDM.html">PyDDM.ddm_calc.getVel_phiDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.get_FF_DDM_matrix.html">PyDDM.ddm_calc.get_FF_DDM_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.get_MSD_from_DDM_data.html">PyDDM.ddm_calc.get_MSD_from_DDM_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.newt.html">PyDDM.ddm_calc.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.radial_avg_ddm_matrix.html">PyDDM.ddm_calc.radial_avg_ddm_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.temporalVarianceDDMMatrix.html">PyDDM.ddm_calc.temporalVarianceDDMMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.window_function.html">PyDDM.ddm_calc.window_function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.ddm_calc.IPythonStreamHandler.html">PyDDM.ddm_calc.IPythonStreamHandler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.html">PyDDM.fit_parameters_dictionaries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not.html">PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes.html">PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values.html">PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.populate_intial_guesses.html">PyDDM.fit_parameters_dictionaries.populate_intial_guesses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters.html">PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.return_parameter_names.html">PyDDM.fit_parameters_dictionaries.return_parameter_names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.return_possible_fitting_models.html">PyDDM.fit_parameters_dictionaries.return_possible_fitting_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.set_parameter_fixed.html">PyDDM.fit_parameters_dictionaries.set_parameter_fixed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits.html">PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess.html">PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.set_parameter_limits.html">PyDDM.fit_parameters_dictionaries.set_parameter_limits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display.html">PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="_autosummary/PyDDM.utils.html">PyDDM.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.create_two_time_correlation_matrix.html">PyDDM.utils.create_two_time_correlation_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.generate_pandas_data.html">PyDDM.utils.generate_pandas_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.generate_pandas_table_fit_results.html">PyDDM.utils.generate_pandas_table_fit_results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.get_schulz_dist.html">PyDDM.utils.get_schulz_dist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.get_velocity_variance.html">PyDDM.utils.get_velocity_variance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.newt.html">PyDDM.utils.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_amplitude.html">PyDDM.utils.plot_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_amplitude_over_background.html">PyDDM.utils.plot_amplitude_over_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_background.html">PyDDM.utils.plot_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_fraction.html">PyDDM.utils.plot_fraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_nonerg.html">PyDDM.utils.plot_nonerg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_one_tau_vs_q.html">PyDDM.utils.plot_one_tau_vs_q</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_schulz.html">PyDDM.utils.plot_schulz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_stretching_exponent.html">PyDDM.utils.plot_stretching_exponent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_to_inspect_fit.html">PyDDM.utils.plot_to_inspect_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.plot_to_inspect_fit_2x2subplot.html">PyDDM.utils.plot_to_inspect_fit_2x2subplot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.smoothstep.html">PyDDM.utils.smoothstep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_autosummary/PyDDM.utils.view_colormap.html">PyDDM.utils.view_colormap</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
 </ul>
 
     </div>
-</nav> <!-- To handle the deprecated key -->
-
-<div class="navbar_extra_footer">
-  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
-</div>
-
-</div>
-
-
-          
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
 
 
-          
-<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
-    
-    <div class="topbar container-xl fixed-top">
-    <div class="topbar-contents row">
-        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
-        <div class="col pl-md-4 topbar-main">
-            
-            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
-                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
-                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
-                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-arrow-left"></i>
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            
-            
-<div class="dropdown-buttons-trigger">
-    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
-            class="fas fa-download"></i></button>
-
-    <div class="dropdown-buttons">
-        <!-- ipynb file if we had a myst markdown file -->
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
         
-        <!-- Download raw file -->
-        <a class="dropdown-buttons" href="_sources/Walkthrough - details.ipynb.txt"><button type="button"
-                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
-                data-placement="left">.ipynb</button></a>
-        <!-- Download PDF via print -->
-        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
-                onclick="printPdf(this)" data-toggle="tooltip" data-placement="left">.pdf</button>
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
     </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Walkthrough - details.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
 </div>
 
-            <!-- Source interaction buttons -->
 
-            <!-- Full screen (wrap in <a> to have style consistency -->
 
-<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
-        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
-        title="Fullscreen mode"><i
-            class="fas fa-expand"></i></button></a>
 
-            <!-- Launch buttons -->
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
 
-        </div>
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
 
-        <!-- Table of contents -->
-        <div class="d-none d-md-block col-md-2 bd-toc show noprint">
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>More detailed walkthrough</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
             
-            <div class="tocsection onthispage pt-5 pb-3">
-                <i class="fas fa-list"></i> Contents
+            <div>
+                <h2> Contents </h2>
             </div>
-            <nav id="bd-toc-nav" aria-label="Page">
+            <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Importing-the-necessary-modules">
-   Importing the necessary modules
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Initializing-DDM_Analysis-class-and-computing-the-DDM-matrix">
-   Initializing DDM_Analysis class and computing the DDM matrix
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Digging-into-the-DDM-xarray.Dataset">
-     Digging into the DDM xarray.Dataset
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#Different-data-selecting-methods">
-       Different data selecting methods
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#Determing-the-A-and-B-parameters-to-get-the-ISF">
-       Determing the A and B parameters to get the ISF
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#Checking-the-background-estimate">
-       Checking the background estimate
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#Additional-notes-about-the-background">
-       Additional notes about the background
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Initiazing-DDM_Fit-class-and-fitting-our-data-to-a-model">
-   Initiazing DDM_Fit class and fitting our data to a model
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Our-first-attemp-at-fitting-the-data">
-     Our first attemp at fitting the data
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Our-second-attemp-at-fitting-the-data---updating-initial-guesses-for-tau">
-     Our second attemp at fitting the data - updating initial guesses for tau
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Our-third-attemp-at-fitting-the-data---tightening-the-bounds-on-the-stretching-exponent">
-     Our third attemp at fitting the data - tightening the bounds on the stretching exponent
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#What-to-make-of-the-results-at-high-q">
-     What to make of the results at high
-     <span class="math notranslate nohighlight">
-      \(q\)
-     </span>
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Determining-the-mean-squared-displacement-from-the-ISF">
-   Determining the mean squared displacement from the ISF
-  </a>
- </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Importing-the-necessary-modules">Importing the necessary modules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Initializing-DDM_Analysis-class-and-computing-the-DDM-matrix">Initializing DDM_Analysis class and computing the DDM matrix</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Digging-into-the-DDM-xarray.Dataset">Digging into the DDM xarray.Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Different-data-selecting-methods">Different data selecting methods</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Determing-the-A-and-B-parameters-to-get-the-ISF">Determing the A and B parameters to get the ISF</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Checking-the-background-estimate">Checking the background estimate</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Additional-notes-about-the-background">Additional notes about the background</a></li>
 </ul>
-
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Initiazing-DDM_Fit-class-and-fitting-our-data-to-a-model">Initiazing DDM_Fit class and fitting our data to a model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Our-first-attemp-at-fitting-the-data">Our first attemp at fitting the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Our-second-attemp-at-fitting-the-data---updating-initial-guesses-for-tau">Our second attemp at fitting the data - updating initial guesses for tau</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Our-third-attemp-at-fitting-the-data---tightening-the-bounds-on-the-stretching-exponent">Our third attemp at fitting the data - tightening the bounds on the stretching exponent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#What-to-make-of-the-results-at-high-q">What to make of the results at high <span class="math notranslate nohighlight">\(q\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Determining-the-mean-squared-displacement-from-the-ISF">Determining the mean squared displacement from the ISF</a></li>
+</ul>
             </nav>
         </div>
     </div>
 </div>
-    <div id="main-content" class="row">
-        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>More detailed walkthrough</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Importing-the-necessary-modules">
-   Importing the necessary modules
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Initializing-DDM_Analysis-class-and-computing-the-DDM-matrix">
-   Initializing DDM_Analysis class and computing the DDM matrix
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Digging-into-the-DDM-xarray.Dataset">
-     Digging into the DDM xarray.Dataset
-    </a>
-    <ul class="nav section-nav flex-column">
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#Different-data-selecting-methods">
-       Different data selecting methods
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#Determing-the-A-and-B-parameters-to-get-the-ISF">
-       Determing the A and B parameters to get the ISF
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#Checking-the-background-estimate">
-       Checking the background estimate
-      </a>
-     </li>
-     <li class="toc-h4 nav-item toc-entry">
-      <a class="reference internal nav-link" href="#Additional-notes-about-the-background">
-       Additional notes about the background
-      </a>
-     </li>
-    </ul>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Initiazing-DDM_Fit-class-and-fitting-our-data-to-a-model">
-   Initiazing DDM_Fit class and fitting our data to a model
-  </a>
-  <ul class="nav section-nav flex-column">
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Our-first-attemp-at-fitting-the-data">
-     Our first attemp at fitting the data
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Our-second-attemp-at-fitting-the-data---updating-initial-guesses-for-tau">
-     Our second attemp at fitting the data - updating initial guesses for tau
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#Our-third-attemp-at-fitting-the-data---tightening-the-bounds-on-the-stretching-exponent">
-     Our third attemp at fitting the data - tightening the bounds on the stretching exponent
-    </a>
-   </li>
-   <li class="toc-h3 nav-item toc-entry">
-    <a class="reference internal nav-link" href="#What-to-make-of-the-results-at-high-q">
-     What to make of the results at high
-     <span class="math notranslate nohighlight">
-      \(q\)
-     </span>
-    </a>
-   </li>
-  </ul>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#Determining-the-mean-squared-displacement-from-the-ISF">
-   Determining the mean squared displacement from the ISF
-  </a>
- </li>
-</ul>
 
-                        </nav>
-                    </div>
-                </div>
-            </div>
-            
-              <div>
+              
                 
-  
-<style>
-/* CSS for nbsphinx extension */
-
-/* remove conflicting styling from Sphinx themes */
-div.nbinput.container div.prompt *,
-div.nboutput.container div.prompt *,
-div.nbinput.container div.input_area pre,
-div.nboutput.container div.output_area pre,
-div.nbinput.container div.input_area .highlight,
-div.nboutput.container div.output_area .highlight {
-    border: none;
-    padding: 0;
-    margin: 0;
-    box-shadow: none;
-}
-
-div.nbinput.container > div[class*=highlight],
-div.nboutput.container > div[class*=highlight] {
-    margin: 0;
-}
-
-div.nbinput.container div.prompt *,
-div.nboutput.container div.prompt * {
-    background: none;
-}
-
-div.nboutput.container div.output_area .highlight,
-div.nboutput.container div.output_area pre {
-    background: unset;
-}
-
-div.nboutput.container div.output_area div.highlight {
-    color: unset;  /* override Pygments text color */
-}
-
-/* avoid gaps between output lines */
-div.nboutput.container div[class*=highlight] pre {
-    line-height: normal;
-}
-
-/* input/output containers */
-div.nbinput.container,
-div.nboutput.container {
-    display: -webkit-flex;
-    display: flex;
-    align-items: flex-start;
-    margin: 0;
-    width: 100%;
-}
-@media (max-width: 540px) {
-    div.nbinput.container,
-    div.nboutput.container {
-        flex-direction: column;
-    }
-}
-
-/* input container */
-div.nbinput.container {
-    padding-top: 5px;
-}
-
-/* last container */
-div.nblast.container {
-    padding-bottom: 5px;
-}
-
-/* input prompt */
-div.nbinput.container div.prompt pre {
-    color: #307FC1;
-}
-
-/* output prompt */
-div.nboutput.container div.prompt pre {
-    color: #BF5B3D;
-}
-
-/* all prompts */
-div.nbinput.container div.prompt,
-div.nboutput.container div.prompt {
-    width: 4.5ex;
-    padding-top: 5px;
-    position: relative;
-    user-select: none;
-}
-
-div.nbinput.container div.prompt > div,
-div.nboutput.container div.prompt > div {
-    position: absolute;
-    right: 0;
-    margin-right: 0.3ex;
-}
-
-@media (max-width: 540px) {
-    div.nbinput.container div.prompt,
-    div.nboutput.container div.prompt {
-        width: unset;
-        text-align: left;
-        padding: 0.4em;
-    }
-    div.nboutput.container div.prompt.empty {
-        padding: 0;
-    }
-
-    div.nbinput.container div.prompt > div,
-    div.nboutput.container div.prompt > div {
-        position: unset;
-    }
-}
-
-/* disable scrollbars on prompts */
-div.nbinput.container div.prompt pre,
-div.nboutput.container div.prompt pre {
-    overflow: hidden;
-}
-
-/* input/output area */
-div.nbinput.container div.input_area,
-div.nboutput.container div.output_area {
-    -webkit-flex: 1;
-    flex: 1;
-    overflow: auto;
-}
-@media (max-width: 540px) {
-    div.nbinput.container div.input_area,
-    div.nboutput.container div.output_area {
-        width: 100%;
-    }
-}
-
-/* input area */
-div.nbinput.container div.input_area {
-    border: 1px solid #e0e0e0;
-    border-radius: 2px;
-    /*background: #f5f5f5;*/
-}
-
-/* override MathJax center alignment in output cells */
-div.nboutput.container div[class*=MathJax] {
-    text-align: left !important;
-}
-
-/* override sphinx.ext.imgmath center alignment in output cells */
-div.nboutput.container div.math p {
-    text-align: left;
-}
-
-/* standard error */
-div.nboutput.container div.output_area.stderr {
-    background: #fdd;
-}
-
-/* ANSI colors */
-.ansi-black-fg { color: #3E424D; }
-.ansi-black-bg { background-color: #3E424D; }
-.ansi-black-intense-fg { color: #282C36; }
-.ansi-black-intense-bg { background-color: #282C36; }
-.ansi-red-fg { color: #E75C58; }
-.ansi-red-bg { background-color: #E75C58; }
-.ansi-red-intense-fg { color: #B22B31; }
-.ansi-red-intense-bg { background-color: #B22B31; }
-.ansi-green-fg { color: #00A250; }
-.ansi-green-bg { background-color: #00A250; }
-.ansi-green-intense-fg { color: #007427; }
-.ansi-green-intense-bg { background-color: #007427; }
-.ansi-yellow-fg { color: #DDB62B; }
-.ansi-yellow-bg { background-color: #DDB62B; }
-.ansi-yellow-intense-fg { color: #B27D12; }
-.ansi-yellow-intense-bg { background-color: #B27D12; }
-.ansi-blue-fg { color: #208FFB; }
-.ansi-blue-bg { background-color: #208FFB; }
-.ansi-blue-intense-fg { color: #0065CA; }
-.ansi-blue-intense-bg { background-color: #0065CA; }
-.ansi-magenta-fg { color: #D160C4; }
-.ansi-magenta-bg { background-color: #D160C4; }
-.ansi-magenta-intense-fg { color: #A03196; }
-.ansi-magenta-intense-bg { background-color: #A03196; }
-.ansi-cyan-fg { color: #60C6C8; }
-.ansi-cyan-bg { background-color: #60C6C8; }
-.ansi-cyan-intense-fg { color: #258F8F; }
-.ansi-cyan-intense-bg { background-color: #258F8F; }
-.ansi-white-fg { color: #C5C1B4; }
-.ansi-white-bg { background-color: #C5C1B4; }
-.ansi-white-intense-fg { color: #A1A6B2; }
-.ansi-white-intense-bg { background-color: #A1A6B2; }
-
-.ansi-default-inverse-fg { color: #FFFFFF; }
-.ansi-default-inverse-bg { background-color: #000000; }
-
-.ansi-bold { font-weight: bold; }
-.ansi-underline { text-decoration: underline; }
-
-
-div.nbinput.container div.input_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight] > pre,
-div.nboutput.container div.output_area div[class*=highlight].math,
-div.nboutput.container div.output_area.rendered_html,
-div.nboutput.container div.output_area > div.output_javascript,
-div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 5px;
-    margin: 0;
-}
-
-/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
-div.nbinput.container div.input_area > div[class^='highlight'],
-div.nboutput.container div.output_area > div[class^='highlight']{
-    overflow-y: hidden;
-}
-
-/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
-.prompt .copybtn {
-    display: none;
-}
-
-/* Some additional styling taken form the Jupyter notebook CSS */
-div.rendered_html table {
-  border: none;
-  border-collapse: collapse;
-  border-spacing: 0;
-  color: black;
-  font-size: 12px;
-  table-layout: fixed;
-}
-div.rendered_html thead {
-  border-bottom: 1px solid black;
-  vertical-align: bottom;
-}
-div.rendered_html tr,
-div.rendered_html th,
-div.rendered_html td {
-  text-align: right;
-  vertical-align: middle;
-  padding: 0.5em 0.5em;
-  line-height: normal;
-  white-space: normal;
-  max-width: none;
-  border: none;
-}
-div.rendered_html th {
-  font-weight: bold;
-}
-div.rendered_html tbody tr:nth-child(odd) {
-  background: #f5f5f5;
-}
-div.rendered_html tbody tr:hover {
-  background: rgba(66, 165, 245, 0.2);
-}
-</style>
-<div class="section" id="More-detailed-walkthrough">
-<h1>More detailed walkthrough<a class="headerlink" href="#More-detailed-walkthrough" title="Permalink to this headline">¶</a></h1>
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="More-detailed-walkthrough">
+<h1>More detailed walkthrough<a class="headerlink" href="#More-detailed-walkthrough" title="Link to this heading">#</a></h1>
 <p>See the simple walkthrough for a quicker introduction to the PyDDM package. Here, we will go into a little more depth.</p>
 <div class="alert alert-block alert-info"><p>Tip: Before working through this, go through the simple walkthrough.</p>
-</div><div class="section" id="Importing-the-necessary-modules">
-<h2>Importing the necessary modules<a class="headerlink" href="#Importing-the-necessary-modules" title="Permalink to this headline">¶</a></h2>
+</div><section id="Importing-the-necessary-modules">
+<h2>Importing the necessary modules<a class="headerlink" href="#Importing-the-necessary-modules" title="Link to this heading">#</a></h2>
 <p>We will ned to import <a class="reference external" href="https://numpy.org/">numpy</a>, <a class="reference external" href="https://matplotlib.org/">matplotlib</a>, and <a class="reference external" href="https://xarray.pydata.org/en/stable/">xarray</a>. We will also import the <a class="reference external" href="https://rmcgorty.github.io/PyDDM/">PyDDM</a> package.</p>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
-<span class="kn">import</span> <span class="nn">matplotlib</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1">#numerical python used for working with arrays, mathematical operations</span>
-<span class="kn">import</span> <span class="nn">xarray</span> <span class="k">as</span> <span class="nn">xr</span> <span class="c1">#package for labeling and adding metadata to multi-dimensional arrays</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span> <span class="c1">#numerical python used for working with arrays, mathematical operations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">xarray</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xr</span> <span class="c1">#package for labeling and adding metadata to multi-dimensional arrays</span>
 
-<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;../../PyDDM&quot;</span><span class="p">)</span> <span class="c1">#must point to the PyDDM folder</span>
-<span class="kn">import</span> <span class="nn">ddm_analysis_and_fitting</span> <span class="k">as</span> <span class="nn">ddm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ddm_analysis_and_fitting</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ddm</span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Initializing-DDM_Analysis-class-and-computing-the-DDM-matrix">
-<h2>Initializing DDM_Analysis class and computing the DDM matrix<a class="headerlink" href="#Initializing-DDM_Analysis-class-and-computing-the-DDM-matrix" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="Initializing-DDM_Analysis-class-and-computing-the-DDM-matrix">
+<h2>Initializing DDM_Analysis class and computing the DDM matrix<a class="headerlink" href="#Initializing-DDM_Analysis-class-and-computing-the-DDM-matrix" title="Link to this heading">#</a></h2>
 <p>The instance of the <code class="docutils literal notranslate"><span class="pre">DDM_Analysis</span></code> class we create will need, when initialized, metadata about the images to analyze and the analysis and fitting parameters. This can be done by using a <a class="reference external" href="https://yaml.org/">yaml</a> file as shown in the following cell of code (there, the metadata is saved in the file “<em>example_data_silica_beads.yml</em>”. But one can also initialize <code class="docutils literal notranslate"><span class="pre">DDM_Analysis</span></code> with a dictionary containing the necessary metadata. One way to create such a dictionary and then using it to
 initialize <code class="docutils literal notranslate"><span class="pre">DDM_Analysis</span></code> is shown below.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">yaml</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
 <span class="n">ddm_analysis_parameters_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">DataDirectory: &#39;C:/Users/rmcgorty/Documents/GitHub/DDM-at-USD/ExampleData/&#39;</span>
 <span class="s2">FileName: &#39;images_nobin_40x_128x128_8bit.tif&#39;</span>
@@ -1743,8 +1152,8 @@ Attributes: (12/24)
 <img alt="_images/Walkthrough_-_details_8_6.png" src="_images/Walkthrough_-_details_8_6.png" />
 </div>
 </div>
-<div class="section" id="Digging-into-the-DDM-xarray.Dataset">
-<h3>Digging into the DDM xarray.Dataset<a class="headerlink" href="#Digging-into-the-DDM-xarray.Dataset" title="Permalink to this headline">¶</a></h3>
+<section id="Digging-into-the-DDM-xarray.Dataset">
+<h3>Digging into the DDM xarray.Dataset<a class="headerlink" href="#Digging-into-the-DDM-xarray.Dataset" title="Link to this heading">#</a></h3>
 <p>Let’s look at the dataset created after running <code class="docutils literal notranslate"><span class="pre">calculate_DDM_matrix</span></code>.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
@@ -2421,8 +1830,8 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <img alt="_images/Walkthrough_-_details_16_0.png" src="_images/Walkthrough_-_details_16_0.png" />
 </div>
 </div>
-<div class="section" id="Different-data-selecting-methods">
-<h4>Different data selecting methods<a class="headerlink" href="#Different-data-selecting-methods" title="Permalink to this headline">¶</a></h4>
+<section id="Different-data-selecting-methods">
+<h4>Different data selecting methods<a class="headerlink" href="#Different-data-selecting-methods" title="Link to this heading">#</a></h4>
 <p>Since we are slicing this <a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.Dataset.html">xarray dataset</a>, let’s use the opportunity to go over different ways of selecting data stored in a dataset. See the <a class="reference external" href="https://xarray.pydata.org/en/stable/user-guide/indexing.html">xarray user guide</a> for more info.</p>
 <ol class="arabic simple">
 <li><p>We can use the <code class="docutils literal notranslate"><span class="pre">isel</span></code> function (see <a class="reference external" href="https://xarray.pydata.org/en/stable/generated/xarray.DataArray.isel.html">xarray.DataArray.isel</a>).</p></li>
@@ -2453,9 +1862,9 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <span class="n">ddm_calc</span><span class="o">.</span><span class="n">ddm_dataset</span><span class="o">.</span><span class="n">ddm_matrix</span><span class="o">.</span><span class="n">isel</span><span class="p">(</span><span class="n">q</span><span class="o">=</span><span class="n">q_index</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xscale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;o&#39;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="Determing-the-A-and-B-parameters-to-get-the-ISF">
-<h4>Determing the A and B parameters to get the ISF<a class="headerlink" href="#Determing-the-A-and-B-parameters-to-get-the-ISF" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="Determing-the-A-and-B-parameters-to-get-the-ISF">
+<h4>Determing the A and B parameters to get the ISF<a class="headerlink" href="#Determing-the-A-and-B-parameters-to-get-the-ISF" title="Link to this heading">#</a></h4>
 <p>Let’s now look at the <code class="docutils literal notranslate"><span class="pre">avg_image_ft</span></code> data variable. This is a radially averaged average of all the Fourier transforms of the images (i.e., the radially average of <span class="math notranslate nohighlight">\(\left&lt; | \tilde{I}(q, t) |^2 \right&gt;_t\)</span>). This function should equal $ (1/2) <span class="math">\times `:nbsphinx-math:</span>left[ A(q) + B(q) right] <a href="#id1"><span class="problematic" id="id2">`</span></a>$.</p>
 <p>If we make the assumption that at the highest wavevectors (large <span class="math notranslate nohighlight">\(q\)</span>) the amplitude, <span class="math notranslate nohighlight">\(A(q)\)</span>, goes to zero, then we can estimate the background, <span class="math notranslate nohighlight">\(B\)</span>. If we also assume that the background is a constant that’s independent of <span class="math notranslate nohighlight">\(q\)</span>, then we can determine <span class="math notranslate nohighlight">\(A(q)\)</span>.</p>
 <p>Plotted below is this <code class="docutils literal notranslate"><span class="pre">avg_image_ft</span></code> along with a horizontal line which can be used to estimate <strong>half</strong> the background. This estimate is taken from the last 10% of the wavevectors. The background can be saved to the <code class="docutils literal notranslate"><span class="pre">B</span></code> data variable. And then we can determine the amplitude which is saved as the <code class="docutils literal notranslate"><span class="pre">Amplitude</span></code> variable.</p>
@@ -2495,7 +1904,12 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <img alt="_images/Walkthrough_-_details_21_1.png" src="_images/Walkthrough_-_details_21_1.png" />
 </div>
 </div>
-<p>The other methods for getting the background (and from the background then estimating the amplitude) are: * <code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 1: <span class="math notranslate nohighlight">\(B\)</span> will be the minimum of the DDM matrix * <code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 2: <span class="math notranslate nohighlight">\(B\)</span> will be the average (over all lag times) of the DDM matrix at the largest wavevector <span class="math notranslate nohighlight">\(q\)</span> * <code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 3: <span class="math notranslate nohighlight">\(B\)</span> = 0</p>
+<p>The other methods for getting the background (and from the background then estimating the amplitude) are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 1: <span class="math notranslate nohighlight">\(B\)</span> will be the minimum of the DDM matrix</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 2: <span class="math notranslate nohighlight">\(B\)</span> will be the average (over all lag times) of the DDM matrix at the largest wavevector <span class="math notranslate nohighlight">\(q\)</span></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">background_method</span></code> = 3: <span class="math notranslate nohighlight">\(B\)</span> = 0</p></li>
+</ul>
 <p>If we know <span class="math notranslate nohighlight">\(A(q)\)</span> and <span class="math notranslate nohighlight">\(B\)</span>, then we can find the intermediate scattering function, <span class="math notranslate nohighlight">\(f(q, \Delta t)\)</span>, by assuming that the DDM matrix is equal to <span class="math notranslate nohighlight">\(D (q, \Delta t) = A(q) \times \left[ 1 - f(q, \Delta t) \right] + B\)</span>.</p>
 <p>The ISF is stored as the data variable <code class="docutils literal notranslate"><span class="pre">ISF</span></code> in the <code class="docutils literal notranslate"><span class="pre">ddm_dataset</span></code>.</p>
 <div class="nbinput docutils container">
@@ -2521,9 +1935,9 @@ Text(0.5, 1.0, &#39;DDM matrix for lag time of 0.288 s&#39;)
 <img alt="_images/Walkthrough_-_details_24_0.png" src="_images/Walkthrough_-_details_24_0.png" />
 </div>
 </div>
-</div>
-<div class="section" id="Checking-the-background-estimate">
-<h4>Checking the background estimate<a class="headerlink" href="#Checking-the-background-estimate" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="Checking-the-background-estimate">
+<h4>Checking the background estimate<a class="headerlink" href="#Checking-the-background-estimate" title="Link to this heading">#</a></h4>
 <p>We expect the ISF to go from 1 to 0. We may not see exactly this behavior in the ISF for all wavevectors. At larger wavevectors, the dynamics might be fast and we might not be taking images fast enough to see the early decay of the ISF. Conversely, at lower wavevectors, the dynamics might be slow and we may not be able to calculate the ISF for large enough lag times to see it decay all the way to zero. Additionally, for non-ergodic dynamics, the ISF may <strong>not</strong> decay to zero but to some value
 sometimes referred to as the non-ergodicity parameter.</p>
 <p>But another reason that the ISF may not go from 1 to 0 is that we did a poor job in estimating the background, <span class="math notranslate nohighlight">\(B\)</span>. Using the default method (<code class="docutils literal notranslate"><span class="pre">background_method</span> <span class="pre">=</span> <span class="pre">0</span></code>), we try to estimate <span class="math notranslate nohighlight">\(B\)</span> by looking at the average Fourier transforms of all the images, radially averaging that, and assuming that the amplitude goes to zero at large wavevectors. But another way to estimate <span class="math notranslate nohighlight">\(B\)</span> is to look at the DDM matrix at large wavevectors, as is plotted below.</p>
@@ -3154,9 +2568,9 @@ Attributes: (12/24)
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="Additional-notes-about-the-background">
-<h4>Additional notes about the background<a class="headerlink" href="#Additional-notes-about-the-background" title="Permalink to this headline">¶</a></h4>
+</section>
+<section id="Additional-notes-about-the-background">
+<h4>Additional notes about the background<a class="headerlink" href="#Additional-notes-about-the-background" title="Link to this heading">#</a></h4>
 <p>The default way that <strong>this</strong> code estimates the background is to compute the power spectrum of the images, as described above. That is, we find <span class="math notranslate nohighlight">\(\left&lt; | \tilde{I}(q, t) |^2 \right&gt;_t\)</span> and recognize that <span class="math notranslate nohighlight">\(\left&lt; | \tilde{I}(q, t) |^2 \right&gt;_t = 0.5 \times \left[ A(q) + B \right]\)</span> and assume that as <span class="math notranslate nohighlight">\(q \rightarrow q_{max}\)</span>, <span class="math notranslate nohighlight">\(A(q) \rightarrow 0\)</span>. Therefore, <span class="math notranslate nohighlight">\(\left&lt; | \tilde{I}(q_{max}, t) |^2 \right&gt;_t \approx 0.5\times B\)</span> (see [<strong>Cerbino 2017</strong>] or Eq. 5 in
 [<strong>Giavazzi 2018</strong>]).</p>
 <p>But, there are other ways. In [<strong>Kurzthaler 2018</strong>], they set the background, <span class="math notranslate nohighlight">\(B\)</span>, to zero. They note that for their fluorescence imaging “the camera noise is usually negligible.” However, they note that for bright-field of phase contrast modalities, the camera is not negligible and <span class="math notranslate nohighlight">\(B\)</span> will be non-zero.</p>
@@ -3166,16 +2580,16 @@ Attributes: (12/24)
 </div></blockquote>
 <blockquote>
 <div><p>[<strong>Giavazzi 2018</strong>] Giavazzi, F., Malinverno, C., Scita, G. &amp; Cerbino, R. <a class="reference external" href="https://doi.org/10.3389/fphy.2018.00120">Tracking-Free Determination of Single-Cell Displacements and Division Rates in Confluent Monolayers.</a> Front. Phys. 6, (2018).</p>
-<p>[<strong>Kurzthaler 2018</strong>] Kurzthaler, C. et al. <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.121.078001">Probing the Spatiotemporal Dynamics of Catalytic Janus Particles with Single-Particle Tracking and Differential Dynamic Microscopy.</a> Phys. Rev. Lett. 121, 078001 (2018).</p>
+<p>[<strong>Kurzthaler 2018</strong>] Kurzthaler, C. et al. <a class="reference external" href="https://doi.org/10.1103/PhysRevLett.121.078001">Probing the Spatiotemporal Dynamics of Catalytic Janus Particles with Single-Particle Tracking and Differential Dynamic Microscopy.</a> Phys. Rev. Lett. 121, 078001 (2018).</p>
 </div></blockquote>
 <blockquote>
 <div><p>[<strong>Bayles 2017</strong>] Bayles, A. V., Squires, T. M. &amp; Helgeson, M. E. <a class="reference external" href="https://doi.org/10.1007/s00397-017-1047-7">Probe microrheology without particle tracking by differential dynamic microscopy.</a> Rheol Acta 56, 863–869 (2017).</p>
 </div></blockquote>
-</div>
-</div>
-</div>
-<div class="section" id="Initiazing-DDM_Fit-class-and-fitting-our-data-to-a-model">
-<h2>Initiazing DDM_Fit class and fitting our data to a model<a class="headerlink" href="#Initiazing-DDM_Fit-class-and-fitting-our-data-to-a-model" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+</section>
+<section id="Initiazing-DDM_Fit-class-and-fitting-our-data-to-a-model">
+<h2>Initiazing DDM_Fit class and fitting our data to a model<a class="headerlink" href="#Initiazing-DDM_Fit-class-and-fitting-our-data-to-a-model" title="Link to this heading">#</a></h2>
 <p>We initlize the <code class="docutils literal notranslate"><span class="pre">DDM_Fit</span></code> class by passing it the yaml file containing our analysis parameters.</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
@@ -3273,8 +2687,8 @@ Parameter &#39;Background&#39; lower limit set to 10.
 Parameter &#39;Background&#39; upper limit set to 220.
 </pre></div></div>
 </div>
-<div class="section" id="Our-first-attemp-at-fitting-the-data">
-<h3>Our first attemp at fitting the data<a class="headerlink" href="#Our-first-attemp-at-fitting-the-data" title="Permalink to this headline">¶</a></h3>
+<section id="Our-first-attemp-at-fitting-the-data">
+<h3>Our first attemp at fitting the data<a class="headerlink" href="#Our-first-attemp-at-fitting-the-data" title="Link to this heading">#</a></h3>
 <p>When we execute the fit below, we can use the optional argument <code class="docutils literal notranslate"><span class="pre">use_A_from_images_as_guess</span></code> set to True. This will use the value of <span class="math notranslate nohighlight">\(A(q)\)</span> we esimated from the average Fourier tranform of all images and the estimated background. We can further limit the bounds on <span class="math notranslate nohighlight">\(A(q)\)</span> with the optional parameter <code class="docutils literal notranslate"><span class="pre">update_limits_on_A</span></code> set to True. This will restrict the range that <span class="math notranslate nohighlight">\(A(q)\)</span> can take to be within 10% of the estimated <span class="math notranslate nohighlight">\(A(q)\)</span>. If we want the bounds to be stricter or looser
 than 10%, we can change the optional parameter <code class="docutils literal notranslate"><span class="pre">updated_lims_on_A_fraction</span></code> to be something other than 0.1 (the default).</p>
 <div class="nbinput docutils container">
@@ -3848,9 +3262,9 @@ Attributes: (12/18)
 <img alt="_images/Walkthrough_-_details_42_7.png" src="_images/Walkthrough_-_details_42_7.png" />
 </div>
 </div>
-</div>
-<div class="section" id="Our-second-attemp-at-fitting-the-data---updating-initial-guesses-for-tau">
-<h3>Our second attemp at fitting the data - updating initial guesses for tau<a class="headerlink" href="#Our-second-attemp-at-fitting-the-data---updating-initial-guesses-for-tau" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="Our-second-attemp-at-fitting-the-data---updating-initial-guesses-for-tau">
+<h3>Our second attemp at fitting the data - updating initial guesses for tau<a class="headerlink" href="#Our-second-attemp-at-fitting-the-data---updating-initial-guesses-for-tau" title="Link to this heading">#</a></h3>
 <p>From the results of the fit, we can estimate a diffusion coefficient of about 0.6 <span class="math notranslate nohighlight">\(\mu m^2 / s\)</span>. We determine this by looking at the characteristic decay time vs the wavevector (<span class="math notranslate nohighlight">\(\tau\)</span> vs <span class="math notranslate nohighlight">\(q\)</span>). On a log-log plot, power laws relationships between the two variables will come across as a straight line where the slope of the line is equal to the power. And, for this data, we see a clear power law show a relationship of <span class="math notranslate nohighlight">\(\tau \propto q^{-2}\)</span> which indicates diffusive motion.
 Note that our data deviates from this power law relationship for <span class="math notranslate nohighlight">\(q\)</span> greater than about 4 <span class="math notranslate nohighlight">\(\mu m^{-1}\)</span>. This could be due to poor optical resolution limiting the high wavevectors (which correspond to small length scales). Or it could be due to not having the temporal resolution necessary to detect fast decay times. Lastly, it could also be due to poor fit performance. We could try to use an initial guess for <span class="math notranslate nohighlight">\(\tau\)</span> for each <span class="math notranslate nohighlight">\(q\)</span> that is based on an estimated diffusion
 coefficient. That is, when we fit <span class="math notranslate nohighlight">\(D(q, \Delta t)\)</span> (or <span class="math notranslate nohighlight">\(f(q,\Delta t)\)</span>), for each <span class="math notranslate nohighlight">\(q\)</span>, we will calculate <span class="math notranslate nohighlight">\(\tau_{guess} = 1 / (Dq^2)\)</span> and use that as the initial guess in the fits. We do that below.</p>
@@ -4449,9 +3863,9 @@ are off even well above our temporal resolution. So it is also not the case that
 <img alt="_images/Walkthrough_-_details_49_1.png" src="_images/Walkthrough_-_details_49_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="Our-third-attemp-at-fitting-the-data---tightening-the-bounds-on-the-stretching-exponent">
-<h3>Our third attemp at fitting the data - tightening the bounds on the stretching exponent<a class="headerlink" href="#Our-third-attemp-at-fitting-the-data---tightening-the-bounds-on-the-stretching-exponent" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="Our-third-attemp-at-fitting-the-data---tightening-the-bounds-on-the-stretching-exponent">
+<h3>Our third attemp at fitting the data - tightening the bounds on the stretching exponent<a class="headerlink" href="#Our-third-attemp-at-fitting-the-data---tightening-the-bounds-on-the-stretching-exponent" title="Link to this heading">#</a></h3>
 <p>Let’s try one more thing with this fitting. Let’s think about the stretching exponent. For normal diffusive motion, we expect the intermediate scattering function to be a simple exponential: <span class="math notranslate nohighlight">\(f(q,\Delta t) = \exp(-\Delta t / \tau)\)</span>. But sometimes when the dynamics are heterogeneous or subdiffusion is present, we see that a stretched exponential works better. That is, for the ISF we use: <span class="math notranslate nohighlight">\(f(q,\Delta t) = \exp(-\Delta t / \tau)^s\)</span> where <span class="math notranslate nohighlight">\(s\)</span> is the stretching exponent.</p>
 <p>For this example data, we just have movie of silica colloidal particles diffusing in water. The dynamics should be diffusive. So we could try constraining the stretching exponent to be around to 1 as we expect (notice how the stretching exponent is between 0.6 and 0.7 for the high <span class="math notranslate nohighlight">\(q\)</span> values in the previous fits).</p>
 <div class="nbinput docutils container">
@@ -5069,10 +4483,14 @@ Attributes: (12/18)
 <img alt="_images/Walkthrough_-_details_55_1.png" src="_images/Walkthrough_-_details_55_1.png" />
 </div>
 </div>
-</div>
-<div class="section" id="What-to-make-of-the-results-at-high-q">
-<h3>What to make of the results at high <span class="math notranslate nohighlight">\(q\)</span><a class="headerlink" href="#What-to-make-of-the-results-at-high-q" title="Permalink to this headline">¶</a></h3>
-<p>So we have tried a couple things to improve the results of our fits for <span class="math notranslate nohighlight">\(q \gtrsim 6 \mu m^{-1}\)</span>. We tried: 1. Updating the intial guess for <span class="math notranslate nohighlight">\(\tau\)</span> for each <span class="math notranslate nohighlight">\(q\)</span> based on an expected diffusion coefficient and constraining the bounds of <span class="math notranslate nohighlight">\(\tau\)</span> around that guess. 2. Narrowing the bounds of the stretching exponent to be close to what we would expect for normal diffusive motion (i.e., near 1).</p>
+</section>
+<section id="What-to-make-of-the-results-at-high-q">
+<h3>What to make of the results at high <span class="math notranslate nohighlight">\(q\)</span><a class="headerlink" href="#What-to-make-of-the-results-at-high-q" title="Link to this heading">#</a></h3>
+<p>So we have tried a couple things to improve the results of our fits for <span class="math notranslate nohighlight">\(q \gtrsim 6 \mu m^{-1}\)</span>. We tried:</p>
+<ol class="arabic simple">
+<li><p>Updating the intial guess for <span class="math notranslate nohighlight">\(\tau\)</span> for each <span class="math notranslate nohighlight">\(q\)</span> based on an expected diffusion coefficient and constraining the bounds of <span class="math notranslate nohighlight">\(\tau\)</span> around that guess.</p></li>
+<li><p>Narrowing the bounds of the stretching exponent to be close to what we would expect for normal diffusive motion (i.e., near 1).</p></li>
+</ol>
 <p>But, these didn’t seem to make the result for <span class="math notranslate nohighlight">\(\tau (q)\)</span> reasonable for the larger <span class="math notranslate nohighlight">\(q\)</span> values. So what is going on?</p>
 <p>The horizontal line in the plot above corresponds to the minimum time lag we are measuring (24 ms given our frame rate of 41.7 Hz). So we are not lacking in temporal resolution.</p>
 <p>But what about <strong>spatial resolution</strong>? Even though our pixels are 0.242 <span class="math notranslate nohighlight">\(\mu m\)</span> in size doesn’t mean that we can truly measure dynamics occurring around such small length scales.</p>
@@ -5080,7 +4498,7 @@ Attributes: (12/18)
 <p>As described in [<strong>Safari 2015</strong>], the maximum <span class="math notranslate nohighlight">\(q\)</span> is determined either by (1) the pixel size, (2) the smallest distance a particle can be detected moving between two frames given the frame rate, and (3) the smallest resolvable distance given the optical resolution limit. In the case of (3): <span class="math notranslate nohighlight">\(q_{max} = \frac{2 \pi NA}{\lambda}\)</span>. For our data, that would be <span class="math notranslate nohighlight">\(q_{max} = 5.7 \mu m^{-1}\)</span>.</p>
 <p><strong>So it seems we have found the culprit of the poor fitting at large :math:`q`: our limited optical resolution.</strong></p>
 <blockquote>
-<div><p>[<strong>Safari 2015</strong>] Safari, M. S., Vorontsova, M. A., Poling-Skutvik, R., Vekilov, P. G. &amp; Conrad, J. C. <a class="reference external" href="https://doi.org/10.1103/PhysRevE.92.042712">Differential dynamic microscopy of weakly scattering and polydisperse protein-rich clusters.</a> Phys. Rev. E 92, 042712 (2015).</p>
+<div><p>[<strong>Safari 2015</strong>] Safari, M. S., Vorontsova, M. A., Poling-Skutvik, R., Vekilov, P. G. &amp; Conrad, J. C. <a class="reference external" href="https://doi.org/10.1103/PhysRevE.92.042712">Differential dynamic microscopy of weakly scattering and polydisperse protein-rich clusters.</a> Phys. Rev. E 92, 042712 (2015).</p>
 </div></blockquote>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
@@ -5119,10 +4537,10 @@ Text(0.5, 1.0, &#39;Lines correspond roughly to limits of temporal (horizontal l
 <img alt="_images/Walkthrough_-_details_58_1.png" src="_images/Walkthrough_-_details_58_1.png" />
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="Determining-the-mean-squared-displacement-from-the-ISF">
-<h2>Determining the mean squared displacement from the ISF<a class="headerlink" href="#Determining-the-mean-squared-displacement-from-the-ISF" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="Determining-the-mean-squared-displacement-from-the-ISF">
+<h2>Determining the mean squared displacement from the ISF<a class="headerlink" href="#Determining-the-mean-squared-displacement-from-the-ISF" title="Link to this heading">#</a></h2>
 <p>If we assume that the particle displacements are Gaussian, then the ISF can be written as <span class="math notranslate nohighlight">\(f(q,\Delta t) = \exp \left[ (-q^2 / 4) \left&lt; \Delta r^2(\Delta t) \right&gt; \right]\)</span>. We can then find the MSD, <span class="math notranslate nohighlight">\(\left&lt; \Delta r^2(\Delta t) \right&gt;\)</span> from the DDM matrix, <span class="math notranslate nohighlight">\(D(q, \Delta t)\)</span>, using:</p>
 <div class="math notranslate nohighlight">
 \[\left&lt; \Delta r^2(\Delta t) \right&gt; = \frac{4}{q^2} \ln \left[ \frac{A(q)}{A(q)-D(q,\Delta t)+B(q)} \right]\]</div>
@@ -5132,7 +4550,7 @@ Text(0.5, 1.0, &#39;Lines correspond roughly to limits of temporal (horizontal l
 <div><p>[<strong>Bayles 2017</strong>] Bayles, A. V., Squires, T. M. &amp; Helgeson, M. E. <a class="reference external" href="https://doi.org/10.1007/s00397-017-1047-7">Probe microrheology without particle tracking by differential dynamic microscopy.</a> Rheol Acta 56, 863–869 (2017).</p>
 </div></blockquote>
 <blockquote>
-<div><p>[<strong>Edera 2017</strong>] Edera, P., Bergamini, D., Trappe, V., Giavazzi, F. &amp; Cerbino, R. <a class="reference external" href="https://doi.org/10.1103/PhysRevMaterials.1.073804">Differential dynamic microscopy microrheology of soft materials: A tracking-free determination of the frequency-dependent loss and storage moduli.</a> Phys. Rev. Materials 1, 073804 (2017).</p>
+<div><p>[<strong>Edera 2017</strong>] Edera, P., Bergamini, D., Trappe, V., Giavazzi, F. &amp; Cerbino, R. <a class="reference external" href="https://doi.org/10.1103/PhysRevMaterials.1.073804">Differential dynamic microscopy microrheology of soft materials: A tracking-free determination of the frequency-dependent loss and storage moduli.</a> Phys. Rev. Materials 1, 073804 (2017).</p>
 </div></blockquote>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
@@ -5188,48 +4606,125 @@ Diffusion coefficient: 0.66499 um^2/s
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
-              </div>
+                </article>
               
-            
-                <!-- Previous / next buttons -->
-<div class='prev-next-area'> 
-    <a class='left-prev' id="prev-link" href="Walkthrough%20-%20simple.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Simple walkthrough</p>
-        </div>
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Walkthrough%20-%20simple.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Simple walkthrough</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Creating a new DDM fitting function</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
+                </footer>
+              
+            </div>
             
-        </div>
-    </div>
-    <footer class="footer">
-  <p>
-    
-      By Ryan McGorty and Hannah Noor Verwei<br/>
-    
-        &copy; Copyright 2021, Ryan McGorty and Hannah Noor Verwei.<br/>
-  </p>
-</footer>
-</main>
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
-      </div>
-    </div>
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Importing-the-necessary-modules">Importing the necessary modules</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Initializing-DDM_Analysis-class-and-computing-the-DDM-matrix">Initializing DDM_Analysis class and computing the DDM matrix</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Digging-into-the-DDM-xarray.Dataset">Digging into the DDM xarray.Dataset</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Different-data-selecting-methods">Different data selecting methods</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Determing-the-A-and-B-parameters-to-get-the-ISF">Determing the A and B parameters to get the ISF</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Checking-the-background-estimate">Checking the background estimate</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#Additional-notes-about-the-background">Additional notes about the background</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Initiazing-DDM_Fit-class-and-fitting-our-data-to-a-model">Initiazing DDM_Fit class and fitting our data to a model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Our-first-attemp-at-fitting-the-data">Our first attemp at fitting the data</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Our-second-attemp-at-fitting-the-data---updating-initial-guesses-for-tau">Our second attemp at fitting the data - updating initial guesses for tau</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#Our-third-attemp-at-fitting-the-data---tightening-the-bounds-on-the-stretching-exponent">Our third attemp at fitting the data - tightening the bounds on the stretching exponent</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#What-to-make-of-the-results-at-high-q">What to make of the results at high <span class="math notranslate nohighlight">\(q\)</span></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#Determining-the-mean-squared-displacement-from-the-ISF">Determining the mean squared displacement from the ISF</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
   
-  <script src="_static/js/index.be7d3bbb2ef33a8344ce.js"></script>
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ryan McGorty and Hannah Noor Verwei
+</p>
 
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021, Ryan McGorty and Hannah Noor Verwei.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>

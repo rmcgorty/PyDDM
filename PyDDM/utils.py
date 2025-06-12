@@ -423,7 +423,11 @@ def plot_background(fit, color='m', color2='k'):
     figB = plt.figure(figsize=(8,8./1.618))
     if ('Background' in fit.parameters.parameter):
         plt.semilogx(fit.q[1:], fit.parameters.loc['Background',:][1:], color+'o', label="Background from fitting DDM data")  
-    plt.hlines(fit.B,fit.q[1],fit.q.max(),color2, linestyles='dashed', label="Background from Fourier transforms of images")
+    if fit.B.size==1:
+        plt.hlines(fit.B,fit.q[1],fit.q.max(),color2, linestyles='dashed', label="Background estimated from images")
+    else:
+        plt.semilogx(fit.B[1:],fit.q[1:], color+'s', label="Background estimate")
+
     plt.xlabel("q (μm$^{-1}$)")
     plt.ylabel("Background (a.u.)")
     plt.legend()

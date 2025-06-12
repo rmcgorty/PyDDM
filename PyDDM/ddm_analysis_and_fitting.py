@@ -691,7 +691,7 @@ class DDM_Analysis:
         if (self.background_method is None) or (self.background_method not in [0,1,2,3,4,5]):
             self.background_method = 0
         if (self.amplitude_method is None) or (self.amplitude_method not in [0,1,2]):
-            self.amplitude_method = 0
+            self.amplitude_method = 1
             
         self.lag_times_frames = ddm.generateLogDistributionOfTimeLags(self.first_lag_time, self.last_lag_time,
                                                                       self.number_of_lag_times)
@@ -1392,10 +1392,12 @@ class DDM_Analysis:
 
         ##Plot graph of rav FFT of frames, used to determine A  and B
         fig2=plt.figure(figsize=(6, 6/1.2))
-        plt.semilogy(ddmdataset.coords['q'][3:], 2*ddmdataset.avg_image_ft[3:],'ro')
-        plt.semilogy(ddmdataset.coords['q'][3:], 2*(ddmdataset.avg_image_ft[3:] - ddmdataset.ft_of_avg_image[3:]),'mo')
+        plt.semilogy(ddmdataset.coords['q'][3:], 2*ddmdataset.avg_image_ft[3:],'ro',label="Power spec of images")
+        plt.semilogy(ddmdataset.coords['q'][3:], 2*(ddmdataset.avg_image_ft[3:] - ddmdataset.ft_of_avg_image[3:]),'mo',
+                     label="Power spec of images minus power spec of avg im")
         plt.xlabel("q μm$^{-1}$")
         plt.ylabel(r"$\left< | \tilde{I}(q, t) |^2 \right>_t$")
+        plt.legend(loc=0)
         if ddmdataset.B.size==1:
             plt.hlines(ddmdataset.B.values, ddmdataset.coords['q'][3], ddmdataset.coords['q'][-1], linestyles='dashed')
         elif ddmdataset.B.size > 1:

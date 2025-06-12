@@ -1,0 +1,907 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>PyDDM.dcimg_mod.DCIMGFile &#8212; PyDDM v0.1.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=eba8b062" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script src="../_static/documentation_options.js?v=d47532a6"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/PyDDM.dcimg_mod.DCIMGFile';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PyDDM.ddm_analysis_and_fitting" href="PyDDM.ddm_analysis_and_fitting.html" />
+    <link rel="prev" title="PyDDM.dcimg_mod" href="PyDDM.dcimg_mod.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">PyDDM v0.1.0 documentation</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../gettingstarted.html">Getting Started</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../usage.html">Usage</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../Provide_info_for_analysis.html">What metadata to provide in the YAML file</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../Walkthrough%20-%20simple.html">Basic walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Walkthrough%20-%20details.html">Advanced walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Walkthrough%20-%20creating%20a%20new%20DDM%20fitting%20function.html">Adding a new DDM model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Walkthrough%20-%20intermittent%20dynamics.html">Probing intermittent dynamics</a></li>
+</ul>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="PyDDM.html">PyDDM</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.html">PyDDM.ISF_and_DDMmatrix_theoretical_models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryBallistic_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_OneNonerg_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryDoubleExp_OneNonerg_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryExpAndBallistic_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryPolydisperse_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheorySingleExp_Nonerg_ISF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_DDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF.html">PyDDM.ISF_and_DDMmatrix_theoretical_models.dTheoryTwoBallistic_ISF</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="PyDDM.dcimg_mod.html">PyDDM.dcimg_mod</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l3 current active"><a class="current reference internal" href="#">PyDDM.dcimg_mod.DCIMGFile</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.html">PyDDM.ddm_analysis_and_fitting</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.apply_binning.html">PyDDM.ddm_analysis_and_fitting.apply_binning</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.fit_report.html">PyDDM.ddm_analysis_and_fitting.fit_report</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit.html">PyDDM.ddm_analysis_and_fitting.get_tau_vs_q_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection.html">PyDDM.ddm_analysis_and_fitting.interactive_fit_inspection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.newt.html">PyDDM.ddm_analysis_and_fitting.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.print_fitting_models.html">PyDDM.ddm_analysis_and_fitting.print_fitting_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background.html">PyDDM.ddm_analysis_and_fitting.recalculate_ISF_with_new_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel.html">PyDDM.ddm_analysis_and_fitting.save_fit_results_to_excel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits.html">PyDDM.ddm_analysis_and_fitting.Browse_DDM_Fits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Analysis.html">PyDDM.ddm_analysis_and_fitting.DDM_Analysis</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_analysis_and_fitting.DDM_Fit.html">PyDDM.ddm_analysis_and_fitting.DDM_Fit</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.ddm_calc.html">PyDDM.ddm_calc</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.computeDDMMatrix.html">PyDDM.ddm_calc.computeDDMMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.computeDDMMatrix_correctVelocityPhase.html">PyDDM.ddm_calc.computeDDMMatrix_correctVelocityPhase</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.determining_A_and_B.html">PyDDM.ddm_calc.determining_A_and_B</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.execute_LSQ_fit.html">PyDDM.ddm_calc.execute_LSQ_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.execute_ScipyCurveFit_fit.html">PyDDM.ddm_calc.execute_ScipyCurveFit_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.find_radial_average.html">PyDDM.ddm_calc.find_radial_average</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.fit_ddm.html">PyDDM.ddm_calc.fit_ddm</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.fit_ddm_all_qs.html">PyDDM.ddm_calc.fit_ddm_all_qs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.generateLogDistributionOfTimeLags.html">PyDDM.ddm_calc.generateLogDistributionOfTimeLags</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.generate_mask.html">PyDDM.ddm_calc.generate_mask</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.getPhase_phiDM.html">PyDDM.ddm_calc.getPhase_phiDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.getVel_phiDM.html">PyDDM.ddm_calc.getVel_phiDM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.get_FF_DDM_matrix.html">PyDDM.ddm_calc.get_FF_DDM_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.get_MSD_from_DDM_data.html">PyDDM.ddm_calc.get_MSD_from_DDM_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.newt.html">PyDDM.ddm_calc.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.radial_avg_ddm_matrix.html">PyDDM.ddm_calc.radial_avg_ddm_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.temporalVarianceDDMMatrix.html">PyDDM.ddm_calc.temporalVarianceDDMMatrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.window_function.html">PyDDM.ddm_calc.window_function</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.ddm_calc.IPythonStreamHandler.html">PyDDM.ddm_calc.IPythonStreamHandler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.html">PyDDM.fit_parameters_dictionaries</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not.html">PyDDM.fit_parameters_dictionaries.extract_array_of_fixed_or_not</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes.html">PyDDM.fit_parameters_dictionaries.extract_array_of_param_mins_maxes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values.html">PyDDM.fit_parameters_dictionaries.extract_array_of_parameter_values</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.populate_intial_guesses.html">PyDDM.fit_parameters_dictionaries.populate_intial_guesses</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters.html">PyDDM.fit_parameters_dictionaries.populate_min_and_max_of_paramters</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.return_parameter_names.html">PyDDM.fit_parameters_dictionaries.return_parameter_names</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.return_possible_fitting_models.html">PyDDM.fit_parameters_dictionaries.return_possible_fitting_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_fixed.html">PyDDM.fit_parameters_dictionaries.set_parameter_fixed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits.html">PyDDM.fit_parameters_dictionaries.set_parameter_guess_and_limits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess.html">PyDDM.fit_parameters_dictionaries.set_parameter_initial_guess</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.set_parameter_limits.html">PyDDM.fit_parameters_dictionaries.set_parameter_limits</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display.html">PyDDM.fit_parameters_dictionaries.turn_parameters_into_dataframe_for_display</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="PyDDM.utils.html">PyDDM.utils</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.create_two_time_correlation_matrix.html">PyDDM.utils.create_two_time_correlation_matrix</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.generate_pandas_data.html">PyDDM.utils.generate_pandas_data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.generate_pandas_table_fit_results.html">PyDDM.utils.generate_pandas_table_fit_results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.get_schulz_dist.html">PyDDM.utils.get_schulz_dist</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.get_velocity_variance.html">PyDDM.utils.get_velocity_variance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.newt.html">PyDDM.utils.newt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_amplitude.html">PyDDM.utils.plot_amplitude</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_amplitude_over_background.html">PyDDM.utils.plot_amplitude_over_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_background.html">PyDDM.utils.plot_background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_fraction.html">PyDDM.utils.plot_fraction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_nonerg.html">PyDDM.utils.plot_nonerg</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_one_tau_vs_q.html">PyDDM.utils.plot_one_tau_vs_q</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_schulz.html">PyDDM.utils.plot_schulz</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_stretching_exponent.html">PyDDM.utils.plot_stretching_exponent</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_to_inspect_fit.html">PyDDM.utils.plot_to_inspect_fit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.plot_to_inspect_fit_2x2subplot.html">PyDDM.utils.plot_to_inspect_fit_2x2subplot</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.smoothstep.html">PyDDM.utils.smoothstep</a></li>
+<li class="toctree-l3"><a class="reference internal" href="PyDDM.utils.view_colormap.html">PyDDM.utils.view_colormap</a></li>
+</ul>
+</details></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/_autosummary/PyDDM.dcimg_mod.DCIMGFile.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>PyDDM.dcimg_mod.DCIMGFile</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile"><code class="docutils literal notranslate"><span class="pre">DCIMGFile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.byte_depth"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.byte_depth</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.dtype"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.dtype</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.file_size"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.file_size</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.first_4px_correction_enabled"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.first_4px_correction_enabled</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.frame"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.frame()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.framestamps"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.framestamps</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.mm"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.mm</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.mma"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.mma</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.nfrms"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.nfrms</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.shape"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.shape</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.timestamps"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.timestamps</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.ts"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.ts()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.whole"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.whole()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.zslice"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.zslice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.zslice_idx"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.zslice_idx()</span></code></a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="pyddm-dcimg-mod-dcimgfile">
+<h1>PyDDM.dcimg_mod.DCIMGFile<a class="headerlink" href="#pyddm-dcimg-mod-dcimgfile" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">DCIMGFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A DCIMG file (Hamamatsu format), memory-mapped.</p>
+<p>This class provides an interface for reading 3D Hamamatsu DCIMG files.</p>
+<p>Usage is pretty straightforward. First of all, create a <cite>DCIMGFile</cite> object:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_file</span> <span class="o">=</span> <span class="n">DCIMGFile</span><span class="p">(</span><span class="s1">&#39;input_file.dcimg&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_file</span>
+<span class="go">&lt;DCIMGFile shape=2450x2048x2048 dtype=&lt;class &#39;numpy.uint16&#39;&gt;file_name=input_file.dcimg&gt;</span>
+</pre></div>
+</div>
+<p>Image data can then be accessed using NumPy’s basic indexing:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">my_file</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="p">:</span><span class="mi">5</span><span class="p">]</span>
+<span class="go">array([[101, 104, 100,  99,  89],</span>
+<span class="go">       [103, 102, 103,  99, 102],</span>
+<span class="go">       [101, 104,  99, 108,  98],</span>
+<span class="go">       [102, 111,  99, 111,  95],</span>
+<span class="go">       [103,  98,  99, 104, 106]], dtype=uint16)</span>
+</pre></div>
+</div>
+<p>Other convenience methods for accessing image data are: <cite>zslice</cite>,
+<cite>zslice_idx</cite>, <cite>frame</cite> and <cite>whole</cite>.</p>
+<p><cite>DCIMGFile</cite> supports context managers:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">with</span> <span class="n">DCIMGFile</span><span class="p">(</span><span class="s1">&#39;input_file.dcimg&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="n">a</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="mi">800</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>NumPy’s basic indexing: <cite>numpy:arrays.indexing</cite></p>
+</div>
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_target_line</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.frame" title="PyDDM.dcimg_mod.DCIMGFile.frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">frame</span></code></a></p></td>
+<td><p>Convenience function to retrieve a single frame (Z plane).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">open</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.ts" title="PyDDM.dcimg_mod.DCIMGFile.ts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ts</span></code></a></p></td>
+<td><p>Timestamp of a single frame.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.whole" title="PyDDM.dcimg_mod.DCIMGFile.whole"><code class="xref py py-obj docutils literal notranslate"><span class="pre">whole</span></code></a></p></td>
+<td><p>Convenience function to retrieve the whole stack.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.zslice" title="PyDDM.dcimg_mod.DCIMGFile.zslice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zslice</span></code></a></p></td>
+<td><p>Return a slice along <cite>Z</cite>, i.e. a substack of frames.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.zslice_idx" title="PyDDM.dcimg_mod.DCIMGFile.zslice_idx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">zslice_idx</span></code></a></p></td>
+<td><p>Return a slice, i.e. a substack of frames, by index.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FILE_HDR_DTYPE</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FMT_NEW</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">FMT_OLD</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NEW_CROP_INFO</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NEW_FRAME_FOOTER_CAMLINK_DTYPE</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NEW_FRAME_FOOTER_USB_DTYPE</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">NEW_SESSION_HEADER_DTYPE</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SESSION_FOOTER2_DTYPE</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SESSION_FOOTER_DTYPE</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">SESS_HDR_DTYPE</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.byte_depth" title="PyDDM.dcimg_mod.DCIMGFile.byte_depth"><code class="xref py py-obj docutils literal notranslate"><span class="pre">byte_depth</span></code></a></p></td>
+<td><p>Number of bytes per pixel.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes_per_img</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">bytes_per_row</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">deep_copy_enabled</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.dtype" title="PyDDM.dcimg_mod.DCIMGFile.dtype"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></a></p></td>
+<td><p>NumPy numerical dtype.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.file_size" title="PyDDM.dcimg_mod.DCIMGFile.file_size"><code class="xref py py-obj docutils literal notranslate"><span class="pre">file_size</span></code></a></p></td>
+<td><p>File size in bytes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.framestamps" title="PyDDM.dcimg_mod.DCIMGFile.framestamps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">framestamps</span></code></a></p></td>
+<td><p>Framestamps of all frames.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.nfrms" title="PyDDM.dcimg_mod.DCIMGFile.nfrms"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nfrms</span></code></a></p></td>
+<td><p>Number of frames (Z planes), same as <cite>zsize</cite>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.shape" title="PyDDM.dcimg_mod.DCIMGFile.shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shape</span></code></a></p></td>
+<td><p>Shape of the whole image stack.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.timestamps" title="PyDDM.dcimg_mod.DCIMGFile.timestamps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">timestamps</span></code></a></p></td>
+<td><p>Timestamps of all frames.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">xsize</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ysize</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">zsize</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.mm" title="PyDDM.dcimg_mod.DCIMGFile.mm"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mm</span></code></a></p></td>
+<td><p>a <cite>numpy.memmap</cite> object with the raw contents of the DCIMG file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.mma" title="PyDDM.dcimg_mod.DCIMGFile.mma"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mma</span></code></a></p></td>
+<td><p>memory-mapped <cite>numpy.ndarray</cite> of the image data, without 4px correction.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#PyDDM.dcimg_mod.DCIMGFile.first_4px_correction_enabled" title="PyDDM.dcimg_mod.DCIMGFile.first_4px_correction_enabled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">first_4px_correction_enabled</span></code></a></p></td>
+<td><p>For some reason, the first 4 pixels of each frame (or the first 4 pixels of line number 1023 of each frame) are stored in a different area in the file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py property">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.byte_depth">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">byte_depth</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.byte_depth" title="Link to this definition">#</a></dt>
+<dd><p>Number of bytes per pixel.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.dtype">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dtype</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.dtype" title="Link to this definition">#</a></dt>
+<dd><p>NumPy numerical dtype.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.file_size">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">file_size</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.file_size" title="Link to this definition">#</a></dt>
+<dd><p>File size in bytes.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.first_4px_correction_enabled">
+<span class="sig-name descname"><span class="pre">first_4px_correction_enabled</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.first_4px_correction_enabled" title="Link to this definition">#</a></dt>
+<dd><p>For some reason, the first 4 pixels of each frame (or the first 4
+pixels of line number 1023 of each frame) are stored in a different
+area in the file. This switch enables retrieving those 4 pixels. If
+False, those pixels are set to 0. If None, they are left unchanged.
+Actually, when the <cite>dtype</cite> is <cite>uint8</cite>, this affects the first 8 pixels.
+In any case this affects 8 bytes. Defaults to True.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.frame">
+<span class="sig-name descname"><span class="pre">frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.frame" title="Link to this definition">#</a></dt>
+<dd><p>Convenience function to retrieve a single frame (Z plane).</p>
+<p>Same as calling <cite>zslice_idx</cite> and squeezing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – frame index</p></li>
+<li><p><strong>dtype</strong></p></li>
+<li><p><strong>copy</strong> (see <cite>zslice</cite>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A numpy array of the original type or of <cite>dtype</cite>, if specified. The
+shape of the array is (<cite>ysize</cite>, <cite>xsize</cite>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>numpy.ndarray</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.framestamps">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">framestamps</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.framestamps" title="Link to this definition">#</a></dt>
+<dd><p>Framestamps of all frames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A numpy array of dtype <cite>numpy.uint32</cite> with framestamps.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>numpy.ndarray</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.mm">
+<span class="sig-name descname"><span class="pre">mm</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.mm" title="Link to this definition">#</a></dt>
+<dd><p>a <cite>numpy.memmap</cite> object with the raw contents of the DCIMG file.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.mma">
+<span class="sig-name descname"><span class="pre">mma</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.mma" title="Link to this definition">#</a></dt>
+<dd><p>memory-mapped <cite>numpy.ndarray</cite> of the image data, without 4px
+correction.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.nfrms">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nfrms</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.nfrms" title="Link to this definition">#</a></dt>
+<dd><p>Number of frames (Z planes), same as <cite>zsize</cite>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.shape">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shape</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.shape" title="Link to this definition">#</a></dt>
+<dd><p>Shape of the whole image stack.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(<cite>zsize</cite>, <cite>ysize</cite>, <cite>xsize</cite>)</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.timestamps">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">timestamps</span></span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.timestamps" title="Link to this definition">#</a></dt>
+<dd><p>Timestamps of all frames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A numpy array of dtype <cite>numpy.datetime64</cite> with frame timestamps.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>numpy.ndarray</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.ts">
+<span class="sig-name descname"><span class="pre">ts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">frame</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.ts" title="Link to this definition">#</a></dt>
+<dd><p>Timestamp of a single frame.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>frame</strong> (<em>int</em>) – Frame index</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><cite>numpy.datetime64</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.whole">
+<span class="sig-name descname"><span class="pre">whole</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.whole" title="Link to this definition">#</a></dt>
+<dd><p>Convenience function to retrieve the whole stack.</p>
+<p>Equivalent to call <cite>zslice_idx</cite> with <cite>index</cite> = 0 and
+<cite>frames_per_slice</cite> = <cite>nfrms</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dtype</strong></p></li>
+<li><p><strong>copy</strong> (see <cite>zslice</cite>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A numpy array of the original type or of dtype, if specified. The
+shape of the array is <cite>shape</cite>.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>numpy.ndarray</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.zslice">
+<span class="sig-name descname"><span class="pre">zslice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.zslice" title="Link to this definition">#</a></dt>
+<dd><p>Return a slice along <cite>Z</cite>, i.e. a substack of frames.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>arg1</strong> (<em>int</em>) – Mandatory argument, will be passed to <cite>python:slice</cite>
+If arg2 and step are both None, it will be passed as <cite>slice(arg1)</cite>,
+i.e. it would act as the stop argument.</p></li>
+<li><p><strong>arg2</strong> (<em>int</em>) – If not null, will be passed as <cite>slice(arg1, arg2, step)</cite></p></li>
+<li><p><strong>step</strong> (<em>int</em>) – If not null, will be passed as <cite>slice(arg1, arg2, step)</cite></p></li>
+<li><p><strong>dtype</strong></p></li>
+<li><p><strong>copy</strong> (<em>bool</em>) – If True, the requested slice is copied to memory. Otherwise a
+memory mapped array is returned.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A numpy array of the original type or of <cite>dtype</cite>, if specified. The
+shape of the array is (<cite>end_frame</cite> - <cite>start_frame</cite>, <cite>ysize</cite>,
+<cite>xsize</cite>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>numpy.ndarray</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PyDDM.dcimg_mod.DCIMGFile.zslice_idx">
+<span class="sig-name descname"><span class="pre">zslice_idx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frames_per_slice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PyDDM.dcimg_mod.DCIMGFile.zslice_idx" title="Link to this definition">#</a></dt>
+<dd><p>Return a slice, i.e. a substack of frames, by index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>index</strong> (<em>int</em>) – slice index</p></li>
+<li><p><strong>frames_per_slice</strong> (<em>int</em>) – number of frames per slice</p></li>
+<li><p><strong>dtype</strong></p></li>
+<li><p><strong>copy</strong> (see <cite>zslice</cite>)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A numpy array of the original type or of <cite>dtype</cite>, if specified. The
+shape of the array is  (<cite>frames_per_slice</cite>, <cite>ysize</cite>, <cite>xsize</cite>).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><cite>numpy.ndarray</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="PyDDM.dcimg_mod.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">PyDDM.dcimg_mod</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="PyDDM.ddm_analysis_and_fitting.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">PyDDM.ddm_analysis_and_fitting</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile"><code class="docutils literal notranslate"><span class="pre">DCIMGFile</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.byte_depth"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.byte_depth</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.dtype"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.dtype</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.file_size"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.file_size</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.first_4px_correction_enabled"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.first_4px_correction_enabled</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.frame"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.frame()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.framestamps"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.framestamps</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.mm"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.mm</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.mma"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.mma</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.nfrms"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.nfrms</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.shape"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.shape</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.timestamps"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.timestamps</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.ts"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.ts()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.whole"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.whole()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.zslice"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.zslice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#PyDDM.dcimg_mod.DCIMGFile.zslice_idx"><code class="docutils literal notranslate"><span class="pre">DCIMGFile.zslice_idx()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Ryan McGorty and Hannah Noor Verwei
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2021, Ryan McGorty and Hannah Noor Verwei.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
